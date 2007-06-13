@@ -72,7 +72,7 @@ class Oficina:
 		botao.adicionaBotao('laranja.png',22,280,12,self.mousedown, "Linha Laranja")
 		botao.adicionaBotao('branco.png',23,240,10,self.mousedown, "Linha Branca")		
 		
-		#botao.adicionaBotao('fechar.png',24,600,10,self.mousedown, "Fechar")
+		botao.adicionaBotao('abrir.png',24,660,10,self.mousedown, "Abrir")
 		botao.adicionaBotao('salvar.png',25,600,10,self.mousedown, "Salvar")
 		
 		self.window.add(self.areaFixa)
@@ -121,11 +121,25 @@ class Oficina:
 			self.area.mudacorlinha(6) 
 		elif ferramenta == 23:
 			self.area.mudacorlinha(7)		
-		elif ferramenta == 24:
-			gtk.main_quit()			
+		elif ferramenta == 24:	
+			dialog = gtk.FileChooserDialog(title=('Abrir Arquivo...'),   
+                                  action=gtk.FILE_CHOOSER_ACTION_OPEN,   
+                                  buttons=(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,   
+                                  gtk.STOCK_SAVE, gtk.RESPONSE_OK)) 
+			dialog.show_all()			
+			response = dialog.run()
+			if response == gtk.RESPONSE_OK:
+				print dialog.get_filename(), 'selected'
+				gtk28 = False 
+				file_path = dialog.get_filename()
+				file_path = self.decode_path((file_path,))[0]  
+				self.open(file_path)
+			elif response == gtk.RESPONSE_CANCEL:
+				print 'Closed, no files selected'
+			dialog.destroy()
+			
 		elif ferramenta == 25:
-			print "Salvar imagem"			
-			dialog = gtk.FileChooserDialog(title=('Save File as...'),   
+			dialog = gtk.FileChooserDialog(title=('Salvar Arquivo como...'),   
                                   action=gtk.FILE_CHOOSER_ACTION_SAVE,   
                                   buttons=(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,   
                                   gtk.STOCK_SAVE, gtk.RESPONSE_OK))  
@@ -164,6 +178,10 @@ class Oficina:
 			
 			self.area.ferramenta = ferramenta
 
+	def open(self, name):
+		self.area.d.limpatudo()
+		self.area.d.loadImage(name)
+			
 	def save(self, name):
 		pixbuf = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, False, 8, DRAW_WIDTH, DRAW_HEIGHT)
 		pixbuf.get_from_drawable(self.area.pixmap, gtk.gdk.colormap_get_system(), 0, 0, 0, 0, -1, -1)

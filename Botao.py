@@ -20,7 +20,6 @@ class Botao:
 		eventbox = gtk.EventBox()
 		eventbox.add(img)	
 		#eventbox.set_visible_window(False)
-		#eventbox.set
 		eventbox.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse("white"))
 
 		eventbox.set_events(gtk.gdk.POINTER_MOTION_MASK |
