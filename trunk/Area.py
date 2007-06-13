@@ -53,14 +53,14 @@ class Area(gtk.DrawingArea):
 		colormap = self.get_colormap()
 		
 		self.cores = [		
-		colormap.alloc_color('#ffaaff', True, True), # roxo 
-		colormap.alloc_color('#f4ee56', True, True), # amarelo
-		colormap.alloc_color('#000000', True, True), # preto
-		colormap.alloc_color('#45a5dc', True, True), # azul
-		colormap.alloc_color('#44aa44', True, True), # verde
-		colormap.alloc_color('#dd5555', True, True), # vermelho
-		colormap.alloc_color('#ffaa11', True, True), # laranja		
-		colormap.alloc_color('#ffffff', True, True)  # branco	
+		colormap.alloc_color('#ffaaff', True, True), # purple
+		colormap.alloc_color('#f4ee56', True, True), # yellow
+		colormap.alloc_color('#000000', True, True), # black
+		colormap.alloc_color('#45a5dc', True, True), # blue
+		colormap.alloc_color('#44aa44', True, True), # green
+		colormap.alloc_color('#dd5555', True, True), # red
+		colormap.alloc_color('#ffaa11', True, True), # orange		
+		colormap.alloc_color('#ffffff', True, True)  # white	
 		]
 		self.font = pango.FontDescription('Sans 8')
 		#self.mensagem = Mensagens(self)
@@ -92,21 +92,13 @@ class Area(gtk.DrawingArea):
 		return False
 
 	def mousedown(self,widget,event): 		
-		# texto
+		# text
 		if self.ferramenta == 4:
 			self.d.Texto(widget,event)
-        	self.oldx = int(event.x)
-        	self.oldy = int(event.y)
-		self.desenha = True			
-		
-	# botao.adicionaBotao('linha.png',1,15,100,self.mousedown, "Linha")
-	# botao.adicionaBotao('lapis.png',2,50,120,self.mousedown, "Lapis")		
-	# botao.adicionaBotao('borracha.png',3,44,180,self.mousedown, "Borracha")
-	# botao.adicionaBotao('letra.png',4,50,220,self.mousedown, "Letra")
-	# botao.adicionaBotao('circulo.png',5,25,270,self.mousedown, "Circulo")
-	# botao.adicionaBotao('quadrado.png',6,20,320,self.mousedown, "Quadrado")
-	# botao.adicionaBotao('vassoura.png',7,20,360,self.mousedown, "Vassoura")
-		
+			
+		self.oldx = int(event.x)
+		self.oldy = int(event.y)			
+		self.desenha = True		
 		
 	def mousemove(self,widget,event): 		
 		x , y, state = event.window.get_pointer()	
@@ -116,29 +108,34 @@ class Area(gtk.DrawingArea):
 			if self.ferramenta == 3:
 				self.d.desenhaBorracha(widget, coords)
 			if self.desenha:
+				# line
 				if self.ferramenta == 1:
-					self.d.desenhaLinha(widget, coords)			
+					print self.oldx
+					self.d.desenhaLinha(widget, coords)	
+				# pencil
 				elif self.ferramenta == 2:
-					self.d.desenhaLapis(widget, coords)				
+					self.d.desenhaLapis(widget, coords)		
+				# circle
 				elif self.ferramenta == 5:
 					self.d.desenhaCirculo(widget,coords)	
+				# square
 				elif self.ferramenta == 6:
 					self.d.desenhaQuadrado(widget,coords)		
 		
 	def mouseup(self,widget,event):		
 		if self.desenha:
-			#linha
+			# line
 			if self.ferramenta == 1:
-				self.pixmap.draw_line(self.gc_linha,self.oldx,self.oldy, self.newx,self.newy)				
+				self.pixmap.draw_line(self.gc_linha,self.oldx,self.oldy, int (event.x), int(event.y))				
 				widget.queue_draw()
 
-			# circulo
+			# circle
 			elif self.ferramenta == 5:
 				self.pixmap.draw_arc(self.gc, True, self.newx, self.newy, self.newx_, self.newy_, 0, 360*64)
 				self.pixmap.draw_arc(self.gc_linha, False, self.newx, self.newy, self.newx_, self.newy_, 0, 360*64)
 				widget.queue_draw()
 
-			# quadrado
+			# square
 			elif self.ferramenta == 6:
 				self.pixmap.draw_rectangle(self.gc, True, self.newx,self.newy, self.newx_,self.newy_)
 				self.pixmap.draw_rectangle(self.gc_linha, False, self.newx,self.newy, self.newx_,self.newy_)
