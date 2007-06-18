@@ -22,8 +22,8 @@ class Desenho:
 	
 	def desenhaBorracha(self, widget, coords):
 		self.d.desenha = False
-		self.d.pixmap.draw_arc(self.d.gc_borracha, True, coords[0], coords[1], 12, 12, 0, 360*64)
-		self.d.pixmap_temp.draw_arc(self.d.gc_borracha, True, coords[0], coords[1], 12, 12, 0, 360*64)
+		self.d.pixmap.draw_arc(self.d.gc_borracha, True, coords[0], coords[1], 30, 30, 0, 360*64)
+		self.d.pixmap_temp.draw_arc(self.d.gc_borracha, True, coords[0], coords[1], 30, 30, 0, 360*64)
 		self.d.oldx = coords[0]
 		self.d.oldy = coords[1]
 		widget.queue_draw()
@@ -188,21 +188,21 @@ class Desenho:
 		self.d.pixmap_temp.draw_rectangle(self.d.get_style().white_gc, True,0, 0, WIDTH, HEIGHT)
 		self.d.pixmap_temp.draw_drawable(self.d.gc,self.d.pixmap,  0 , 0 ,0,0, WIDTH, HEIGHT)	
 		
-		if self.d.px > self.d.oldx:
+		if self.d.sx > self.d.oldx:
 			x0 = self.d.oldx
 		else:
-			x0 = self.d.px
+			x0 = self.d.sx
 			
-		if self.d.py > self.d.oldy:
+		if self.d.sy > self.d.oldy:
 			x1 = self.d.oldy
 		else:
-			x1 = self.d.py
+			x1 = self.d.sy
 			
-		w = self.d.px - self.d.oldx
+		w = self.d.sx - self.d.oldx
 		if w < 0:
 			w = - w
 			
-		h = self.d.py - self.d.oldy			
+		h = self.d.sy - self.d.oldy			
 		if h < 0:
 			h = - h
 		

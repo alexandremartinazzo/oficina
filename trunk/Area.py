@@ -38,10 +38,12 @@ class Area(gtk.DrawingArea):
 		self.newy = 0
 		self.newx_ = 0
 		self.newy_ = 0
+		""""
 		self.px = 0
-		self.py = 0
+		self.py = 0		
 		self.antx = 0
 		self.anty = 0
+		"""
 		self.primeira = 1
 		self.gc = None
 		self.gc_linha = None
@@ -162,15 +164,17 @@ class Area(gtk.DrawingArea):
 				self.pixmap.draw_rectangle(self.gc_linha, False, self.newx,self.newy, self.newx_,self.newy_)
 				widget.queue_draw()
 			# selection
-			elif self.ferramenta == 26 and self.move == False:
-				self.move = True
-				self.px = int (event.x)
-				self.py = int(event.y)
-				self.window.set_cursor(self.janela.cursorMove.cursor())
-			elif self.move == True:		
-				self.pixmap.draw_drawable(self.gc, self.pixmap_temp, 0,0,0,0, WIDTH, HEIGHT)	
-				self.window.set_cursor(self.janela.cursorSelecao.cursor())	
-				self.move = False				
+			elif self.ferramenta == 26:
+				if self.move == False:
+					self.pixmap_temp.draw_drawable(self.gc,self.pixmap,  0 , 0 ,0,0, WIDTH, HEIGHT)
+					self.move = True
+					self.sx = int (event.x)
+					self.sy = int(event.y)
+					self.window.set_cursor(self.janela.cursorMove.cursor())
+				elif self.move == True:		
+					self.pixmap.draw_drawable(self.gc, self.pixmap_temp, 0,0,0,0, WIDTH, HEIGHT)	
+					self.window.set_cursor(self.janela.cursorSelecao.cursor())	
+					self.move = False				
 			# polignon
 			elif self.ferramenta == 27:
 				if self.primeira == 1:
