@@ -34,6 +34,9 @@ class Oficina:
 		self.cursorQuadrado = Cursores('quadrado_cursor.png')
 		self.cursorLinha = Cursores('linha_cursor.png')
 		self.cursorLetra = Cursores('letra_cursor.png')		
+		self.cursorSelecao = Cursores('selecao_cursor.png')	
+		self.cursorPoligono = Cursores('poligono_cursor.png')	
+		self.cursorMove= Cursores('move_cursor.png')
 		
 		self.area = Area(self)
 		self.area.ferramenta = 2
@@ -46,7 +49,7 @@ class Oficina:
 		botao.adicionaBotao('balde.png',-2,15,40,self.mousedown, "Balde")
 		
 		botao.adicionaBotao('linha.png',1,15,100,self.mousedown, "Linha")
-		botao.adicionaBotao('lapis.png',2,50,120,self.mousedown, "Lapis")		
+		botao.adicionaBotao('lapis.png',2,50,140,self.mousedown, "Lapis")		
 		botao.adicionaBotao('borracha.png',3,44,180,self.mousedown, "Borracha")
 		botao.adicionaBotao('letra.png',4,50,220,self.mousedown, "Letra")
 		botao.adicionaBotao('circulo.png',5,25,270,self.mousedown, "Circulo")
@@ -74,6 +77,8 @@ class Oficina:
 		
 		botao.adicionaBotao('abrir.png',24,660,10,self.mousedown, "Abrir")
 		botao.adicionaBotao('salvar.png',25,600,10,self.mousedown, "Salvar")
+		botao.adicionaBotao('selecao.png',26,550,10,self.mousedown, "Selecao")
+		botao.adicionaBotao('poligono.png',27,70,95,self.mousedown, "Poligono")
 		
 		self.window.add(self.areaFixa)
 		self.window.connect("destroy", gtk.main_quit)		
@@ -174,7 +179,11 @@ class Oficina:
 				self.area.window.set_cursor(self.cursorCirculo.cursor())
 			elif ferramenta == 6:
 				print "quadrado"
-				self.area.window.set_cursor(self.cursorQuadrado.cursor())
+				self.area.window.set_cursor(self.cursorQuadrado.cursor())		
+			elif ferramenta == 26:
+				self.area.window.set_cursor(self.cursorSelecao.cursor())			
+			elif ferramenta == 27:
+				self.area.window.set_cursor(self.cursorPoligono.cursor())						
 			
 			self.area.ferramenta = ferramenta
 

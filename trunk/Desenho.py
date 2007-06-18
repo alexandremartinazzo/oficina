@@ -67,6 +67,45 @@ class Desenho:
 		self.d.pixmap_temp.draw_drawable(self.d.gc,self.d.pixmap,  0 , 0 ,0,0, WIDTH, HEIGHT)
 		self.d.pixmap_temp.draw_rectangle(self.d.gc, True ,self.d.newx,self.d.newy,self.d.newx_,self.d.newy_)
 		self.d.pixmap_temp.draw_rectangle(self.d.gc_linha, False ,self.d.newx,self.d.newy,self.d.newx_,self.d.newy_)
+		
+	def desenhaSelecao(self, widget, coords):
+		widget.queue_draw()		
+
+		if coords[0] > WIDTH:
+			coords0 = WIDTH
+		else:
+			coords0 = coords[0]
+			
+		if coords [1] > HEIGHT:
+			coords1 = HEIGHT
+		else:
+			coords1 = coords[1]
+			
+		self.d.newx_ = coords0 - self.d.oldx
+		self.d.newy_ = coords1 - self.d.oldy
+
+		if self.d.newx_ >= 0:
+			self.d.newx = self.d.oldx	
+		else:	
+			if coords0 > 0:
+				self.d.newx = coords0
+				self.d.newx_ = - self.d.newx_
+			else:
+				self.d.newx = 0
+				self.d.newx_ = self.d.oldx
+					
+		if self.d.newy_ >= 0:
+			self.d.newy = self.d.oldy	
+		else:				
+			if coords1 > 0:
+				self.d.newy_ = - self.d.newy_
+				self.d.newy = coords1
+			else:
+				self.d.newy = 0
+				self.d.newy_ = self.d.oldy
+				
+		self.d.pixmap_temp.draw_drawable(self.d.gc,self.d.pixmap,  0 , 0 ,0,0, WIDTH, HEIGHT)
+		self.d.pixmap_temp.draw_rectangle(self.d.gc_selecao, False ,self.d.newx,self.d.newy,self.d.newx_,self.d.newy_)
 
 	def desenhaCirculo(self, widget, coords):
 		widget.queue_draw()	
@@ -144,5 +183,41 @@ class Desenho:
 		pixbuf = gtk.gdk.pixbuf_new_from_file(name) 
 		self.d.pixmap.draw_pixbuf(self.d.gc, pixbuf, 0, 0, 0, 0, width=-1, height=-1, dither=gtk.gdk.RGB_DITHER_NORMAL, x_dither=0, y_dither=0)
 		self.d.queue_draw()	
+		
+	def moveSelection(self, widget, coords):		
+		self.d.pixmap_temp.draw_rectangle(self.d.get_style().white_gc, True,0, 0, WIDTH, HEIGHT)
+		self.d.pixmap_temp.draw_drawable(self.d.gc,self.d.pixmap,  0 , 0 ,0,0, WIDTH, HEIGHT)	
+		
+		if self.d.px > self.d.oldx:
+			x0 = self.d.oldx
+		else:
+			x0 = self.d.px
+			
+		if self.d.py > self.d.oldy:
+			x1 = self.d.oldy
+		else:
+			x1 = self.d.py
+			
+		w = self.d.px - self.d.oldx
+		if w < 0:
+			w = - w
+			
+		h = self.d.py - self.d.oldy			
+		if h < 0:
+			h = - h
+		
+		self.d.pixmap_temp.draw_rectangle(self.d.get_style().white_gc, True, x0, x1, w, h)
+		self.d.pixmap_temp.draw_drawable(self.d.gc, self.d.pixmap, x0, x1, coords[0] - w/2, coords[1]- h/2, w, h)		
+		widget.queue_draw()
+		
+	def desenhaPoligono(self, widget, coords): 
+		widget.queue_draw() 
+		self.d.pixmap_temp.draw_drawable(self.d.gc,self.d.pixmap,  0 , 0 ,0,0, WIDTH, HEIGHT)
+		if self.d.primeira == 1:
+			self.d.pixmap_temp.draw_line(self.d.gc_linha,self.d.oldx,self.d.oldy,coords[0],coords[1]) 
+		else:
+			self.d.pixmap_temp.draw_line(self.d.gc_linha,int (self.d.antx), int (self.d.anty),coords[0],coords[1]) 
+		self.d.newx = coords[0]     
+		self.d.newy = coords[1]		
 
 

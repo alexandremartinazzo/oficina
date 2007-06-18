@@ -30,6 +30,7 @@ class Area(gtk.DrawingArea):
 		
 		self.ferramenta = None
 		self.desenha = False
+		self.move = False
 		self.connect("configure_event", self.configure_event)
 		self.oldx = 0
 		self.oldy = 0
@@ -37,9 +38,15 @@ class Area(gtk.DrawingArea):
 		self.newy = 0
 		self.newx_ = 0
 		self.newy_ = 0
+		self.px = 0
+		self.py = 0
+		self.antx = 0
+		self.anty = 0
+		self.primeira = 1
 		self.gc = None
 		self.gc_linha = None
 		self.gc_borracha= None
+		self.gc_selecao= None
 		self.pixmap = None	
 		self.pixmap_temp = None
 		self.desenho = []	
@@ -60,7 +67,8 @@ class Area(gtk.DrawingArea):
 		colormap.alloc_color('#44aa44', True, True), # green
 		colormap.alloc_color('#dd5555', True, True), # red
 		colormap.alloc_color('#ffaa11', True, True), # orange		
-		colormap.alloc_color('#ffffff', True, True)  # white	
+		colormap.alloc_color('#ffffff', True, True), # white	
+		colormap.alloc_color('#00aa00', True, True)  # green - selection
 		]
 		self.font = pango.FontDescription('Sans 8')
 		#self.mensagem = Mensagens(self)
@@ -70,16 +78,23 @@ class Area(gtk.DrawingArea):
 	def configure_event(self, widget, event):		
 		win = widget.window
 		width = win.get_geometry()[2]
-		height = win.get_geometry()[3]		
+		height = win.get_geometry()[3]	
+		
 		self.pixmap = gtk.gdk.Pixmap(win, width, height, -1)
 		self.pixmap.draw_rectangle(widget.get_style().white_gc, True, 0, 0, width, height)
 		self.pixmap_temp = gtk.gdk.Pixmap(win, width, height, -1)
 		self.pixmap_temp.draw_rectangle(widget.get_style().white_gc, True, 0, 0, width, height)
+		
 		self.gc = widget.window.new_gc()	
 		self.gc_borracha = widget.window.new_gc()		
 		self.gc_borracha.set_foreground(self.cores[7])
+		
 		self.gc_linha = widget.window.new_gc()	
 		self.gc_linha.set_line_attributes(2, gtk.gdk.LINE_SOLID, gtk.gdk.CAP_ROUND, gtk.gdk.JOIN_ROUND)
+		
+		self.gc_selecao = widget.window.new_gc()	
+		self.gc_selecao.set_line_attributes(1, gtk.gdk.LINE_ON_OFF_DASH, gtk.gdk.CAP_ROUND, gtk.gdk.JOIN_ROUND)
+		self.gc_selecao.set_foreground(self.cores[8])
 		
 		return True
 
@@ -95,9 +110,10 @@ class Area(gtk.DrawingArea):
 		# text
 		if self.ferramenta == 4:
 			self.d.Texto(widget,event)
+		if not self.move or self.ferramenta != 26:
+			self.oldx = int(event.x)
+			self.oldy = int(event.y)	
 			
-		self.oldx = int(event.x)
-		self.oldy = int(event.y)			
 		self.desenha = True		
 		
 	def mousemove(self,widget,event): 		
@@ -120,26 +136,69 @@ class Area(gtk.DrawingArea):
 					self.d.desenhaCirculo(widget,coords)	
 				# square
 				elif self.ferramenta == 6:
-					self.d.desenhaQuadrado(widget,coords)		
+					self.d.desenhaQuadrado(widget,coords)	
+				# selection
+				elif self.ferramenta == 26 and not self.move:
+					self.d.desenhaSelecao(widget,coords)						
+				# selection
+				elif self.ferramenta == 26 and self.move:
+					self.d.moveSelection(widget, coords)			
 		
-	def mouseup(self,widget,event):		
+	def mouseup(self,widget,event):	
+		
 		if self.desenha:
 			# line
 			if self.ferramenta == 1:
 				self.pixmap.draw_line(self.gc_linha,self.oldx,self.oldy, int (event.x), int(event.y))				
 				widget.queue_draw()
-
 			# circle
 			elif self.ferramenta == 5:
 				self.pixmap.draw_arc(self.gc, True, self.newx, self.newy, self.newx_, self.newy_, 0, 360*64)
 				self.pixmap.draw_arc(self.gc_linha, False, self.newx, self.newy, self.newx_, self.newy_, 0, 360*64)
 				widget.queue_draw()
-
 			# square
 			elif self.ferramenta == 6:
 				self.pixmap.draw_rectangle(self.gc, True, self.newx,self.newy, self.newx_,self.newy_)
 				self.pixmap.draw_rectangle(self.gc_linha, False, self.newx,self.newy, self.newx_,self.newy_)
 				widget.queue_draw()
+			# selection
+			elif self.ferramenta == 26 and self.move == False:
+				self.move = True
+				self.px = int (event.x)
+				self.py = int(event.y)
+				self.window.set_cursor(self.janela.cursorMove.cursor())
+			elif self.move == True:		
+				self.pixmap.draw_drawable(self.gc, self.pixmap_temp, 0,0,0,0, WIDTH, HEIGHT)	
+				self.window.set_cursor(self.janela.cursorSelecao.cursor())	
+				self.move = False				
+			# polignon
+			elif self.ferramenta == 27:
+				if self.primeira == 1:
+					self.pixmap.draw_line(self.gc_linha,self.oldx,self.oldy , int (event.x), int( event.y ))
+					self.antx = event.x
+					self.anty = event.y
+					self.px = self.antx
+					self.py = self.anty
+					self.primeira = 0					
+				else:
+					self.dx = event.x - self.px
+					self.dy = event.y - self.py				
+					if self.dx < 0:
+						self.dx = -self.dx						
+					if self.dy < 0:
+						self.dy = -self.dy						
+					if (self.dx < 50) & (self.dy < 50):
+						self.pixmap.draw_line(self.gc_linha ,int (self.px), int (self.py), int (self.antx), int (self.anty))
+						self.primeira = 1
+						self.oldx = 0
+						self.oldy = 0						
+					else:    
+						self.pixmap.draw_line(self.gc_linha,int (self.antx),int (self.anty), int (event.x), int(event.y))			
+						
+					self.antx = event.x
+					self.anty = event.y
+					widget.queue_draw()
+
 				
 		self.desenha = False		
 		
