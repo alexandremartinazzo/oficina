@@ -144,7 +144,10 @@ class Area(gtk.DrawingArea):
 					self.d.desenhaSelecao(widget,coords)						
 				# selection
 				elif self.ferramenta == 26 and self.move:
-					self.d.moveSelection(widget, coords)			
+					self.d.moveSelection(widget, coords)
+				#poligon	
+				elif self.ferramenta == 27:
+					self.d.desenhaPoligono(widget, coords)	
 		
 	def mouseup(self,widget,event):	
 		
@@ -175,36 +178,27 @@ class Area(gtk.DrawingArea):
 					self.pixmap.draw_drawable(self.gc, self.pixmap_temp, 0,0,0,0, WIDTH, HEIGHT)	
 					self.window.set_cursor(self.janela.cursorSelecao.cursor())	
 					self.move = False				
-			# polignon
+			# poligono
 			elif self.ferramenta == 27:
 				if self.primeira == 1:
-					self.pixmap.draw_line(self.gc_linha,self.oldx,self.oldy , int (event.x), int( event.y ))
+					self.pixmap.draw_line(self.gc_linha,self.oldx,self.oldy, int (event.x), int( event.y ))
 					self.antx = event.x
 					self.anty = event.y
-					self.px = self.antx
-					self.py = self.anty
-					self.primeira = 0					
+					self.px = self.oldx
+					self.py = self.oldy
+					self.primeira = 0
 				else:
-					self.dx = event.x - self.px
-					self.dy = event.y - self.py				
-					if self.dx < 0:
-						self.dx = -self.dx						
-					if self.dy < 0:
-						self.dy = -self.dy						
-					if (self.dx < 50) & (self.dy < 50):
-						self.pixmap.draw_line(self.gc_linha ,int (self.px), int (self.py), int (self.antx), int (self.anty))
+					self.dx = math.fabs(event.x - self.px)
+					self.dy = math.fabs(event.y - self.py)
+					if (self.dx < 20) & (self.dy < 20):
+						self.pixmap.draw_line(self.gc_linha,int (self.px), int (self.py), int (self.antx), int (self.anty))
 						self.primeira = 1
-						self.oldx = 0
-						self.oldy = 0						
-					else:    
-						self.pixmap.draw_line(self.gc_linha,int (self.antx),int (self.anty), int (event.x), int(event.y))			
-						
+					else:	
+						self.pixmap.draw_line(self.gc_linha,int (self.antx),int (self.anty), int (event.x), int( event.y ))
 					self.antx = event.x
 					self.anty = event.y
-					widget.queue_draw()
-
-				
-		self.desenha = False		
+				widget.queue_draw() 
+		self.desenha = False
 		
 	def mudacor(self, cor):
 		self.cor_ = cor		

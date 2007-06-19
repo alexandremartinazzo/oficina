@@ -210,8 +210,7 @@ class Desenho:
 		self.d.pixmap_temp.draw_drawable(self.d.gc, self.d.pixmap, x0, x1, coords[0] - w/2, coords[1]- h/2, w, h)		
 		widget.queue_draw()
 		
-	def desenhaPoligono(self, widget, coords): 
-		widget.queue_draw() 
+	def desenhaPoligono(self, widget, coords):
 		self.d.pixmap_temp.draw_drawable(self.d.gc,self.d.pixmap,  0 , 0 ,0,0, WIDTH, HEIGHT)
 		if self.d.primeira == 1:
 			self.d.pixmap_temp.draw_line(self.d.gc_linha,self.d.oldx,self.d.oldy,coords[0],coords[1]) 
@@ -219,5 +218,5 @@ class Desenho:
 			self.d.pixmap_temp.draw_line(self.d.gc_linha,int (self.d.antx), int (self.d.anty),coords[0],coords[1]) 
 		self.d.newx = coords[0]     
 		self.d.newy = coords[1]		
-
+		widget.queue_draw() 
 
