@@ -20,10 +20,10 @@ class Desenho:
 		self.d.newy = coords[1]
 		widget.queue_draw()
 	
-	def desenhaBorracha(self, widget, coords):
+	def desenhaBorracha(self, widget, coords, side):
 		self.d.desenha = False
-		self.d.pixmap.draw_arc(self.d.gc_borracha, True, coords[0], coords[1], 30, 30, 0, 360*64)
-		self.d.pixmap_temp.draw_arc(self.d.gc_borracha, True, coords[0], coords[1], 30, 30, 0, 360*64)
+		self.d.pixmap.draw_arc(self.d.gc_borracha, True, coords[0], coords[1], side, side, 0, 360*64)
+		self.d.pixmap_temp.draw_arc(self.d.gc_borracha, True, coords[0], coords[1], side, side, 0, 360*64)
 		self.d.oldx = coords[0]
 		self.d.oldy = coords[1]
 		widget.queue_draw()
