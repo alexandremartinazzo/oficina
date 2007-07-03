@@ -124,7 +124,7 @@ class Area(gtk.DrawingArea):
 						
 		if state & gtk.gdk.BUTTON1_MASK and self.pixmap != None:
 			if self.ferramenta == 3:
-				self.d.desenhaBorracha(widget, coords)
+				self.d.desenhaBorracha(widget, coords, 30)
 			if self.desenha:
 				# line
 				if self.ferramenta == 1:
