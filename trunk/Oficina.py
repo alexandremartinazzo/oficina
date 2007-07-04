@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import  pygtk
 pygtk.require('2.0')
 import gtk
@@ -14,9 +15,10 @@ DRAW_HEIGHT = 900
 class Oficina:
 	def __init__(self):
 		self.window = gtk.Window()
+                self.window.set_size_request(DRAW_WIDTH,DRAW_HEIGHT)
 
 		self.areaFixa = gtk.Fixed()
-		self.areaFixa.set_size_request(DRAW_WIDTH, DRAW_HEIGHT)
+		#self.areaFixa.set_size_request(DRAW_WIDTH, DRAW_HEIGHT)
 
 		# cor de fundo da janela
 		color = gtk.gdk.color_parse("white")
@@ -40,7 +42,14 @@ class Oficina:
 		
 		self.area = Area(self)
 		self.area.ferramenta = 2
-		self.areaFixa.put(self.area,0,0)
+		#self.areaFixa.put(self.area,0,0)
+
+                # create a Scrolled Window with automatic bars
+                self.scrolledWindow = gtk.ScrolledWindow()
+                self.scrolledWindow.set_policy(gtk.POLICY_AUTOMATIC,gtk.POLICY_AUTOMATIC)
+
+                self.areaFixa.put(self.area,0,0)
+		self.scrolledWindow.add_with_viewport(self.areaFixa)
 
 		# botoes de evento
 		# ferramentas
@@ -80,7 +89,8 @@ class Oficina:
 		botao.adicionaBotao('selecao.png',26,550,10,self.mousedown, "Selecao")
 		botao.adicionaBotao('poligono.png',27,70,95,self.mousedown, "Poligono")
 		
-		self.window.add(self.areaFixa)
+		#self.window.add(self.areaFixa)
+                self.window.add(self.scrolledWindow)
 		self.window.connect("destroy", gtk.main_quit)		
 		# desenho de texto
 		self.entrada = gtk.Entry(max=50)
