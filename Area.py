@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import  pygtk
 pygtk.require('2.0')
 import gtk
@@ -8,8 +9,8 @@ import pango
 
 from Desenho import Desenho
 
-WIDTH = 1200
-HEIGHT = 900
+WIDTH = 1195
+HEIGHT = 895
 
 class Area(gtk.DrawingArea):
 	def __init__(self, janela):		
