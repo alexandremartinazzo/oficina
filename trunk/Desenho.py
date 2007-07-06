@@ -21,10 +21,11 @@ class Desenho:
 		self.d.newy = coords[1]
 		widget.queue_draw()
 	
-	def desenhaBorracha(self, widget, coords, side):
+	def eraser(self, widget, coords, size = 30, shape = 'circle'):
 		self.d.desenha = False
-		self.d.pixmap.draw_arc(self.d.gc_borracha, True, coords[0], coords[1], side, side, 0, 360*64)
-		self.d.pixmap_temp.draw_arc(self.d.gc_borracha, True, coords[0], coords[1], side, side, 0, 360*64)
+		if(shape = 'circle'):
+			self.d.pixmap.draw_arc(self.d.gc_borracha, True, coords[0], coords[1], size, size, 0, 360*64)
+			self.d.pixmap_temp.draw_arc(self.d.gc_borracha, True, coords[0], coords[1], size, size, 0, 360*64)
 		self.d.oldx = coords[0]
 		self.d.oldy = coords[1]
 		widget.queue_draw()
