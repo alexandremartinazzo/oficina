@@ -108,6 +108,10 @@ class Area(gtk.DrawingArea):
 		self.gc_selecao.set_foreground(self.cores[8])
 		
 		return True
+		
+    # set the new line size
+	def configure_line(self, widget, size = 2):
+	    self.gc_linha.set_line_attributes(size, gtk.gdk.LINE_SOLID, gtk.gdk.CAP_ROUND, gtk.gdk.JOIN_ROUND)
 
 	def expose(self, widget, event):		
 		area = event.area		
@@ -133,11 +137,12 @@ class Area(gtk.DrawingArea):
 						
 		if state & gtk.gdk.BUTTON1_MASK and self.pixmap != None:
 			if self.ferramenta == 3:
-				self.d.eraser(widget, coords)
+				self.d.desenhaBorracha(widget, coords)
 			if self.desenha:
 				# line
 				if self.ferramenta == 1:
 					print self.oldx
+					self.configure_line(widget)
 					self.d.desenhaLinha(widget, coords)	
 				# pencil
 				elif self.ferramenta == 2:

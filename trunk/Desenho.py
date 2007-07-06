@@ -14,12 +14,19 @@ HEIGHT = 900
 class Desenho:
 	def __init__(self, d_):		
 		self.d = d_
-	def desenhaLinha(self, widget, coords):				
+		
+	def desenhaLinha(self, widget, coords):	
+	    self.line(widget, coords)
+	
+	def line(self, widget, coords):		
 		self.d.pixmap_temp.draw_drawable(self.d.gc,self.d.pixmap,  0 , 0 ,0,0, WIDTH, HEIGHT)
 		self.d.pixmap_temp.draw_line(self.d.gc_linha,self.d.oldx,self.d.oldy,coords[0],coords[1])
 		self.d.newx = coords[0]	
 		self.d.newy = coords[1]
 		widget.queue_draw()
+	
+	def desenhaBorracha(self, widget, coords, size = 30, shape = 'circle'):
+	    self.eraser(widget, coords, size, shape)
 	
 	def eraser(self, widget, coords, size = 30, shape = 'circle'):
 		self.d.desenha = False
