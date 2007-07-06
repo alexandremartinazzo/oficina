@@ -38,6 +38,9 @@ class Desenho:
 		widget.queue_draw()
 		
 	def desenhaQuadrado(self, widget, coords):
+	    self.square(widget, coords)
+	
+	def square(self, widget, coords):
 		widget.queue_draw()		
 
 		if coords[0] > WIDTH:
@@ -78,6 +81,9 @@ class Desenho:
 		self.d.pixmap_temp.draw_rectangle(self.d.gc_linha, False ,self.d.newx,self.d.newy,self.d.newx_,self.d.newy_)
 		
 	def desenhaSelecao(self, widget, coords):
+	    self.selection(widget, coords)
+	
+	def selection(self, widget, coords):
 		widget.queue_draw()		
 
 		if coords[0] > WIDTH:
@@ -117,6 +123,9 @@ class Desenho:
 		self.d.pixmap_temp.draw_rectangle(self.d.gc_selecao, False ,self.d.newx,self.d.newy,self.d.newx_,self.d.newy_)
 
 	def desenhaCirculo(self, widget, coords):
+	    self.circle(widget, coords)
+	
+	def circle(self, widget, coords):
 		widget.queue_draw()	
 		
 		if coords[0] > WIDTH:
@@ -157,6 +166,9 @@ class Desenho:
 		self.d.pixmap_temp.draw_arc(self.d.gc, True, self.d.newx, self.d.newy, self.d.newx_,self.d.newy_, 0, 360*64)
 		self.d.pixmap_temp.draw_arc(self.d.gc_linha, False, self.d.newx, self.d.newy, self.d.newx_, self.d.newy_, 0, 360*64)
 	
+	def pencil(self, widget, coords):
+	    self.desenhaLapis(widget, coords)
+	
 	def desenhaLapis(self, widget, coords):
 		self.d.pixmap_temp.draw_drawable(self.d.gc,self.d.pixmap,  0 , 0 ,0,0, WIDTH, HEIGHT)
 		self.d.pixmap.draw_line(self.d.gc_linha,self.d.oldx,self.d.oldy,coords[0],coords[1])	
@@ -165,6 +177,9 @@ class Desenho:
 		widget.queue_draw()
 
 	def limpatudo(self):
+	    self.clear()
+	
+	def clear(self):
 		self.d.desenho = []
 		self.d.textos = []		
 		self.d.pixmap.draw_rectangle(self.d.get_style().white_gc, True,0, 0, WIDTH, HEIGHT)
@@ -172,6 +187,9 @@ class Desenho:
 		self.d.queue_draw()	
 
 	def Texto(self,widget,event):
+	    self.text(widget, event)
+	
+	def text(self,widget,event):
 		if self.d.estadoTexto == 0:
 			self.d.estadoTexto = 1
 			print event.x
@@ -220,6 +238,9 @@ class Desenho:
 		widget.queue_draw()
 		
 	def desenhaPoligono(self, widget, coords):
+	    self.polygon(widget, coords)
+	
+	def polygon(self, widget, coords):
 		self.d.pixmap_temp.draw_drawable(self.d.gc,self.d.pixmap,  0 , 0 ,0,0, WIDTH, HEIGHT)
 		if self.d.primeira == 1:
 			self.d.pixmap_temp.draw_line(self.d.gc_linha,self.d.oldx,self.d.oldy,coords[0],coords[1]) 

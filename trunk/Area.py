@@ -146,13 +146,16 @@ class Area(gtk.DrawingArea):
 					self.d.desenhaLinha(widget, coords)	
 				# pencil
 				elif self.ferramenta == 2:
-					self.d.desenhaLapis(widget, coords)		
+				    self.configure_line(widget)
+				    self.d.desenhaLapis(widget, coords)		
 				# circle
 				elif self.ferramenta == 5:
-					self.d.desenhaCirculo(widget,coords)	
+				    self.configure_line(widget)
+				    self.d.desenhaCirculo(widget,coords)	
 				# square
 				elif self.ferramenta == 6:
-					self.d.desenhaQuadrado(widget,coords)	
+				    self.configure_line(widget)
+				    self.d.desenhaQuadrado(widget,coords)	
 				# selection
 				elif self.ferramenta == 26 and not self.move:
 					self.d.desenhaSelecao(widget,coords)						
@@ -161,7 +164,8 @@ class Area(gtk.DrawingArea):
 					self.d.moveSelection(widget, coords)
 				#poligon	
 				elif self.ferramenta == 27:
-					self.d.desenhaPoligono(widget, coords)	
+				    self.configure_line(widget)
+				    self.d.desenhaPoligono(widget, coords)	
 		
 	def mouseup(self,widget,event):	
 		
