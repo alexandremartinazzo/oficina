@@ -76,6 +76,14 @@ class Area(gtk.DrawingArea):
 		self.font = pango.FontDescription('Sans 8')
 		#self.mensagem = Mensagens(self)
 		#self.mensagem.criaConexao()
+		
+		#start of UNDO and REDO
+		self.first_undo = True
+		#self.first_redo = False
+		self.undo_times = 0
+		self.redo_times = 0
+		self.undo_list=[]#pixmaps list to do Undo func
+		#self.redo_list=[]
 
 	# Create a new backing pixmap of the appropriate size
 	def configure_event(self, widget, event):		
@@ -157,16 +165,19 @@ class Area(gtk.DrawingArea):
 			if self.ferramenta == 1:
 				self.pixmap.draw_line(self.gc_linha,self.oldx,self.oldy, int (event.x), int(event.y))				
 				widget.queue_draw()
+				self.enableUndo(widget)
 			# circle
 			elif self.ferramenta == 5:
 				self.pixmap.draw_arc(self.gc, True, self.newx, self.newy, self.newx_, self.newy_, 0, 360*64)
 				self.pixmap.draw_arc(self.gc_linha, False, self.newx, self.newy, self.newx_, self.newy_, 0, 360*64)
 				widget.queue_draw()
+				self.enableUndo(widget)
 			# square
 			elif self.ferramenta == 6:
 				self.pixmap.draw_rectangle(self.gc, True, self.newx,self.newy, self.newx_,self.newy_)
 				self.pixmap.draw_rectangle(self.gc_linha, False, self.newx,self.newy, self.newx_,self.newy_)
 				widget.queue_draw()
+				self.enableUndo(widget)
 			# selection
 			elif self.ferramenta == 26:
 				if self.move == False:
@@ -178,7 +189,8 @@ class Area(gtk.DrawingArea):
 				elif self.move == True:		
 					self.pixmap.draw_drawable(self.gc, self.pixmap_temp, 0,0,0,0, WIDTH, HEIGHT)	
 					self.window.set_cursor(self.janela.cursorSelecao.cursor())	
-					self.move = False				
+					self.move = False
+					self.enableUndo(widget)				
 			# poligono
 			elif self.ferramenta == 27:
 				if self.primeira == 1:
@@ -194,11 +206,14 @@ class Area(gtk.DrawingArea):
 					if (self.dx < 20) & (self.dy < 20):
 						self.pixmap.draw_line(self.gc_linha,int (self.px), int (self.py), int (self.antx), int (self.anty))
 						self.primeira = 1
+						self.enableUndo(widget)
 					else:	
 						self.pixmap.draw_line(self.gc_linha,int (self.antx),int (self.anty), int (event.x), int( event.y ))
 					self.antx = event.x
 					self.anty = event.y
 				widget.queue_draw() 
+			elif self.ferramenta == 2:# or 3 or 4 check this before
+				self.enableUndo(widget)
 		self.desenha = False
 		
 	def mudacor(self, cor):
@@ -208,3 +223,55 @@ class Area(gtk.DrawingArea):
  	def mudacorlinha(self, cor):
 		self.cor_linha = cor	
 		self.gc_linha.set_foreground(self.cores[cor])
+		
+    #this func make a basic Undo
+	def undo(self,widget):
+		if self.first_undo:#if is the first time you click on UNDO
+			self.undo_times -= 1
+			self.redo_times = 1
+		elif self.first_redo and self.undo_times!=0:
+			self.undo_times += 1
+		
+		print "Undo no.%d" %(self.undo_times)
+		if self.undo_times >0 :	
+			self.undo_times -= 1
+			self.redo_times += 1
+						
+			self.pixmap.draw_drawable(self.gc, self.undo_list[self.undo_times], 0,0,0,0, WIDTH, HEIGHT)
+			self.queue_draw()
+			self.first_redo=False
+		else:	
+			self.undo_times = 0
+			#self.redo_times = 1
+			self.first_redo = True
+			self.d.limpatudo()#Undo the last action, so clear-all
+		self.first_undo=False
+		 
+	def redo(self,widget):
+		print "REDO no.%d" %(self.redo_times)
+		
+		if  (self.redo_times>0):
+			self.redo_times -= 1
+			self.undo_times += 1
+
+			
+			if self.first_redo:
+				self.undo_times -=1
+				if self.undo_times!=0:
+					self.redo_times +=1
+			self.first_redo=False
+			print "Desenhando cena undo[%d]" %(self.undo_times)
+			self.pixmap.draw_drawable(self.gc, self.undo_list[self.undo_times], 0,0,0,0, WIDTH, HEIGHT)
+			
+		self.queue_draw()
+			
+		   	
+	def enableUndo(self,widget):
+		if not self.first_undo and not self.first_redo:
+			self.undo_times += 1
+		self.undo_list.append(None)#alloc memory
+		self.undo_list[self.undo_times] = gtk.gdk.Pixmap(widget.window, WIDTH, HEIGHT, -1) #define type
+		self.undo_list[self.undo_times].draw_drawable(self.gc,self.pixmap,0,0,0,0, WIDTH, HEIGHT) #copy workarea
+		self.undo_times += 1
+		self.redo_times = 0	
+		self.first_undo = True
