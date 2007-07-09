@@ -1,0 +1,7 @@
+[Activity]
+name = Drawing
+activity_version = 1
+service_name = org.laptop.Oficina
+icon = activity-edit
+class = drawingactivity.OficinaActivity
+
