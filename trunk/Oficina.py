@@ -1,11 +1,10 @@
-# -*- coding: utf-8 -*-
 import  pygtk
 pygtk.require('2.0')
 import gtk
 from gtk import gdk
 import os
 
-from Cursores import Cursores
+from Cursors import Cursores
 from Botao import Botao
 from Area import Area
 
@@ -14,15 +13,14 @@ DRAW_HEIGHT = 900
 
 class Oficina:
 	def __init__(self):
-		self.window = gtk.Window()
-                self.window.set_size_request(DRAW_WIDTH,DRAW_HEIGHT)
+		#self.window = gtk.Window()
 
-		self.areaFixa = gtk.Fixed()
+		#self.areaFixa = gtk.Fixed()
 		#self.areaFixa.set_size_request(DRAW_WIDTH, DRAW_HEIGHT)
 
 		# cor de fundo da janela
-		color = gtk.gdk.color_parse("white")
-		self.window.modify_bg(gtk.STATE_NORMAL, color)
+		#color = gtk.gdk.color_parse("white")
+		#self.window.modify_bg(gtk.STATE_NORMAL, color)
 		
 		# imagem de fundo
 		#self.fundo = gtk.Image()
@@ -44,15 +42,9 @@ class Oficina:
 		self.area.ferramenta = 2
 		#self.areaFixa.put(self.area,0,0)
 
-                # create a Scrolled Window with automatic bars
-                self.scrolledWindow = gtk.ScrolledWindow()
-                self.scrolledWindow.set_policy(gtk.POLICY_AUTOMATIC,gtk.POLICY_AUTOMATIC)
-
-                self.areaFixa.put(self.area,0,0)
-		self.scrolledWindow.add_with_viewport(self.areaFixa)
-
 		# botoes de evento
 		# ferramentas
+		
 		botao = Botao(self.areaFixa)
 		botao.adicionaBotao('corlinha.png',-1,15,10,self.mousedown, "Cor Linha")
 		botao.adicionaBotao('balde.png',-2,15,40,self.mousedown, "Balde")
@@ -65,6 +57,7 @@ class Oficina:
 		botao.adicionaBotao('quadrado.png',6,20,320,self.mousedown, "Quadrado")
 		botao.adicionaBotao('vassoura.png',7,20,360,self.mousedown, "Vassoura")
 		# cor preenchimento
+		# deprecated
 		botao.adicionaBotao('roxo.png',8,210,42,self.mousedown, "Preenchimento Roxo")
 		botao.adicionaBotao('amarelo.png',9,54,40,self.mousedown, "Preenchimento Amarelo")
 		botao.adicionaBotao('preto.png',10,90,42,self.mousedown,  "Preenchimento Preto")
@@ -75,6 +68,7 @@ class Oficina:
 		botao.adicionaBotao('branco.png',15,240,40,self.mousedown, "Preenchimento Branco")
 		
 		# cor linha
+		# deprecated
 		botao.adicionaBotao('roxo.png',16,210,12,self.mousedown, "Linha Roxa")
 		botao.adicionaBotao('amarelo.png',17,54,10,self.mousedown, "Linha Amarela")
 		botao.adicionaBotao('preto.png',18,90,12,self.mousedown, "Linha Preta")
@@ -89,16 +83,18 @@ class Oficina:
 		botao.adicionaBotao('selecao.png',26,550,10,self.mousedown, "Selecao")
 		botao.adicionaBotao('poligono.png',27,70,95,self.mousedown, "Poligono")
 		
-		#self.window.add(self.areaFixa)
-                self.window.add(self.scrolledWindow)
+		self.window.add(self.areaFixa)
 		self.window.connect("destroy", gtk.main_quit)		
 		# desenho de texto
+		
 		self.entrada = gtk.Entry(max=50)
 		self.areaFixa.put(self.entrada,100,100)
-
+		
 		self.window.show_all()		
 		self.entrada.hide()
-		self.area.window.set_cursor(self.cursorLapis.cursor())
+		
+		#self.area.show()
+		#
 
 	def mousedown(self,widget,event, ferramenta):	
 		self.entrada.hide()

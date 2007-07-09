@@ -15,30 +15,21 @@ class Desenho:
 	def __init__(self, d_):		
 		self.d = d_
 		
-	def desenhaLinha(self, widget, coords):	
-	    self.line(widget, coords)
-	
 	def line(self, widget, coords):		
 		self.d.pixmap_temp.draw_drawable(self.d.gc,self.d.pixmap,  0 , 0 ,0,0, WIDTH, HEIGHT)
-		self.d.pixmap_temp.draw_line(self.d.gc_linha,self.d.oldx,self.d.oldy,coords[0],coords[1])
+		self.d.pixmap_temp.draw_line(self.d.gc_line,self.d.oldx,self.d.oldy,coords[0],coords[1])
 		self.d.newx = coords[0]	
 		self.d.newy = coords[1]
 		widget.queue_draw()
 	
-	def desenhaBorracha(self, widget, coords, size = 30, shape = 'circle'):
-	    self.eraser(widget, coords, size, shape)
-	
 	def eraser(self, widget, coords, size = 30, shape = 'circle'):
 		self.d.desenha = False
 		if(shape == 'circle'):
-			self.d.pixmap.draw_arc(self.d.gc_borracha, True, coords[0], coords[1], size, size, 0, 360*64)
-			self.d.pixmap_temp.draw_arc(self.d.gc_borracha, True, coords[0], coords[1], size, size, 0, 360*64)
+			self.d.pixmap.draw_arc(self.d.gc_eraser, True, coords[0], coords[1], size, size, 0, 360*64)
+			self.d.pixmap_temp.draw_arc(self.d.gc_eraser, True, coords[0], coords[1], size, size, 0, 360*64)
 		self.d.oldx = coords[0]
 		self.d.oldy = coords[1]
 		widget.queue_draw()
-		
-	def desenhaQuadrado(self, widget, coords):
-	    self.square(widget, coords)
 	
 	def square(self, widget, coords):
 		widget.queue_draw()		
@@ -77,12 +68,12 @@ class Desenho:
 				self.d.newy_ = self.d.oldy
 				
 		self.d.pixmap_temp.draw_drawable(self.d.gc,self.d.pixmap,  0 , 0 ,0,0, WIDTH, HEIGHT)
-		self.d.pixmap_temp.draw_rectangle(self.d.gc, True ,self.d.newx,self.d.newy,self.d.newx_,self.d.newy_)
-		self.d.pixmap_temp.draw_rectangle(self.d.gc_linha, False ,self.d.newx,self.d.newy,self.d.newx_,self.d.newy_)
-		
-	def desenhaSelecao(self, widget, coords):
-	    self.selection(widget, coords)
-	
+		if not self.d.marquee:	
+			self.d.pixmap_temp.draw_rectangle(self.d.gc, True ,self.d.newx,self.d.newy,self.d.newx_,self.d.newy_)
+			self.d.pixmap_temp.draw_rectangle(self.d.gc_line, False ,self.d.newx,self.d.newy,self.d.newx_,self.d.newy_)
+		else:
+			self.d.pixmap_temp.draw_rectangle(self.d.gc_marquee, False ,self.d.newx,self.d.newy,self.d.newx_,self.d.newy_)	
+
 	def selection(self, widget, coords):
 		widget.queue_draw()		
 
@@ -120,10 +111,8 @@ class Desenho:
 				self.d.newy_ = self.d.oldy
 				
 		self.d.pixmap_temp.draw_drawable(self.d.gc,self.d.pixmap,  0 , 0 ,0,0, WIDTH, HEIGHT)
-		self.d.pixmap_temp.draw_rectangle(self.d.gc_selecao, False ,self.d.newx,self.d.newy,self.d.newx_,self.d.newy_)
+		self.d.pixmap_temp.draw_rectangle(self.d.gc_selection, False ,self.d.newx,self.d.newy,self.d.newx_,self.d.newy_)
 
-	def desenhaCirculo(self, widget, coords):
-	    self.circle(widget, coords)
 	
 	def circle(self, widget, coords):
 		widget.queue_draw()	
@@ -162,32 +151,26 @@ class Desenho:
 				self.d.newy = 0
 				self.d.newy_ = self.d.oldy
 
-		self.d.pixmap_temp.draw_drawable(self.d.gc,self.d.pixmap,  0 , 0 ,0,0, WIDTH, HEIGHT)		
-		self.d.pixmap_temp.draw_arc(self.d.gc, True, self.d.newx, self.d.newy, self.d.newx_,self.d.newy_, 0, 360*64)
-		self.d.pixmap_temp.draw_arc(self.d.gc_linha, False, self.d.newx, self.d.newy, self.d.newx_, self.d.newy_, 0, 360*64)
+		self.d.pixmap_temp.draw_drawable(self.d.gc,self.d.pixmap,  0 , 0 ,0,0, WIDTH, HEIGHT)	
+		if not self.d.marquee:	
+			self.d.pixmap_temp.draw_arc(self.d.gc, True, self.d.newx, self.d.newy, self.d.newx_,self.d.newy_, 0, 360*64)
+			self.d.pixmap_temp.draw_arc(self.d.gc_line, False, self.d.newx, self.d.newy, self.d.newx_, self.d.newy_, 0, 360*64)
+		else:
+			self.d.pixmap_temp.draw_arc(self.d.gc_marquee, False, self.d.newx, self.d.newy, self.d.newx_, self.d.newy_, 0, 360*64)
 	
 	def pencil(self, widget, coords):
-	    self.desenhaLapis(widget, coords)
-	
-	def desenhaLapis(self, widget, coords):
 		self.d.pixmap_temp.draw_drawable(self.d.gc,self.d.pixmap,  0 , 0 ,0,0, WIDTH, HEIGHT)
-		self.d.pixmap.draw_line(self.d.gc_linha,self.d.oldx,self.d.oldy,coords[0],coords[1])	
+		self.d.pixmap.draw_line(self.d.gc_line,self.d.oldx,self.d.oldy,coords[0],coords[1])	
 		self.d.oldx = coords[0]
 		self.d.oldy = coords[1]
 		widget.queue_draw()
 
-	def limpatudo(self):
-	    self.clear()
-	
 	def clear(self):
 		self.d.desenho = []
 		self.d.textos = []		
 		self.d.pixmap.draw_rectangle(self.d.get_style().white_gc, True,0, 0, WIDTH, HEIGHT)
 		self.d.pixmap_temp.draw_rectangle(self.d.get_style().white_gc, True,0, 0, WIDTH, HEIGHT)
 		self.d.queue_draw()	
-
-	def Texto(self,widget,event):
-	    self.text(widget, event)
 	
 	def text(self,widget,event):
 		if self.d.estadoTexto == 0:
@@ -236,16 +219,13 @@ class Desenho:
 		self.d.pixmap_temp.draw_rectangle(self.d.get_style().white_gc, True, x0, x1, w, h)
 		self.d.pixmap_temp.draw_drawable(self.d.gc, self.d.pixmap, x0, x1, coords[0] - w/2, coords[1]- h/2, w, h)		
 		widget.queue_draw()
-		
-	def desenhaPoligono(self, widget, coords):
-	    self.polygon(widget, coords)
 	
 	def polygon(self, widget, coords):
 		self.d.pixmap_temp.draw_drawable(self.d.gc,self.d.pixmap,  0 , 0 ,0,0, WIDTH, HEIGHT)
 		if self.d.primeira == 1:
-			self.d.pixmap_temp.draw_line(self.d.gc_linha,self.d.oldx,self.d.oldy,coords[0],coords[1]) 
+			self.d.pixmap_temp.draw_line(self.d.gc_line,self.d.oldx,self.d.oldy,coords[0],coords[1]) 
 		else:
-			self.d.pixmap_temp.draw_line(self.d.gc_linha,int (self.d.antx), int (self.d.anty),coords[0],coords[1]) 
+			self.d.pixmap_temp.draw_line(self.d.gc_line,int (self.d.antx), int (self.d.anty),coords[0],coords[1]) 
 		self.d.newx = coords[0]     
 		self.d.newy = coords[1]		
 		widget.queue_draw() 

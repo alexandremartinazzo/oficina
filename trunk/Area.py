@@ -29,7 +29,7 @@ class Area(gtk.DrawingArea):
 
 		self.set_extension_events(gtk.gdk.EXTENSION_EVENTS_CURSOR)
 		
-		self.ferramenta = None
+		self.tool = None
 		self.desenha = False
 		self.move = False
 		self.connect("configure_event", self.configure_event)
@@ -47,25 +47,27 @@ class Area(gtk.DrawingArea):
 		"""
 		self.primeira = 1
 		self.gc = None
-		self.gc_linha = None
-		self.gc_borracha= None
-		self.gc_selecao= None
+		self.gc_line = None
+		self.gc_eraser = None
+		self.gc_selection = None
+		self.gc_marquee = None
 		self.pixmap = None	
 		self.pixmap_temp = None
 		self.desenho = []	
 		self.textos = []	
-		self.cor_ = 2
-		self.cor_linha = 2
+		self.color_ = 2
+		self.color_line = 2
 		self.estadoTexto = 0
 		self.janela = janela	
 		self.d = Desenho(self)
+		self.marquee = False
 
 		colormap = self.get_colormap()
 		
 		self.cores = [		
-		colormap.alloc_color('#ffaaff', True, True), # purple
-		colormap.alloc_color('#f4ee56', True, True), # yellow
 		colormap.alloc_color('#000000', True, True), # black
+		colormap.alloc_color('#ee33ee', True, True), # purple
+		colormap.alloc_color('#f4ee56', True, True), # yellow		
 		colormap.alloc_color('#45a5dc', True, True), # blue
 		colormap.alloc_color('#44aa44', True, True), # green
 		colormap.alloc_color('#dd5555', True, True), # red
@@ -97,21 +99,24 @@ class Area(gtk.DrawingArea):
 		self.pixmap_temp.draw_rectangle(widget.get_style().white_gc, True, 0, 0, width, height)
 		
 		self.gc = widget.window.new_gc()	
-		self.gc_borracha = widget.window.new_gc()		
-		self.gc_borracha.set_foreground(self.cores[7])
+		self.gc_eraser = widget.window.new_gc()		
+		self.gc_eraser.set_foreground(self.cores[7])
+
 		
-		self.gc_linha = widget.window.new_gc()	
-		self.gc_linha.set_line_attributes(2, gtk.gdk.LINE_SOLID, gtk.gdk.CAP_ROUND, gtk.gdk.JOIN_ROUND)
+		self.gc_line = widget.window.new_gc()	
+
+		self.gc_marquee = widget.window.new_gc()	
+		self.gc_marquee.set_line_attributes(2, gtk.gdk.LINE_ON_OFF_DASH, gtk.gdk.CAP_ROUND, gtk.gdk.JOIN_ROUND)
 		
-		self.gc_selecao = widget.window.new_gc()	
-		self.gc_selecao.set_line_attributes(1, gtk.gdk.LINE_ON_OFF_DASH, gtk.gdk.CAP_ROUND, gtk.gdk.JOIN_ROUND)
-		self.gc_selecao.set_foreground(self.cores[8])
+		self.gc_selection = widget.window.new_gc()	
+		self.gc_selection.set_line_attributes(1, gtk.gdk.LINE_ON_OFF_DASH, gtk.gdk.CAP_ROUND, gtk.gdk.JOIN_ROUND)
+		self.gc_selection.set_foreground(self.cores[8])
 		
 		return True
 		
     # set the new line size
 	def configure_line(self, widget, size = 2):
-	    self.gc_linha.set_line_attributes(size, gtk.gdk.LINE_SOLID, gtk.gdk.CAP_ROUND, gtk.gdk.JOIN_ROUND)
+	    self.gc_line.set_line_attributes(size, gtk.gdk.LINE_SOLID, gtk.gdk.CAP_ROUND, gtk.gdk.JOIN_ROUND)
 
 	def expose(self, widget, event):		
 		area = event.area		
@@ -123,9 +128,9 @@ class Area(gtk.DrawingArea):
 
 	def mousedown(self,widget,event): 		
 		# text
-		if self.ferramenta == 4:
+		if self.tool == 4:
 			self.d.Texto(widget,event)
-		if not self.move or self.ferramenta != 26:
+		if not self.move or self.tool != 26:
 			self.oldx = int(event.x)
 			self.oldy = int(event.y)	
 			
@@ -136,59 +141,65 @@ class Area(gtk.DrawingArea):
 		coords = int(x), int(y)
 						
 		if state & gtk.gdk.BUTTON1_MASK and self.pixmap != None:
-			if self.ferramenta == 3:
-				self.d.desenhaBorracha(widget, coords)
+			if self.tool == 3:
+				self.d.eraser(widget, coords)
 			if self.desenha:
 				# line
-				if self.ferramenta == 1:
+				if self.tool == 1:
 					print self.oldx
 					self.configure_line(widget)
-					self.d.desenhaLinha(widget, coords)	
+					self.d.line(widget, coords)	
 				# pencil
-				elif self.ferramenta == 2:
+				elif self.tool == 2:
 				    self.configure_line(widget)
-				    self.d.desenhaLapis(widget, coords)		
+				    self.d.pencil(widget, coords)		
 				# circle
-				elif self.ferramenta == 5:
+				elif self.tool == 5:
 				    self.configure_line(widget)
-				    self.d.desenhaCirculo(widget,coords)	
+				    self.d.circle(widget,coords)	
 				# square
-				elif self.ferramenta == 6:
+				elif self.tool == 6:
 				    self.configure_line(widget)
-				    self.d.desenhaQuadrado(widget,coords)	
+				    self.d.square(widget,coords)	
 				# selection
-				elif self.ferramenta == 26 and not self.move:
-					self.d.desenhaSelecao(widget,coords)						
+				elif self.tool == 26 and not self.move:
+					self.d.selection(widget,coords)						
 				# selection
-				elif self.ferramenta == 26 and self.move:
+				elif self.tool == 26 and self.move:
 					self.d.moveSelection(widget, coords)
 				#poligon	
-				elif self.ferramenta == 27:
+				elif self.tool == 27:
 				    self.configure_line(widget)
-				    self.d.desenhaPoligono(widget, coords)	
+				    self.d.polygon(widget, coords)	
 		
 	def mouseup(self,widget,event):	
 		
 		if self.desenha:
 			# line
-			if self.ferramenta == 1:
-				self.pixmap.draw_line(self.gc_linha,self.oldx,self.oldy, int (event.x), int(event.y))				
+			if self.tool == 1:
+				self.pixmap.draw_line(self.gc_line,self.oldx,self.oldy, int (event.x), int(event.y))				
 				widget.queue_draw()
 				self.enableUndo(widget)
 			# circle
-			elif self.ferramenta == 5:
-				self.pixmap.draw_arc(self.gc, True, self.newx, self.newy, self.newx_, self.newy_, 0, 360*64)
-				self.pixmap.draw_arc(self.gc_linha, False, self.newx, self.newy, self.newx_, self.newy_, 0, 360*64)
+			elif self.tool == 5:
+				if not self.marquee:	
+					self.pixmap.draw_arc(self.gc, True, self.newx, self.newy, self.newx_, self.newy_, 0, 360*64)
+					self.pixmap.draw_arc(self.gc_line, False, self.newx, self.newy, self.newx_, self.newy_, 0, 360*64)
+				else:
+					self.pixmap.draw_arc(self.gc_marquee, False, self.newx, self.newy, self.newx_, self.newy_, 0, 360*64)
 				widget.queue_draw()
 				self.enableUndo(widget)
 			# square
-			elif self.ferramenta == 6:
-				self.pixmap.draw_rectangle(self.gc, True, self.newx,self.newy, self.newx_,self.newy_)
-				self.pixmap.draw_rectangle(self.gc_linha, False, self.newx,self.newy, self.newx_,self.newy_)
+			elif self.tool == 6:
+				if not self.marquee:	
+					self.pixmap.draw_rectangle(self.gc, True, self.newx,self.newy, self.newx_,self.newy_)
+					self.pixmap.draw_rectangle(self.gc_line, False, self.newx,self.newy, self.newx_,self.newy_)
+				else:
+					self.pixmap.draw_rectangle(self.gc_marquee, False, self.newx,self.newy, self.newx_,self.newy_)
 				widget.queue_draw()
 				self.enableUndo(widget)
 			# selection
-			elif self.ferramenta == 26:
+			elif self.tool == 26:
 				if self.move == False:
 					self.pixmap_temp.draw_drawable(self.gc,self.pixmap,  0 , 0 ,0,0, WIDTH, HEIGHT)
 					self.move = True
@@ -197,13 +208,13 @@ class Area(gtk.DrawingArea):
 					self.window.set_cursor(self.janela.cursorMove.cursor())
 				elif self.move == True:		
 					self.pixmap.draw_drawable(self.gc, self.pixmap_temp, 0,0,0,0, WIDTH, HEIGHT)	
-					self.window.set_cursor(self.janela.cursorSelecao.cursor())	
+					self.window.set_cursor(self.janela.cursorselection.cursor())	
 					self.move = False
 					self.enableUndo(widget)				
-			# poligono
-			elif self.ferramenta == 27:
+			# polygon
+			elif self.tool == 27:
 				if self.primeira == 1:
-					self.pixmap.draw_line(self.gc_linha,self.oldx,self.oldy, int (event.x), int( event.y ))
+					self.pixmap.draw_line(self.gc_line,self.oldx,self.oldy, int (event.x), int( event.y ))
 					self.antx = event.x
 					self.anty = event.y
 					self.px = self.oldx
@@ -213,31 +224,25 @@ class Area(gtk.DrawingArea):
 					self.dx = math.fabs(event.x - self.px)
 					self.dy = math.fabs(event.y - self.py)
 					if (self.dx < 20) & (self.dy < 20):
-						self.pixmap.draw_line(self.gc_linha,int (self.px), int (self.py), int (self.antx), int (self.anty))
+						self.pixmap.draw_line(self.gc_line,int (self.px), int (self.py), int (self.antx), int (self.anty))
 						self.primeira = 1
 						self.enableUndo(widget)
 					else:	
-						self.pixmap.draw_line(self.gc_linha,int (self.antx),int (self.anty), int (event.x), int( event.y ))
+						self.pixmap.draw_line(self.gc_line,int (self.antx),int (self.anty), int (event.x), int( event.y ))
 					self.antx = event.x
 					self.anty = event.y
 				widget.queue_draw() 
-			elif self.ferramenta == 2:# or 3 or 4 check this before
+			elif self.tool == 2:# or 3 or 4 check this before
 				self.enableUndo(widget)
 		self.desenha = False
 		
-	def mudacor(self, cor):
-		self.cor_ = cor		
-		self.gc.set_foreground(self.cores[cor])
- 
- 	def mudacorlinha(self, cor):
-		self.cor_linha = cor	
-		self.gc_linha.set_foreground(self.cores[cor])
 		
     #this func make a basic Undo
 	def undo(self,widget):
 		if self.first_undo:#if is the first time you click on UNDO
 			self.undo_times -= 1
 			self.redo_times = 1
+		"""
 		elif self.first_redo and self.undo_times!=0:
 			self.undo_times += 1
 		
@@ -255,6 +260,7 @@ class Area(gtk.DrawingArea):
 			self.first_redo = True
 			self.d.limpatudo()#Undo the last action, so clear-all
 		self.first_undo=False
+		"""
 		 
 	def redo(self,widget):
 		print "REDO no.%d" %(self.redo_times)
@@ -278,9 +284,32 @@ class Area(gtk.DrawingArea):
 	def enableUndo(self,widget):
 		if not self.first_undo and not self.first_redo:
 			self.undo_times += 1
+		"""
 		self.undo_list.append(None)#alloc memory
 		self.undo_list[self.undo_times] = gtk.gdk.Pixmap(widget.window, WIDTH, HEIGHT, -1) #define type
 		self.undo_list[self.undo_times].draw_drawable(self.gc,self.pixmap,0,0,0,0, WIDTH, HEIGHT) #copy workarea
 		self.undo_times += 1
 		self.redo_times = 0	
 		self.first_undo = True
+		"""
+
+	def _set_marquee(self):
+		self.marquee = True
+
+	def _set_not_marquee(self):
+		self.marquee = False
+
+	def _set_fill_color(self, color):
+		self.color_ = color		
+		self.gc.set_foreground(self.cores[color])
+ 
+ 	def _set_stroke_color(self, color):
+		if self.marquee:
+			self.color_line_marquee = color	
+			self.gc_marquee.set_foreground(self.cores[color])
+			self.gc_marquee.set_line_attributes(1, gtk.gdk.LINE_ON_OFF_DASH, gtk.gdk.CAP_ROUND, gtk.gdk.JOIN_ROUND)
+		else:
+			self.color_line = color	
+			self.gc_line.set_foreground(self.cores[color])
+			self.gc_line.set_line_attributes(1, gtk.gdk.LINE_ON_OFF_DASH, gtk.gdk.CAP_ROUND, gtk.gdk.JOIN_ROUND)
+  
