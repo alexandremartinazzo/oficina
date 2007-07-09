@@ -10,8 +10,8 @@ from toolbox import Toolbox
 from Area import Area
 from Cursors import Cursors
 
-DRAW_WIDTH  = 1200
-DRAW_HEIGHT = 900
+DRAW_WIDTH  = 1195
+DRAW_HEIGHT = 780
 
 class OficinaActivity(activity.Activity):
     def __init__(self, handle):

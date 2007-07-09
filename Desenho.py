@@ -8,8 +8,8 @@ import math
 import pango
 
 
-WIDTH = 1200
-HEIGHT = 900
+WIDTH = 1195
+HEIGHT = 780
 
 class Desenho:
 	def __init__(self, d_):		
@@ -67,12 +67,10 @@ class Desenho:
 				self.d.newy = 0
 				self.d.newy_ = self.d.oldy
 				
-		self.d.pixmap_temp.draw_drawable(self.d.gc,self.d.pixmap,  0 , 0 ,0,0, WIDTH, HEIGHT)
-		if not self.d.marquee:	
-			self.d.pixmap_temp.draw_rectangle(self.d.gc, True ,self.d.newx,self.d.newy,self.d.newx_,self.d.newy_)
-			self.d.pixmap_temp.draw_rectangle(self.d.gc_line, False ,self.d.newx,self.d.newy,self.d.newx_,self.d.newy_)
-		else:
-			self.d.pixmap_temp.draw_rectangle(self.d.gc_marquee, False ,self.d.newx,self.d.newy,self.d.newx_,self.d.newy_)	
+		self.d.pixmap_temp.draw_drawable(self.d.gc,self.d.pixmap,  0 , 0 ,0,0, WIDTH, HEIGHT)		
+		self.d.pixmap_temp.draw_rectangle(self.d.gc, True ,self.d.newx,self.d.newy,self.d.newx_,self.d.newy_)
+		self.d.pixmap_temp.draw_rectangle(self.d.gc_line, False ,self.d.newx,self.d.newy,self.d.newx_,self.d.newy_)
+
 
 	def selection(self, widget, coords):
 		widget.queue_draw()		
@@ -152,11 +150,9 @@ class Desenho:
 				self.d.newy_ = self.d.oldy
 
 		self.d.pixmap_temp.draw_drawable(self.d.gc,self.d.pixmap,  0 , 0 ,0,0, WIDTH, HEIGHT)	
-		if not self.d.marquee:	
-			self.d.pixmap_temp.draw_arc(self.d.gc, True, self.d.newx, self.d.newy, self.d.newx_,self.d.newy_, 0, 360*64)
-			self.d.pixmap_temp.draw_arc(self.d.gc_line, False, self.d.newx, self.d.newy, self.d.newx_, self.d.newy_, 0, 360*64)
-		else:
-			self.d.pixmap_temp.draw_arc(self.d.gc_marquee, False, self.d.newx, self.d.newy, self.d.newx_, self.d.newy_, 0, 360*64)
+		self.d.pixmap_temp.draw_arc(self.d.gc, True, self.d.newx, self.d.newy, self.d.newx_,self.d.newy_, 0, 360*64)
+		self.d.pixmap_temp.draw_arc(self.d.gc_line, False, self.d.newx, self.d.newy, self.d.newx_, self.d.newy_, 0, 360*64)		
+
 	
 	def pencil(self, widget, coords):
 		self.d.pixmap_temp.draw_drawable(self.d.gc,self.d.pixmap,  0 , 0 ,0,0, WIDTH, HEIGHT)
