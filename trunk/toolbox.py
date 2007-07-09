@@ -66,7 +66,7 @@ class ToolsToolbar(gtk.Toolbar):
     _TOOL_BUCKET = 2
     _TOOL_MARQUEE_ELLIPTICAL = 5
     _TOOL_MARQUEE_FREEFORM = 2
-    _TOOL_MARQUEE_RECTANGULAR = 6
+    _TOOL_MARQUEE_RECTANGULAR = 26
     _TOOL_MARQUEE_SMART = 2
 
     
@@ -486,10 +486,11 @@ def set_tool(widget, activity, data=None, tool=None):
         activity._area._set_not_marquee()
         
     elif data == 'tool-marquee-rectangular':    
-	activity._area._set_marquee()
+        pix = gtk.gdk.pixbuf_new_from_file("./images/selecao_cursor.png")
+        cursor = gtk.gdk.Cursor(gtk.gdk.display_get_default() , pix, 6, 21)
 
     elif data == 'tool-marquee-elliptical':  
-	activity._area._set_marquee()
+	pass
 
     elif data == '':
         pix = gtk.gdk.pixbuf_new_from_file("./images/linha_cursor.png")

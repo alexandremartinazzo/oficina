@@ -10,7 +10,7 @@ import pango
 from Desenho import Desenho
 
 WIDTH = 1195
-HEIGHT = 895
+HEIGHT = 780
 
 class Area(gtk.DrawingArea):
 	def __init__(self, janela):		
@@ -50,7 +50,6 @@ class Area(gtk.DrawingArea):
 		self.gc_line = None
 		self.gc_eraser = None
 		self.gc_selection = None
-		self.gc_marquee = None
 		self.pixmap = None	
 		self.pixmap_temp = None
 		self.desenho = []	
@@ -60,7 +59,6 @@ class Area(gtk.DrawingArea):
 		self.estadoTexto = 0
 		self.janela = janela	
 		self.d = Desenho(self)
-		self.marquee = False
 
 		colormap = self.get_colormap()
 		
@@ -105,9 +103,6 @@ class Area(gtk.DrawingArea):
 		
 		self.gc_line = widget.window.new_gc()	
 
-		self.gc_marquee = widget.window.new_gc()	
-		self.gc_marquee.set_line_attributes(2, gtk.gdk.LINE_ON_OFF_DASH, gtk.gdk.CAP_ROUND, gtk.gdk.JOIN_ROUND)
-		
 		self.gc_selection = widget.window.new_gc()	
 		self.gc_selection.set_line_attributes(1, gtk.gdk.LINE_ON_OFF_DASH, gtk.gdk.CAP_ROUND, gtk.gdk.JOIN_ROUND)
 		self.gc_selection.set_foreground(self.cores[8])
@@ -182,20 +177,16 @@ class Area(gtk.DrawingArea):
 				self.enableUndo(widget)
 			# circle
 			elif self.tool == 5:
-				if not self.marquee:	
-					self.pixmap.draw_arc(self.gc, True, self.newx, self.newy, self.newx_, self.newy_, 0, 360*64)
-					self.pixmap.draw_arc(self.gc_line, False, self.newx, self.newy, self.newx_, self.newy_, 0, 360*64)
-				else:
-					self.pixmap.draw_arc(self.gc_marquee, False, self.newx, self.newy, self.newx_, self.newy_, 0, 360*64)
+				self.pixmap.draw_arc(self.gc, True, self.newx, self.newy, self.newx_, self.newy_, 0, 360*64)
+				self.pixmap.draw_arc(self.gc_line, False, self.newx, self.newy, self.newx_, self.newy_, 0, 360*64)
+
 				widget.queue_draw()
 				self.enableUndo(widget)
 			# square
-			elif self.tool == 6:
-				if not self.marquee:	
-					self.pixmap.draw_rectangle(self.gc, True, self.newx,self.newy, self.newx_,self.newy_)
-					self.pixmap.draw_rectangle(self.gc_line, False, self.newx,self.newy, self.newx_,self.newy_)
-				else:
-					self.pixmap.draw_rectangle(self.gc_marquee, False, self.newx,self.newy, self.newx_,self.newy_)
+			elif self.tool == 6:	
+				self.pixmap.draw_rectangle(self.gc, True, self.newx,self.newy, self.newx_,self.newy_)
+				self.pixmap.draw_rectangle(self.gc_line, False, self.newx,self.newy, self.newx_,self.newy_)
+
 				widget.queue_draw()
 				self.enableUndo(widget)
 			# selection
@@ -293,23 +284,12 @@ class Area(gtk.DrawingArea):
 		self.first_undo = True
 		"""
 
-	def _set_marquee(self):
-		self.marquee = True
-
-	def _set_not_marquee(self):
-		self.marquee = False
-
 	def _set_fill_color(self, color):
 		self.color_ = color		
 		self.gc.set_foreground(self.cores[color])
  
  	def _set_stroke_color(self, color):
-		if self.marquee:
-			self.color_line_marquee = color	
-			self.gc_marquee.set_foreground(self.cores[color])
-			self.gc_marquee.set_line_attributes(1, gtk.gdk.LINE_ON_OFF_DASH, gtk.gdk.CAP_ROUND, gtk.gdk.JOIN_ROUND)
-		else:
-			self.color_line = color	
-			self.gc_line.set_foreground(self.cores[color])
-			self.gc_line.set_line_attributes(1, gtk.gdk.LINE_ON_OFF_DASH, gtk.gdk.CAP_ROUND, gtk.gdk.JOIN_ROUND)
+		self.color_line = color	
+		self.gc_line.set_foreground(self.cores[color])
+		self.gc_line.set_line_attributes(1, gtk.gdk.LINE_ON_OFF_DASH, gtk.gdk.CAP_ROUND, gtk.gdk.JOIN_ROUND)
   
