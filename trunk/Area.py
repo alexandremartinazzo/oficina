@@ -39,7 +39,7 @@ class Area(gtk.DrawingArea):
 		self.newy = 0
 		self.newx_ = 0
 		self.newy_ = 0
-		self.poligon_start = True
+		self.primeira = 1
 		self.gc = None
 		self.gc_line = None
 		self.gc_eraser = None
@@ -199,66 +199,27 @@ class Area(gtk.DrawingArea):
 					self.move = False
 					self.enableUndo(widget)				
 			# polygon
-			elif self.ferramenta == 27:
-				if self.polygon_start:
-					self.pixmap.draw_line(self.gc_linha,self.oldx,self.oldy, int (event.x), int( event.y ))
-					self.last_x = event.x
-					self.last_y = event.y
-					self.first_x = self.oldx
-					self.first_y = self.oldy
-					self.polygon_start = False
+			elif self.tool == 27:
+				if self.primeira == 1:
+					self.pixmap.draw_line(self.gc_line,self.oldx,self.oldy, int (event.x), int( event.y ))
+					self.antx = event.x
+					self.anty = event.y
+					self.px = self.oldx
+					self.py = self.oldy
+					self.primeira = 0
 				else:
-					self.dx = math.fabs(event.x - self.first_x)
-					self.dy = math.fabs(event.y - self.first_y)
+					self.dx = math.fabs(event.x - self.px)
+					self.dy = math.fabs(event.y - self.py)
 					if (self.dx < 20) & (self.dy < 20):
-						self.pixmap.draw_line(self.gc_line,int (self.first_x), int (self.first_y), int (self.last_x), int (self.last_y))
-						self.polygon_start = True
+						self.pixmap.draw_line(self.gc_line,int (self.px), int (self.py), int (self.antx), int (self.anty))
+						self.primeira = 1
 						self.enableUndo(widget)
 					else:	
-						self.pixmap.draw_line(self.gc_line,int (self.last_x),int (self.last_y), int (event.x), int( event.y ))
-					self.last_x = event.x
-					self.last_y = event.y
-				widget.queue_draw()
-
+						self.pixmap.draw_line(self.gc_line,int (self.antx),int (self.anty), int (event.x), int( event.y ))
+					self.antx = event.x
+					self.anty = event.y
+				widget.queue_draw() 
 			elif self.tool == 2:# or 3 or 4 check this before
-				self.enableUndo(widget)
-
-			#flood fill
-			elif self.ferramenta == 28:
-				self.color_dec = 0
-				self.x_current = int (event.x)
-				self.y_current = int (event.y)
-				self.imagem = self.pixmap.get_image(0,0, WIDTH, HEIGHT)
-				self.color_start = self.imagem.get_pixel(self.x_current, self.y_current)
-				if self.color_start != self.color_dec:
-					self.list_x = [self.x_current]
-					self.list_y = [self.y_current]
-					self.imagem.put_pixel(self.x_current,self.y_current,self.color_dec)
-					while len(self.list_x) > 0:
-						if self.x_current+1 < WIDTH:
-							if self.imagem.get_pixel(self.x_current+1, self.y_current) == self.color_start:
-								self.imagem.put_pixel(self.x_current+1, self.y_current, self.color_dec)
-								self.list_x.append(self.x_current+1)
-								self.list_y.append(self.y_current)
-						if self.x_current-1 >= 0:
-							if self.imagem.get_pixel(self.x_current -1, self.y_current) == self.color_start:
-								self.imagem.put_pixel(self.x_current-1, self.y_current, self.color_dec)
-								self.list_x.append(self.x_current-1)
-								self.list_y.append(self.y_current)
-						if self.y_current+1 < HEIGHT:
-							if self.imagem.get_pixel(self.x_current, self.y_current+1) == self.color_start:
-								self.imagem.put_pixel(self.x_current, self.y_current+1, self.color_dec)
-								self.list_x.append(self.x_current)
-								self.list_y.append(self.y_current+1)
-						if self.y_current-1 >= 0:
-							if self.imagem.get_pixel(self.x_current, self.y_current-1) == self.color_start:
-								self.imagem.put_pixel(self.x_current, self.y_current-1, self.color_dec)
-								self.list_x.append(self.x_current)
-								self.list_y.append(self.y_current-1)
-						self.x_current = self.list_x.pop()
-						self.y_current = self.list_y.pop()
-					self.pixmap.draw_image(self.gc,self.imagem,0,0,0,0,WIDTH, HEIGHT)
-					widget.queue_draw()
 				self.enableUndo(widget)
 		self.desenha = False
 		
