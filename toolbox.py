@@ -104,27 +104,27 @@ class ToolsToolbar(gtk.Toolbar):
         self._tool_bucket = ToolButton('tool-bucket')
         self.insert(self._tool_bucket, -1)
         self._tool_bucket.show()
-        self._tool_bucket.set_tooltip(_('bucket'))
+        self._tool_bucket.set_tooltip(_('Bucket'))
 
         self._tool_marquee_elliptical = ToolButton('tool-marquee-elliptical')
         self.insert(self._tool_marquee_elliptical, -1)
         self._tool_marquee_elliptical.show()
-        self._tool_marquee_elliptical.set_tooltip(_('tool-marquee-elliptical'))
+        self._tool_marquee_elliptical.set_tooltip(_('Elliptical Marquee'))
 
         self._tool_marquee_freeform = ToolButton('tool-marquee-freeform')
         self.insert(self._tool_marquee_freeform, -1)
         self._tool_marquee_freeform.show()
-        self._tool_marquee_freeform.set_tooltip(_('tool-marquee-freeform'))
+        self._tool_marquee_freeform.set_tooltip(_('Freeform Marquee'))
 
         self._tool_marquee_smart = ToolButton('tool-marquee-smart')
         self.insert(self._tool_marquee_smart, -1)
         self._tool_marquee_smart.show()
-        self._tool_marquee_smart.set_tooltip(_('tool-marquee-smart'))
+        self._tool_marquee_smart.set_tooltip(_('Smart Marquee'))
 
         self._tool_marquee_rectangular = ToolButton('tool-marquee-rectangular')
         self.insert(self._tool_marquee_rectangular, -1)
         self._tool_marquee_rectangular.show()
-        self._tool_marquee_rectangular.set_tooltip(_('tool-marquee-rectangular'))
+        self._tool_marquee_rectangular.set_tooltip(_('Rectangular Marquee'))
 
         self._tool_pencil.connect('clicked', set_tool, activity, 'tool-pencil', self._TOOL_PENCIL)
         self._tool_brush.connect('clicked', set_tool, activity, 'tool-brush', self._TOOL_BRUSH)
@@ -154,7 +154,7 @@ class ComboFillColors(ToolComboBox):
 
         self._fill_color = self.combo
         self._fill_color.append_item(self._ACTION_BLACK, _('Black'))
-	self._fill_color.append_item(self._ACTION_PURPLE, _('Purple'))
+        self._fill_color.append_item(self._ACTION_PURPLE, _('Purple'))
         self._fill_color.append_item(self._ACTION_YELLOW, _('Yellow'))        
         self._fill_color.append_item(self._ACTION_BLUE, _('Blue'))
         self._fill_color.append_item(self._ACTION_GREEN, _('Green')) 
@@ -163,13 +163,16 @@ class ComboFillColors(ToolComboBox):
         self._fill_color.append_item(self._ACTION_WHITE, _('White'))
 
         self._fill_color.set_active(0)
-        self._fill_color.connect('changed', self._combo_changed_cb)
+        #self._fill_color.connect('changed', self._combo_changed_cb)
+        self._fill_color.connect('changed', self.set_fill_color)
 
-    def _combo_changed_cb(self, combo):
-        set_fill_color(self._activity, combo.get_active())   
-        print 'combo ativo' + str(combo.get_active())       
+#     def _combo_changed_cb(self, combo):
+#         set_fill_color(self._activity, combo.get_active())   
+#         print 'combo ativo' + str(combo.get_active())       
 
-
+    def set_fill_color(self, combo):
+        color = combo.get_active()
+        self._activity._area._set_fill_color(color)
 
 
 
@@ -188,7 +191,8 @@ class ComboStrokeColors(ToolComboBox):
         ToolComboBox.__init__(self)
         self._stroke_color = self.combo
         self._activity = activity
-	self._stroke_color.append_item(self._ACTION_BLACK, _('Black'))
+        
+        self._stroke_color.append_item(self._ACTION_BLACK, _('Black'))
         self._stroke_color.append_item(self._ACTION_PURPLE, _('Purple'))
         self._stroke_color.append_item(self._ACTION_YELLOW, _('Yellow'))
         self._stroke_color.append_item(self._ACTION_BLUE, _('Blue'))
@@ -198,12 +202,16 @@ class ComboStrokeColors(ToolComboBox):
         self._stroke_color.append_item(self._ACTION_WHITE, _('White'))
 
         self._stroke_color.set_active(0)
-        self._stroke_color.connect('changed', self._combo_changed_cb)
+        #self._stroke_color.connect('changed', self._combo_changed_cb)
+        self._stroke_color.connect('changed', self.set_stroke_color)
 
-    def _combo_changed_cb(self, combo):
-        set_stroke_color(self._activity, combo.get_active())
-        print 'combo ativo' + str(combo.get_active())     
-	
+#     def _combo_changed_cb(self, combo):
+#         set_stroke_color(self._activity, combo.get_active())
+#         print 'combo ativo' + str(combo.get_active())     
+        
+    def set_stroke_color(self, combo):
+        color = combo.get_active()
+        self._activity._area._set_stroke_color(color)
 
 class ShapesToolbar(gtk.Toolbar):
 
@@ -357,36 +365,55 @@ class ImageToolbar(gtk.Toolbar):
         self._object_insert.set_tooltip(_('object-insert'))
         
         separator = gtk.SeparatorToolItem()
+        separator.set_draw(True)
         self.insert(separator, -1)
         separator.show()
         
         self._object_rotate_left = ToolButton('object-rotate-left')
         self.insert(self._object_rotate_left, -1)
         self._object_rotate_left.show()
-        self._object_rotate_left.set_tooltip(_('object-rotate-left'))
+        self._object_rotate_left.set_tooltip(_('Rotate Left'))
 
         self._object_rotate_right = ToolButton('object-rotate-right')
         self.insert(self._object_rotate_right, -1)
         self._object_rotate_right.show()
-        self._object_rotate_right.set_tooltip(_('object-rotate-right'))
+        self._object_rotate_right.set_tooltip(_('Rotate Right'))
         
         self._object_height = ToolButton('object-height')
         self.insert(self._object_height, -1)
         self._object_height.show()
         self._object_height.connect('clicked', test_connect, activity, 'object-height')
-        self._object_height.set_tooltip(_('object-height'))           
+        self._object_height.set_tooltip(_('Height'))           
 
         self._object_width = ToolButton('object-width')
         self.insert(self._object_width, -1)
         self._object_width.show()
-        self._object_width.set_tooltip(_('object-width'))
+        self._object_width.set_tooltip(_('Width'))
 
         self._object_height.connect('clicked', set_tool, activity, 'object-height', self._OBJECT_HEIGHT)
-        self._object_insert.connect('clicked', insertImage, activity)
+        #self._object_insert.connect('clicked', insertImage, activity)
+        self._object_insert.connect('clicked', self.insertImage, activity)
         self._object_rotate_left.connect('clicked', set_tool, activity, 'object-rotate-left', self._OBJECT_ROTATE_LEFT)
         self._object_rotate_right.connect('clicked', set_tool, activity, 'object-rotate-right', self._OBJECT_ROTATE_RIGHT)
         self._object_width.connect('clicked', set_tool, activity, 'object-width', self._OBJECT_WIDTH)
-            
+    
+    def insertImage(self, widget, activity):
+        dialog = gtk.FileChooserDialog(title=(_('Open File...')),   
+                     action=gtk.FILE_CHOOSER_ACTION_OPEN,   
+                     buttons=(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,   
+                     gtk.STOCK_OK, gtk.RESPONSE_OK)) 
+        dialog.show_all()			
+        response = dialog.run()
+        if response == gtk.RESPONSE_OK:
+            print dialog.get_filename(), 'selected'
+            #gtk28 = False 
+            file_path = dialog.get_filename()
+            #file_path = decode_path((file_path,))[0]
+            #open(activity, file_path)
+            activity._area.d.loadImage(file_path)
+        elif response == gtk.RESPONSE_CANCEL:
+            print 'Closed, no files selected'
+        dialog.destroy()
 
 class EffectsToolbar(gtk.Toolbar):
 
@@ -490,7 +517,7 @@ def set_tool(widget, activity, data=None, tool=None):
         cursor = gtk.gdk.Cursor(gtk.gdk.display_get_default() , pix, 6, 21)
 
     elif data == 'tool-marquee-elliptical':  
-	pass
+        pass
 
     elif data == '':
         pix = gtk.gdk.pixbuf_new_from_file("./images/linha_cursor.png")
@@ -528,12 +555,12 @@ def set_tool(widget, activity, data=None, tool=None):
     #print cursor
     
 
-def set_fill_color(activity, color):
-    activity._area._set_fill_color(color)
+# def set_fill_color(activity, color):
+#     activity._area._set_fill_color(color)
 
 
-def set_stroke_color(activity, color):
-    activity._area._set_stroke_color(color)
+# def set_stroke_color(activity, color):
+#     activity._area._set_stroke_color(color)
 
             
 def test_connect(widget, activity, data=None):
@@ -551,55 +578,55 @@ def insertImage(widget, activity):
     response = dialog.run()
     if response == gtk.RESPONSE_OK:
         print dialog.get_filename(), 'selected'
-        gtk28 = False 
+        #gtk28 = False 
         file_path = dialog.get_filename()
-        file_path = decode_path((file_path,))[0]  
-        open(activity, file_path)
+        #file_path = decode_path((file_path,))[0]
+        #open(activity, file_path)
+        activity._area.d.loadImage(file_path)
     elif response == gtk.RESPONSE_CANCEL:
         print 'Closed, no files selected'
     dialog.destroy()
 
+# These functions are not used. Files are saved through Sugar Journal
+# def saveImage(activity):
+#     dialog = gtk.FileChooserDialog(title=('Save As...'),   
+#                                   action=gtk.FILE_CHOOSER_ACTION_SAVE,   
+#                                   buttons=(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,   
+#                                   gtk.STOCK_SAVE, gtk.RESPONSE_OK))  
+#     dialog.show_all()			
+#     response = dialog.run()
+#     if response == gtk.RESPONSE_OK:
+#         print dialog.get_filename(), 'selected'
+#         gtk28 = False 
+#         file_path = dialog.get_filename()
+#         file_path = decode_path((file_path,))[0]  
+#         save(file_path)
+#     elif response == gtk.RESPONSE_CANCEL:
+#         print 'Closed, no files selected'
+#     dialog.destroy()
 
-def saveImage(activity):
-    dialog = gtk.FileChooserDialog(title=('Save As...'),   
-                                  action=gtk.FILE_CHOOSER_ACTION_SAVE,   
-                                  buttons=(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,   
-                                  gtk.STOCK_SAVE, gtk.RESPONSE_OK))  
-    dialog.show_all()			
-    response = dialog.run()
-    if response == gtk.RESPONSE_OK:
-        print dialog.get_filename(), 'selected'
-        gtk28 = False 
-        file_path = dialog.get_filename()
-        file_path = decode_path((file_path,))[0]  
-        save(file_path)
-    elif response == gtk.RESPONSE_CANCEL:
-        print 'Closed, no files selected'
-    dialog.destroy()
+# def open(activity, file_path):
+#     #activity._area.d.clear()
+#     activity._area.d.loadImage(file_path)
+# 			
 
+# def save(activity, file_path):
+#     pixbuf = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, False, 8, DRAW_WIDTH, DRAW_HEIGHT)
+#     pixbuf.get_from_drawable(self.area.pixmap, gtk.gdk.colormap_get_system(), 0, 0, 0, 0, -1, -1)
+#     pixbuf.save(file_path + ".png", "png", {})	
+# 		
 
-def open(activity, file_path):
-    #activity._area.d.clear()
-    activity._area.d.loadImage(file_path)
-			
+# def decode_path(file_paths):
+#     file_paths_list = list()
+#     for file_path in file_paths: 
+#         try: 
+#             file_path = file_path.decode(sys.getfilesystemencoding()) 
+#         except: 
+#             try: 
+#                 file_path = file_path.decode('utf-8') 
+#             except: 
+#                 pass 
+#             file_paths_list.append(file_path) 
 
-def save(activity, file_path):
-    pixbuf = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, False, 8, DRAW_WIDTH, DRAW_HEIGHT)
-    pixbuf.get_from_drawable(self.area.pixmap, gtk.gdk.colormap_get_system(), 0, 0, 0, 0, -1, -1)
-    pixbuf.save(file_path + ".png", "png", {})	
-		
-
-def decode_path(file_paths):
-    file_paths_list = list()
-    for file_path in file_paths: 
-        try: 
-            file_path = file_path.decode(sys.getfilesystemencoding()) 
-        except: 
-            try: 
-                file_path = file_path.decode('utf-8') 
-            except: 
-                pass 
-            file_paths_list.append(file_path) 
-
-    return file_paths_list 
-    
+#     return file_paths_list 
+#     
