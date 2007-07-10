@@ -191,10 +191,11 @@ class Area(gtk.DrawingArea):
 					self.move = True
 					self.sx = int (event.x)
 					self.sy = int(event.y)
-					self.window.set_cursor(self.janela.cursorMove.cursor())
+					self.window.set_cursor(gtk.gdk.Cursor(gtk.gdk.FLEUR))
 				elif self.move == True:		
 					self.pixmap.draw_drawable(self.gc, self.pixmap_temp, 0,0,0,0, WIDTH, HEIGHT)	
-					self.window.set_cursor(self.janela.cursorselection.cursor())	
+					# FIXME: Adicionar cursor formato selecao
+					self.window.set_cursor(gtk.gdk.Cursor(gtk.gdk.CROSSHAIR))	
 					self.move = False
 					self.enableUndo(widget)				
 			# polygon
