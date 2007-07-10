@@ -39,12 +39,6 @@ class Area(gtk.DrawingArea):
 		self.newy = 0
 		self.newx_ = 0
 		self.newy_ = 0
-		""""
-		self.px = 0
-		self.py = 0		
-		self.antx = 0
-		self.anty = 0
-		"""
 		self.primeira = 1
 		self.gc = None
 		self.gc_line = None
@@ -59,6 +53,7 @@ class Area(gtk.DrawingArea):
 		self.estadoTexto = 0
 		self.janela = janela	
 		self.d = Desenho(self)
+		self.line_size = 2
 
 		colormap = self.get_colormap()
 		
@@ -99,7 +94,6 @@ class Area(gtk.DrawingArea):
 		self.gc = widget.window.new_gc()	
 		self.gc_eraser = widget.window.new_gc()		
 		self.gc_eraser.set_foreground(self.cores[7])
-
 		
 		self.gc_line = widget.window.new_gc()	
 
@@ -110,7 +104,8 @@ class Area(gtk.DrawingArea):
 		return True
 		
     # set the new line size
-	def configure_line(self, widget, size = 2):
+	def configure_line(self, size):
+	    self.line_size = size
 	    self.gc_line.set_line_attributes(size, gtk.gdk.LINE_SOLID, gtk.gdk.CAP_ROUND, gtk.gdk.JOIN_ROUND)
 
 	def expose(self, widget, event):		
@@ -142,19 +137,19 @@ class Area(gtk.DrawingArea):
 				# line
 				if self.tool == 1:
 					print self.oldx
-					self.configure_line(widget)
+					self.configure_line(self.line_size)
 					self.d.line(widget, coords)	
 				# pencil
 				elif self.tool == 2:
-				    self.configure_line(widget)
+				    self.configure_line(self.line_size)
 				    self.d.pencil(widget, coords)		
 				# circle
 				elif self.tool == 5:
-				    self.configure_line(widget)
+				    self.configure_line(self.line_size)
 				    self.d.circle(widget,coords)	
 				# square
 				elif self.tool == 6:
-				    self.configure_line(widget)
+				    self.configure_line(self.line_size)
 				    self.d.square(widget,coords)	
 				# selection
 				elif self.tool == 26 and not self.move:
@@ -164,7 +159,7 @@ class Area(gtk.DrawingArea):
 					self.d.moveSelection(widget, coords)
 				#poligon	
 				elif self.tool == 27:
-				    self.configure_line(widget)
+				    self.configure_line(self.line_size)
 				    self.d.polygon(widget, coords)	
 		
 	def mouseup(self,widget,event):	
@@ -229,11 +224,11 @@ class Area(gtk.DrawingArea):
 		
 		
     #this func make a basic Undo
-	def undo(self,widget):
+	def undo(self):
 		if self.first_undo:#if is the first time you click on UNDO
 			self.undo_times -= 1
 			self.redo_times = 1
-		"""
+		
 		elif self.first_redo and self.undo_times!=0:
 			self.undo_times += 1
 		
@@ -249,11 +244,11 @@ class Area(gtk.DrawingArea):
 			self.undo_times = 0
 			#self.redo_times = 1
 			self.first_redo = True
-			self.d.limpatudo()#Undo the last action, so clear-all
+			self.d.clear()#Undo the last action, so clear-all
 		self.first_undo=False
-		"""
+		
 		 
-	def redo(self,widget):
+	def redo(self):
 		print "REDO no.%d" %(self.redo_times)
 		
 		if  (self.redo_times>0):
@@ -275,14 +270,14 @@ class Area(gtk.DrawingArea):
 	def enableUndo(self,widget):
 		if not self.first_undo and not self.first_redo:
 			self.undo_times += 1
-		"""
+		
 		self.undo_list.append(None)#alloc memory
 		self.undo_list[self.undo_times] = gtk.gdk.Pixmap(widget.window, WIDTH, HEIGHT, -1) #define type
 		self.undo_list[self.undo_times].draw_drawable(self.gc,self.pixmap,0,0,0,0, WIDTH, HEIGHT) #copy workarea
 		self.undo_times += 1
 		self.redo_times = 0	
 		self.first_undo = True
-		"""
+		
 
 	def _set_fill_color(self, color):
 		self.color_ = color		

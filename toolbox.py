@@ -49,10 +49,11 @@ class Toolbox(ActivityToolbox):
 class DrawEditToolbar(EditToolbar):
     def __init__(self, activity):
         EditToolbar.__init__(self)
-        
+
+        self.undo.connect('clicked', undo, activity)
+        self.redo.connect('clicked', redo, activity)
+
         #FIXME: buttons are not connected to the right callback
-        self.undo.connect('clicked', test_connect, activity, 'undo')
-        self.redo.connect('clicked', test_connect, activity, 'redo')
         self.copy.connect('clicked', test_connect, activity, 'copy')
         self.paste.connect('clicked', test_connect, activity, 'paste')
 
@@ -74,11 +75,23 @@ class ToolsToolbar(gtk.Toolbar):
         gtk.Toolbar.__init__(self)
 
          # FIXME: This should be a file picker instead of a combobox
+        self._icon_fill = ToolButton('icon-fill')
+        self.insert(self._icon_fill, -1)
+        self._icon_fill.show()
+
         tool_item = ComboFillColors(activity)
         self.insert(tool_item, -1)
         tool_item.show()
 
+        self._icon_stroke = ToolButton('icon-stroke')
+        self.insert(self._icon_stroke, -1)
+        self._icon_stroke.show()
+
         tool_item = ComboStrokeColors(activity)
+        self.insert(tool_item, -1)
+        tool_item.show()
+
+        tool_item = ComboStrokeSize(activity)
         self.insert(tool_item, -1)
         tool_item.show()
         
@@ -166,6 +179,7 @@ class ComboFillColors(ToolComboBox):
         #self._fill_color.connect('changed', self._combo_changed_cb)
         self._fill_color.connect('changed', self.set_fill_color)
 
+
 #     def _combo_changed_cb(self, combo):
 #         set_fill_color(self._activity, combo.get_active())   
 #         print 'combo ativo' + str(combo.get_active())       
@@ -213,6 +227,49 @@ class ComboStrokeColors(ToolComboBox):
         color = combo.get_active()
         self._activity._area._set_stroke_color(color)
 
+
+class ComboStrokeSize(ToolComboBox):
+
+    _ACTION_1 = 1
+    _ACTION_2 = 2
+    _ACTION_3 = 3
+    _ACTION_5 = 5
+    _ACTION_10 = 10
+    _ACTION_20 = 20
+    _ACTION_50 = 50
+    _ACTION_100 = 100
+    _ACTION_500 = 500
+    _ACTION_1000 = 1000
+    _ACTION_5000 = 5000
+    _ACTION_10000 = 10000
+    _ACTION_100000 = 100000
+
+    def __init__(self, activity):
+        ToolComboBox.__init__(self)
+        self._activity = activity
+
+        self._stroke_size = self.combo
+        self._stroke_size.append_item(self._ACTION_1, _('1'))
+	self._stroke_size.append_item(self._ACTION_2, _('2'))
+        self._stroke_size.append_item(self._ACTION_3, _('3'))        
+        self._stroke_size.append_item(self._ACTION_5, _('5'))
+        self._stroke_size.append_item(self._ACTION_10, _('10')) 
+        self._stroke_size.append_item(self._ACTION_20, _('20'))
+        self._stroke_size.append_item(self._ACTION_50, _('50'))
+        self._stroke_size.append_item(self._ACTION_100, _('100'))
+        self._stroke_size.append_item(self._ACTION_500, _('500'))
+        self._stroke_size.append_item(self._ACTION_1000, _('1000'))
+        self._stroke_size.append_item(self._ACTION_5000, _('5000'))
+        self._stroke_size.append_item(self._ACTION_10000, _('10000'))
+        self._stroke_size.append_item(self._ACTION_100000, _('100000'))
+
+        self._stroke_size.set_active(0)
+        self._stroke_size.connect('changed', self._combo_changed_cb)
+
+    def _combo_changed_cb(self, combo):
+        set_stroke_size(self._activity, combo.get_active())   
+
+
 class ShapesToolbar(gtk.Toolbar):
 
     _TOOL_SHAPE_ARROW = 0
@@ -231,13 +288,25 @@ class ShapesToolbar(gtk.Toolbar):
     def __init__(self, activity):
         gtk.Toolbar.__init__(self)
 
+        self._icon_fill = ToolButton('icon-fill')
+        self.insert(self._icon_fill, -1)
+        self._icon_fill.show()
+
         # FIXME: This should be a file picker instead of a combobox
+
         tool_item = ComboFillColors(activity)
         self.insert(tool_item, -1)
         tool_item.show()
 
-        # FIXME: This should be a file picker instead of a combobox
+        self._icon_stroke = ToolButton('icon-stroke')
+        self.insert(self._icon_stroke, -1)
+        self._icon_stroke.show()
+
         tool_item = ComboStrokeColors(activity)
+        self.insert(tool_item, -1)
+        tool_item.show()
+
+        tool_item = ComboStrokeSize(activity)
         self.insert(tool_item, -1)
         tool_item.show()
         
@@ -415,6 +484,7 @@ class ImageToolbar(gtk.Toolbar):
             print 'Closed, no files selected'
         dialog.destroy()
 
+
 class EffectsToolbar(gtk.Toolbar):
 
     def __init__(self, activity):
@@ -505,12 +575,10 @@ def set_tool(widget, activity, data=None, tool=None):
     elif data == 'tool-shape-ellipse':
         pix = gtk.gdk.pixbuf_new_from_file("./images/circulo_cursor.png")
         cursor = gtk.gdk.Cursor(gtk.gdk.display_get_default() , pix, 6, 21)
-        activity._area._set_not_marquee()
         
     elif data == 'tool-shape-rectangle':
         pix = gtk.gdk.pixbuf_new_from_file("./images/quadrado_cursor.png")
         cursor = gtk.gdk.Cursor(gtk.gdk.display_get_default() , pix, 6, 21)
-        activity._area._set_not_marquee()
         
     elif data == 'tool-marquee-rectangular':    
         pix = gtk.gdk.pixbuf_new_from_file("./images/selecao_cursor.png")
@@ -551,7 +619,7 @@ def set_tool(widget, activity, data=None, tool=None):
         except:
             cursor = None
         
-    #activity._area.window.set_cursor(cursor)
+    activity._area.window.set_cursor(cursor)
     #print cursor
     
 
@@ -562,7 +630,15 @@ def set_tool(widget, activity, data=None, tool=None):
 # def set_stroke_color(activity, color):
 #     activity._area._set_stroke_color(color)
 
+def set_stroke_size(activity, size):
+     activity._area.configure_line(size)
             
+def undo(widget, activity):
+    activity._area.undo()		
+
+def redo(widget, activity):
+    activity._area.redo()
+
 def test_connect(widget, activity, data=None):
     ''' Dummy callback for testing'''
     string = data + ' button clicked\n'
@@ -587,46 +663,4 @@ def insertImage(widget, activity):
         print 'Closed, no files selected'
     dialog.destroy()
 
-# These functions are not used. Files are saved through Sugar Journal
-# def saveImage(activity):
-#     dialog = gtk.FileChooserDialog(title=('Save As...'),   
-#                                   action=gtk.FILE_CHOOSER_ACTION_SAVE,   
-#                                   buttons=(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,   
-#                                   gtk.STOCK_SAVE, gtk.RESPONSE_OK))  
-#     dialog.show_all()			
-#     response = dialog.run()
-#     if response == gtk.RESPONSE_OK:
-#         print dialog.get_filename(), 'selected'
-#         gtk28 = False 
-#         file_path = dialog.get_filename()
-#         file_path = decode_path((file_path,))[0]  
-#         save(file_path)
-#     elif response == gtk.RESPONSE_CANCEL:
-#         print 'Closed, no files selected'
-#     dialog.destroy()
-
-# def open(activity, file_path):
-#     #activity._area.d.clear()
-#     activity._area.d.loadImage(file_path)
-# 			
-
-# def save(activity, file_path):
-#     pixbuf = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, False, 8, DRAW_WIDTH, DRAW_HEIGHT)
-#     pixbuf.get_from_drawable(self.area.pixmap, gtk.gdk.colormap_get_system(), 0, 0, 0, 0, -1, -1)
-#     pixbuf.save(file_path + ".png", "png", {})	
-# 		
-
-# def decode_path(file_paths):
-#     file_paths_list = list()
-#     for file_path in file_paths: 
-#         try: 
-#             file_path = file_path.decode(sys.getfilesystemencoding()) 
-#         except: 
-#             try: 
-#                 file_path = file_path.decode('utf-8') 
-#             except: 
-#                 pass 
-#             file_paths_list.append(file_path) 
-
-#     return file_paths_list 
-#     
+  
