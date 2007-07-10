@@ -27,6 +27,9 @@ class Desenho:
 		if(shape == 'circle'):
 			self.d.pixmap.draw_arc(self.d.gc_eraser, True, coords[0], coords[1], size, size, 0, 360*64)
 			self.d.pixmap_temp.draw_arc(self.d.gc_eraser, True, coords[0], coords[1], size, size, 0, 360*64)
+		if(shape == 'square'):
+		    self.d.pixmap.draw_rectangle(self.d.gc_borracha, True, coords[0], coords[1], size, size)
+		    self.d.pixmap_temp.draw_rectangle(self.d.gc_borracha, True, coords[0], coords[1], size, size)
 		self.d.oldx = coords[0]
 		self.d.oldy = coords[1]
 		widget.queue_draw()
