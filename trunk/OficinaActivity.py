@@ -11,7 +11,7 @@ from Area import Area
 from Cursors import Cursors
 
 DRAW_WIDTH  = 1195
-DRAW_HEIGHT = 780
+DRAW_HEIGHT = 800
 
 class OficinaActivity(activity.Activity):
     def __init__(self, handle):
@@ -19,20 +19,12 @@ class OficinaActivity(activity.Activity):
 
         os.chdir(activity.get_bundle_path())
         #print activity.get_bundle_path()
-
+        
         toolbox = Toolbox(self)
         self.set_toolbox(toolbox)
-        toolbox.show()
-        
-        ## Commented for testing
-        ## I will use a gtk.TextView to display results for events
-##        oficina = Oficina(self)
-##        self._area = oficina.area
-##        self._area = oficina.areaFixa()
-##        self.set_canvas(self._area)
-##        self._area.show()
-        
-        #FIXME : achar local melhor pra colocar isso
+        toolbox.show()       
+  
+
         # cursors
         #self._pencil_cursor = Cursors('lapis_cursor.png')
         #self._circle_cursor = Cursors('circulo_cursor.png')
@@ -48,14 +40,23 @@ class OficinaActivity(activity.Activity):
         sw = gtk.ScrolledWindow()
         sw.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
 
-        self._area = self.area = Area(self)
-        self._area.tool = 2
-        sw.add_with_viewport(self._area)
-        self._area.show()
+	self._fixed = gtk.Fixed()	
+        self._area = Area(self)	
+	color = gtk.gdk.color_parse("white")
+	self._fixed.modify_bg(gtk.STATE_NORMAL, color)
+	#FIXME: use a textview instead of a Entry
+        #self._textview = gtk.TextView()
+	self._textview = gtk.Entry()
+	self._area.tool = 2
+	self._fixed.put(self._area, 0 , 0)
 
-        #self.textview = gtk.TextView()
-        #sw.add(self.textview)
-        #self.textview.show()
+        sw.add_with_viewport(self._fixed)
+        self._area.show()
+        self._fixed.show()
+
+
+        self._fixed.put(self._textview, 0, 0)
+        self._textview.hide()
         sw.show()
 
         # setting scrolledwindow as activity canvas...
