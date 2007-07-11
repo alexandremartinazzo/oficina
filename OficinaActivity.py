@@ -10,8 +10,8 @@ from toolbox import Toolbox
 from Area import Area
 from Cursors import Cursors
 
-DRAW_WIDTH  = 1195
-DRAW_HEIGHT = 800
+# DRAW_WIDTH  = 1195
+# DRAW_HEIGHT = 800
 
 class OficinaActivity(activity.Activity):
     def __init__(self, handle):
@@ -40,15 +40,15 @@ class OficinaActivity(activity.Activity):
         sw = gtk.ScrolledWindow()
         sw.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
 
-	self._fixed = gtk.Fixed()	
+        self._fixed = gtk.Fixed()	
         self._area = Area(self)	
-	color = gtk.gdk.color_parse("white")
-	self._fixed.modify_bg(gtk.STATE_NORMAL, color)
-	#FIXME: use a textview instead of a Entry
+        color = gtk.gdk.color_parse("white")
+        self._fixed.modify_bg(gtk.STATE_NORMAL, color)
+        #FIXME: use a textview instead of a Entry
         #self._textview = gtk.TextView()
-	self._textview = gtk.Entry()
-	self._area.tool = 2
-	self._fixed.put(self._area, 0 , 0)
+        self._textview = gtk.Entry()
+        self._area.tool = 2
+        self._fixed.put(self._area, 0 , 0)
 
         sw.add_with_viewport(self._fixed)
         self._area.show()
@@ -78,7 +78,8 @@ class OficinaActivity(activity.Activity):
         Method to save file on Sugar Journal
         '''
         print file_path
-        pixbuf = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, False, 8, DRAW_WIDTH, DRAW_HEIGHT)
+        width, height = self._area.window.get_size()
+        pixbuf = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, False, 8, width, height)
         pixbuf.get_from_drawable(self._area.pixmap, gtk.gdk.colormap_get_system(), 0, 0, 0, 0, -1, -1)
         pixbuf.save(file_path, 'png', {})	
 
