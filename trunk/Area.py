@@ -39,6 +39,7 @@ class Area(gtk.DrawingArea):
 		self.newy = 0
 		self.newx_ = 0
 		self.newy_ = 0
+		self.color_dec = 0
 		self.primeira = 1
 		self.gc = None
 		self.gc_line = None
@@ -227,6 +228,44 @@ class Area(gtk.DrawingArea):
 			elif self.tool == 2:# or 3 or 4 check this before
 				widget.queue_draw() 
 				self.enableUndo(widget)
+
+			#bucket
+			if self.tool == 28:
+				self.x_current = int (event.x)
+				self.y_current = int (event.y)
+				self.imagem = self.pixmap.get_image(0,0, WIDTH, HEIGHT)
+				self.color_start = self.imagem.get_pixel(self.x_current, self.y_current)
+				if self.color_start != self.color_dec:
+					self.list_x = [self.x_current]
+					self.list_y = [self.y_current]
+					self.imagem.put_pixel(self.x_current,self.y_current,self.color_dec)
+					while len(self.list_x) > 0:
+						while gtk.events_pending ():gtk.main_iteration()
+						if self.x_current+1 < WIDTH:
+							if self.imagem.get_pixel(self.x_current+1, self.y_current) == self.color_start:
+								self.imagem.put_pixel(self.x_current+1, self.y_current, self.color_dec)
+								self.list_x.append(self.x_current+1)
+								self.list_y.append(self.y_current)
+						if self.x_current-1 >= 0:
+							if self.imagem.get_pixel(self.x_current -1, self.y_current) == self.color_start:
+								self.imagem.put_pixel(self.x_current-1, self.y_current, self.color_dec)
+								self.list_x.append(self.x_current-1)
+								self.list_y.append(self.y_current)
+						if self.y_current+1 < HEIGHT:
+							if self.imagem.get_pixel(self.x_current, self.y_current+1) == self.color_start:
+								self.imagem.put_pixel(self.x_current, self.y_current+1, self.color_dec)
+								self.list_x.append(self.x_current)
+								self.list_y.append(self.y_current+1)
+						if self.y_current-1 >= 0:
+							if self.imagem.get_pixel(self.x_current, self.y_current-1) == self.color_start:
+								self.imagem.put_pixel(self.x_current, self.y_current-1, self.color_dec)
+								self.list_x.append(self.x_current)
+								self.list_y.append(self.y_current-1)
+						self.x_current = self.list_x.pop()
+						self.y_current = self.list_y.pop()
+					self.pixmap.draw_image(self.gc,self.imagem,0,0,0,0,WIDTH, HEIGHT)
+					widget.queue_draw()
+				self.enableUndo(widget)
 		self.desenha = False
 		
 		
@@ -300,6 +339,7 @@ class Area(gtk.DrawingArea):
 	def _set_fill_color(self, color):
 		self.color_ = color		
 		self.gc.set_foreground(self.cores[color])
+		self.color_dec = self.cores[cor].pixel
  
  	def _set_stroke_color(self, color):
 		self.color_line = color	

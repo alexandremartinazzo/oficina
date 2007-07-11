@@ -67,7 +67,7 @@ class ToolsToolbar(gtk.Toolbar):
     _TOOL_BRUSH = 29
     _TOOL_ERASER = 3
     _TOOL_POLYGON = 27
-    _TOOL_BUCKET = 2
+    _TOOL_BUCKET = 28
     _TOOL_MARQUEE_ELLIPTICAL = 5
     _TOOL_MARQUEE_FREEFORM = 2
     _TOOL_MARQUEE_RECTANGULAR = 26
