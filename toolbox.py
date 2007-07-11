@@ -119,12 +119,14 @@ class ToolsToolbar(gtk.Toolbar):
         self.insert(self._tool_brush, -1)
         self._tool_brush.show()
         self._tool_brush.set_tooltip(_('Brush'))
-        
-        """
+
+
         self._tool_bucket = ToolButton('tool-bucket')
         self.insert(self._tool_bucket, -1)
         self._tool_bucket.show()
         self._tool_bucket.set_tooltip(_('Bucket'))
+        """
+
 
         self._tool_marquee_elliptical = ToolButton('tool-marquee-elliptical')
         self.insert(self._tool_marquee_elliptical, -1)
@@ -149,7 +151,7 @@ class ToolsToolbar(gtk.Toolbar):
         self._tool_pencil.connect('clicked', set_tool, activity, 'tool-pencil', self._TOOL_PENCIL)
         self._tool_brush.connect('clicked', set_tool, activity, 'tool-brush', self._TOOL_BRUSH)
         self._tool_eraser.connect('clicked', set_tool, activity, 'tool-eraser', self._TOOL_ERASER)
-        #self._tool_bucket.connect('clicked', set_tool, activity, 'tool-bucket', self._TOOL_BUCKET)
+        self._tool_bucket.connect('clicked', set_tool, activity, 'tool-bucket', self._TOOL_BUCKET)
         #self._tool_marquee_elliptical.connect('clicked', set_tool, activity, 'tool-marquee-elliptical', self._TOOL_MARQUEE_ELLIPTICAL)
         #self._tool_marquee_freeform.connect('clicked', set_tool, activity, 'tool-marquee-freeform', self._TOOL_MARQUEE_FREEFORM)
         self._tool_marquee_rectangular.connect('clicked', set_tool, activity, 'tool-marquee-rectangular', self._TOOL_MARQUEE_RECTANGULAR)
@@ -632,6 +634,15 @@ def set_tool(widget, activity, data=None, tool=None):
     elif data == 'tool-shape-line':
         pix = gtk.gdk.pixbuf_new_from_file("./images/linha_cursor.png")
         cursor = gtk.gdk.Cursor(gtk.gdk.display_get_default() , pix, 6, 21)
+
+    elif data == 'tool-brush':
+        pix = gtk.gdk.pixbuf_new_from_file("./icons/brush_cursor.svg")
+        cursor = gtk.gdk.Cursor(gtk.gdk.display_get_default() , pix, 6, 21)
+
+    elif data == 'tool-bucket':
+        pix = gtk.gdk.pixbuf_new_from_file("./icons/bucket_cursor.svg")
+        cursor = gtk.gdk.Cursor(gtk.gdk.display_get_default() , pix, 6, 21)
+        
         
     else:
         # Uses toolbar icon as cursor

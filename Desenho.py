@@ -187,7 +187,7 @@ class Desenho:
 		if self.d.estadoTexto == 0:
 			self.d.estadoTexto = 1
 			print event.x
-			self.d.janela._fixed.move(self.d.janela._textview, int(event.x), int(event.y))
+			self.d.janela._fixed.move(self.d.janela._textview, int(event.x)+200, int(event.y)+100)
 			self.d.janela._textview.show()
 		else:	
 			self.d.estadoTexto = 0	
