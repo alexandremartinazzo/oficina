@@ -9,7 +9,7 @@ from Botao import Botao
 from Area import Area
 
 DRAW_WIDTH = 1200
-DRAW_HEIGHT = 900
+DRAW_HEIGHT = 800
 
 class Oficina:
 	def __init__(self):

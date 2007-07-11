@@ -1,7 +1,7 @@
 [Activity]
-name = Drawing
+name = Oficina
 activity_version = 1
 service_name = org.laptop.Oficina
 icon = activity-edit
-class = drawingactivity.OficinaActivity
+class = OficinaActivity.OficinaActivity
 
