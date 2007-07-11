@@ -110,16 +110,21 @@ class ToolsToolbar(gtk.Toolbar):
         self._tool_pencil.show()
         self._tool_pencil.set_tooltip(_('Pencil'))
 
-        self._tool_eraser = ToolButton('tool-eraser')
-        self.insert(self._tool_eraser, -1)
-        self._tool_eraser.show()
-        self._tool_eraser.set_tooltip(_('Eraser'))
         
         self._tool_brush = ToolButton('tool-brush')
         self.insert(self._tool_brush, -1)
         self._tool_brush.show()
         self._tool_brush.set_tooltip(_('Brush'))
 
+        self._tool_eraser = ToolButton('tool-eraser')
+        self.insert(self._tool_eraser, -1)
+        self._tool_eraser.show()
+        self._tool_eraser.set_tooltip(_('Eraser'))
+
+        self._tool_polygon = ToolButton('tool-polygon')
+        self.insert(self._tool_polygon, -1)
+        self._tool_polygon.show()
+        self._tool_polygon.set_tooltip(_('Polygon'))
 
         self._tool_bucket = ToolButton('tool-bucket')
         self.insert(self._tool_bucket, -1)
@@ -148,6 +153,7 @@ class ToolsToolbar(gtk.Toolbar):
         self._tool_marquee_rectangular.show()
         self._tool_marquee_rectangular.set_tooltip(_('Rectangular Marquee'))
 
+        self._tool_polygon.connect('clicked', set_tool, activity, 'tool-polygon', self._TOOL_POLYGON)
         self._tool_pencil.connect('clicked', set_tool, activity, 'tool-pencil', self._TOOL_PENCIL)
         self._tool_brush.connect('clicked', set_tool, activity, 'tool-brush', self._TOOL_BRUSH)
         self._tool_eraser.connect('clicked', set_tool, activity, 'tool-eraser', self._TOOL_ERASER)
@@ -332,9 +338,7 @@ class ShapesToolbar(gtk.Toolbar):
         self.insert(self._tool_shape_line, -1)
         self._tool_shape_line.show()
         self._tool_shape_line.set_tooltip(_('Line'))
-
         """
-
         self._tool_shape_polygon = ToolButton('tool-shape-polygon')
         self.insert(self._tool_shape_polygon, -1)
         self._tool_shape_polygon.show()
@@ -642,7 +646,10 @@ def set_tool(widget, activity, data=None, tool=None):
     elif data == 'tool-bucket':
         pix = gtk.gdk.pixbuf_new_from_file("./icons/bucket_cursor.svg")
         cursor = gtk.gdk.Cursor(gtk.gdk.display_get_default() , pix, 6, 21)
-        
+
+    elif data == 'tool-polygon':
+        pix = gtk.gdk.pixbuf_new_from_file("./images/poligono_cursor.png")
+        cursor = gtk.gdk.Cursor(gtk.gdk.display_get_default() , pix, 6, 21)  
         
     else:
         # Uses toolbar icon as cursor
