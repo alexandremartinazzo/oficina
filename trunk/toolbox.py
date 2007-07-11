@@ -61,7 +61,7 @@ class DrawEditToolbar(EditToolbar):
 class ToolsToolbar(gtk.Toolbar):
 
     _TOOL_PENCIL = 2
-    _TOOL_BRUSH = 2
+    _TOOL_BRUSH = 29
     _TOOL_ERASER = 3
     _TOOL_POLYGON = 27
     _TOOL_BUCKET = 2
@@ -107,18 +107,17 @@ class ToolsToolbar(gtk.Toolbar):
         self._tool_pencil.show()
         self._tool_pencil.set_tooltip(_('Pencil'))
 
-
-
         self._tool_eraser = ToolButton('tool-eraser')
         self.insert(self._tool_eraser, -1)
         self._tool_eraser.show()
         self._tool_eraser.set_tooltip(_('Eraser'))
-        """
+        
         self._tool_brush = ToolButton('tool-brush')
         self.insert(self._tool_brush, -1)
         self._tool_brush.show()
         self._tool_brush.set_tooltip(_('Brush'))
-
+        
+        """
         self._tool_bucket = ToolButton('tool-bucket')
         self.insert(self._tool_bucket, -1)
         self._tool_bucket.show()
@@ -145,7 +144,7 @@ class ToolsToolbar(gtk.Toolbar):
         self._tool_marquee_rectangular.set_tooltip(_('Rectangular Marquee'))
 
         self._tool_pencil.connect('clicked', set_tool, activity, 'tool-pencil', self._TOOL_PENCIL)
-        #self._tool_brush.connect('clicked', set_tool, activity, 'tool-brush', self._TOOL_BRUSH)
+        self._tool_brush.connect('clicked', set_tool, activity, 'tool-brush', self._TOOL_BRUSH)
         self._tool_eraser.connect('clicked', set_tool, activity, 'tool-eraser', self._TOOL_ERASER)
         #self._tool_bucket.connect('clicked', set_tool, activity, 'tool-bucket', self._TOOL_BUCKET)
         #self._tool_marquee_elliptical.connect('clicked', set_tool, activity, 'tool-marquee-elliptical', self._TOOL_MARQUEE_ELLIPTICAL)

@@ -43,6 +43,7 @@ class Area(gtk.DrawingArea):
 		self.gc = None
 		self.gc_line = None
 		self.gc_eraser = None
+		self.gc_brush = None
 		self.gc_selection = None
 		self.pixmap = None	
 		self.pixmap_temp = None
@@ -95,6 +96,9 @@ class Area(gtk.DrawingArea):
 		self.gc_eraser = widget.window.new_gc()		
 		self.gc_eraser.set_foreground(self.cores[7])
 		
+		self.gc_brush = widget.window.new_gc()		
+		self.gc_brush.set_foreground(self.cores[0])
+				
 		self.gc_line = widget.window.new_gc()	
 
 		self.gc_selection = widget.window.new_gc()	
@@ -133,6 +137,9 @@ class Area(gtk.DrawingArea):
 		if state & gtk.gdk.BUTTON1_MASK and self.pixmap != None:
 			if self.tool == 3:
 				self.d.eraser(widget, coords)
+			#brush
+			elif self.tool == 29:
+				    self.d.brush(widget, coords, self.line_size)
 			if self.desenha:
 				# line
 				if self.tool == 1:
@@ -288,6 +295,7 @@ class Area(gtk.DrawingArea):
 		self.color_line = color	
 		self.gc_line.set_foreground(self.cores[color])
 		self.gc_line.set_line_attributes(1, gtk.gdk.LINE_ON_OFF_DASH, gtk.gdk.CAP_ROUND, gtk.gdk.JOIN_ROUND)  
+		self.gc_brush.set_foreground(self.cores[color])
 
 	def _set_grayscale(self):
 		pix = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, False, 8, WIDTH, HEIGHT)

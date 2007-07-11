@@ -33,6 +33,18 @@ class Desenho:
 		self.d.oldx = coords[0]
 		self.d.oldy = coords[1]
 		widget.queue_draw()
+		
+	def brush(self, widget, coords, size = 5, shape = 'circle'):
+		self.d.desenha = False
+		if(shape == 'circle'):
+			self.d.pixmap.draw_arc(self.d.gc_brush, True, coords[0], coords[1], size, size, 0, 360*64)
+			self.d.pixmap_temp.draw_arc(self.d.gc_brush, True, coords[0], coords[1], size, size, 0, 360*64)
+		if(shape == 'square'):
+		    self.d.pixmap.draw_rectangle(self.d.gc_brush, True, coords[0], coords[1], size, size)
+		    self.d.pixmap_temp.draw_rectangle(self.d.gc_brush, True, coords[0], coords[1], size, size)
+		self.d.oldx = coords[0]
+		self.d.oldy = coords[1]
+		widget.queue_draw()
 	
 	def square(self, widget, coords):
 		widget.queue_draw()		
