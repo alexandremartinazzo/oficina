@@ -75,11 +75,9 @@ class Area(gtk.DrawingArea):
 		
 		#start of UNDO and REDO
 		self.first_undo = True
-		#self.first_redo = False
 		self.undo_times = 0
 		self.redo_times = 0
-		self.undo_list=[]#pixmaps list to do Undo func
-		#self.redo_list=[]
+		self.undo_list=[]#pixmaps list to Undo func
 
 	# Create a new backing pixmap of the appropriate size
 	def configure_event(self, widget, event):		
@@ -237,15 +235,19 @@ class Area(gtk.DrawingArea):
 			self.undo_times -= 1
 			self.redo_times = 1
 		
-		elif self.first_redo and self.undo_times!=0:
+		elif (self.first_redo) and (self.undo_times!=0):
 			self.undo_times += 1
 		
 		print "Undo no.%d" %(self.undo_times)
 		if self.undo_times >0 :	
 			self.undo_times -= 1
 			self.redo_times += 1
-						
-			self.pixmap.draw_drawable(self.gc, self.undo_list[self.undo_times], 0,0,0,0, WIDTH, HEIGHT)
+			try: #to not try paint someting wrong
+				#print "Drawing undo[%d]" %(self.undo_times)
+				self.pixmap.draw_drawable(self.gc, self.undo_list[self.undo_times], 0,0,0,0, WIDTH, HEIGHT)
+			except:
+				print "Can't draw"
+				pass
 			self.queue_draw()
 			self.first_redo=False
 		else:	
@@ -257,7 +259,7 @@ class Area(gtk.DrawingArea):
 		
 		 
 	def redo(self):
-		print "REDO no.%d" %(self.redo_times)
+		#print "REDO no.%d" %(self.redo_times)
 		
 		if  (self.redo_times>0):
 			self.redo_times -= 1
@@ -266,12 +268,14 @@ class Area(gtk.DrawingArea):
 			
 			if self.first_redo:
 				self.undo_times -=1
-				if self.undo_times!=0:
-					self.redo_times +=1
+				self.redo_times +=1
 			self.first_redo=False
-			print "Desenhando cena undo[%d]" %(self.undo_times)
-			self.pixmap.draw_drawable(self.gc, self.undo_list[self.undo_times], 0,0,0,0, WIDTH, HEIGHT)
-			
+			try: #to not try paint someting wrong 
+				#print "Drawing undo[%d]" %(self.undo_times)
+				self.pixmap.draw_drawable(self.gc, self.undo_list[self.undo_times], 0,0,0,0, WIDTH, HEIGHT)
+			except:
+				print "Can't draw"
+				self.undo_times-=1
 		self.queue_draw()
 			
 		   	
@@ -286,7 +290,12 @@ class Area(gtk.DrawingArea):
 		self.redo_times = 0	
 		self.first_undo = True
 		
-
+		#this is the part where we can limit the steps of undo/redo		
+		#if self.undo_times>=5:
+		#	self.undo_list.pop(0)
+		#	self.undo_times-=1
+		#	print "estourou"
+		
 	def _set_fill_color(self, color):
 		self.color_ = color		
 		self.gc.set_foreground(self.cores[color])
