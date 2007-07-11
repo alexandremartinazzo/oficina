@@ -9,8 +9,8 @@ import pango
 
 from Desenho import Desenho
 
-WIDTH = 1195
-HEIGHT = 800
+WIDTH = 800
+HEIGHT = 600
 
 class Area(gtk.DrawingArea):
 	def __init__(self, janela):		
