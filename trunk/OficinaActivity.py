@@ -33,6 +33,12 @@ class OficinaActivity(activity.Activity):
         self._area = Area(self)	
         color = gtk.gdk.color_parse("white")
         self._fixed.modify_bg(gtk.STATE_NORMAL, color)
+
+	self.bg = gtk.Image()
+	self.bg.set_from_file('./icons/bg.svg')
+	self._fixed.put(self.bg, 200, 100)
+        self.bg.show()
+
         #FIXME: use a textview instead of a Entry
         #self._textview = gtk.TextView()
         self._textview = gtk.Entry()
