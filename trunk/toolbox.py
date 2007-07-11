@@ -54,8 +54,11 @@ class DrawEditToolbar(EditToolbar):
         self.redo.connect('clicked', redo, activity)
 
         #FIXME: buttons are not connected to the right callback
-        #self.copy.connect('clicked', test_connect, activity, 'copy')
-        #self.paste.connect('clicked', test_connect, activity, 'paste')
+        self.copy.connect('clicked', test_connect, activity, 'copy')
+        self.paste.connect('clicked', test_connect, activity, 'paste')
+
+        self.copy.hide()
+        self.paste.hide()
 
 
 class ToolsToolbar(gtk.Toolbar):
@@ -180,7 +183,6 @@ class ComboFillColors(ToolComboBox):
         self._fill_color.append_item(self._ACTION_WHITE, _('White'))
 
         self._fill_color.set_active(0)
-
         self._fill_color.connect('changed', self.set_fill_color)
 
 
@@ -218,11 +220,11 @@ class ComboStrokeColors(ToolComboBox):
         self._stroke_color.set_active(0)
         #self._stroke_color.connect('changed', self._combo_changed_cb)
         self._stroke_color.connect('changed', self.set_stroke_color)
+        self.connect("focus", self.event_focus)
+       
+    def event_focus(self, combo):
+        print 'combostroke gained focus' 	
 
-#     def _combo_changed_cb(self, combo):
-#         set_stroke_color(self._activity, combo.get_active())
-#         print 'combo ativo' + str(combo.get_active())     
-        
     def set_stroke_color(self, combo):
         color = combo.get_active()
         self._activity._area._set_stroke_color(color)

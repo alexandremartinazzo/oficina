@@ -197,6 +197,7 @@ class Desenho:
 			self.d.pixmap.draw_layout(self.d.gc, self.d.oldx, self.d.oldy, layout)
 			self.d.pixmap_temp.draw_layout(self.d.gc, self.d.oldx, self.d.oldy, layout)
 			self.d.janela._textview.hide()
+			self.d.janela._textview.set_text('')
 
 			widget.queue_draw()
 
