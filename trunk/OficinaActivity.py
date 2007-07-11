@@ -25,17 +25,6 @@ class OficinaActivity(activity.Activity):
         toolbox.show()       
   
 
-        # cursors
-        #self._pencil_cursor = Cursors('lapis_cursor.png')
-        #self._circle_cursor = Cursors('circulo_cursor.png')
-        #self._rubber_cursor = Cursors('borracha_cursor.png')
-        #self._square_cursor = Cursors('quadrado_cursor.png')
-        #self._line_cursor = Cursors('linha_cursor.png')
-        #self._letter_cursor = Cursors('letra_cursor.png')		
-        #self._selection_cursor = Cursors('selecao_cursor.png')	
-        #self._polygon_cursor = Cursors('poligono_cursor.png')	
-        #self._move_cursor = Cursors('move_cursor.png')
-
         # addind a textview widget
         sw = gtk.ScrolledWindow()
         sw.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
@@ -48,7 +37,7 @@ class OficinaActivity(activity.Activity):
         #self._textview = gtk.TextView()
         self._textview = gtk.Entry()
         self._area.tool = 2
-        self._fixed.put(self._area, 0 , 0)
+        self._fixed.put(self._area, 200 , 100)
 
         sw.add_with_viewport(self._fixed)
         self._area.show()
