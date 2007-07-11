@@ -8,6 +8,7 @@ from sugar.graphics.toolcombobox import ToolComboBox
 from sugar.graphics.toolbutton import ToolButton
 from sugar.graphics.toggletoolbutton import ToggleToolButton
 from sugar.graphics.combobox import ComboBox
+from sugar.graphics.palette import Palette
 
 from Cursors import Cursors
 
@@ -78,6 +79,8 @@ class ToolsToolbar(gtk.Toolbar):
         gtk.Toolbar.__init__(self)
 
          # FIXME: This should be a file picker instead of a combobox
+         
+        self._activity = activity
 
 	"""
         self._icon_fill = ToolButton('icon-fill')
@@ -110,11 +113,12 @@ class ToolsToolbar(gtk.Toolbar):
         self._tool_pencil.show()
         self._tool_pencil.set_tooltip(_('Pencil'))
 
-        
         self._tool_brush = ToolButton('tool-brush')
         self.insert(self._tool_brush, -1)
         self._tool_brush.show()
         self._tool_brush.set_tooltip(_('Brush'))
+        self._brush_palette = self.create_palette('Brush')
+        self._tool_brush.set_palette(self._brush_palette)
 
         self._tool_eraser = ToolButton('tool-eraser')
         self.insert(self._tool_eraser, -1)
@@ -125,11 +129,12 @@ class ToolsToolbar(gtk.Toolbar):
         self.insert(self._tool_polygon, -1)
         self._tool_polygon.show()
         self._tool_polygon.set_tooltip(_('Polygon'))
-
+        
         self._tool_bucket = ToolButton('tool-bucket')
         self.insert(self._tool_bucket, -1)
         self._tool_bucket.show()
         self._tool_bucket.set_tooltip(_('Bucket'))
+        
         """
 
 
@@ -163,7 +168,26 @@ class ToolsToolbar(gtk.Toolbar):
         self._tool_marquee_rectangular.connect('clicked', set_tool, activity, 'tool-marquee-rectangular', self._TOOL_MARQUEE_RECTANGULAR)
         #self._tool_marquee_smart.connect('clicked', set_tool, activity, 'tool-marquee-smart', self._TOOL_MARQUEE_SMART)
 
+    def create_palette(self, data=None):
+        if data == None:
+            return None
+        elif data == 'Brush':
+            palette = Palette(_(data))
+            item_1 = gtk.MenuItem(_('Square'))
+            item_2 = gtk.MenuItem(_('Circle'))
 
+            palette.append_menu_item(item_1)
+            palette.append_menu_item(item_2)
+            item_1.show()
+            item_2.show()
+            item_1.connect('activate', self.test, 'square')
+            item_2.connect('activate', self.test, 'circle')
+            
+            return palette
+
+    def test(self, button, data=None):
+        print button, data
+        self._activity._area.brush_shape = data
 
 class ComboFillColors(ToolComboBox):
 

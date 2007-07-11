@@ -56,6 +56,7 @@ class Area(gtk.DrawingArea):
 		self.janela = janela	
 		self.d = Desenho(self)
 		self.line_size = 2
+		self.brush_shape = 'circle'
 
 		colormap = self.get_colormap()
 		
@@ -138,7 +139,7 @@ class Area(gtk.DrawingArea):
 				self.d.eraser(widget, coords)
 			#brush
 			elif self.tool == 29:
-				    self.d.brush(widget, coords, self.line_size)
+				    self.d.brush(widget, coords, self.line_size, self.brush_shape)
 			if self.desenha:
 				# line
 				if self.tool == 1:
@@ -339,13 +340,14 @@ class Area(gtk.DrawingArea):
 	def _set_fill_color(self, color):
 		self.color_ = color		
 		self.gc.set_foreground(self.cores[color])
-		self.color_dec = self.cores[cor].pixel
+		
  
  	def _set_stroke_color(self, color):
 		self.color_line = color	
 		self.gc_line.set_foreground(self.cores[color])
 		self.gc_line.set_line_attributes(1, gtk.gdk.LINE_ON_OFF_DASH, gtk.gdk.CAP_ROUND, gtk.gdk.JOIN_ROUND)  
 		self.gc_brush.set_foreground(self.cores[color])
+		self.color_dec = self.cores[color].pixel
 
 	def _set_grayscale(self):
 		pix = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, False, 8, WIDTH, HEIGHT)
