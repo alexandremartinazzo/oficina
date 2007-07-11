@@ -49,8 +49,8 @@ class Area(gtk.DrawingArea):
 		self.pixmap_temp = None
 		self.desenho = []	
 		self.textos = []	
-		self.color_ = 2
-		self.color_line = 2
+		self.color_ = 0
+		self.color_line = 0
 		self.estadoTexto = 0
 		self.janela = janela	
 		self.d = Desenho(self)
@@ -225,6 +225,7 @@ class Area(gtk.DrawingArea):
 					self.anty = event.y
 				widget.queue_draw() 
 			elif self.tool == 2:# or 3 or 4 check this before
+				widget.queue_draw() 
 				self.enableUndo(widget)
 		self.desenha = False
 		
