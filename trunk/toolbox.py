@@ -41,9 +41,9 @@ class Toolbox(ActivityToolbox):
         self.add_toolbar(_('Effects'), self._effects_toolbar)
         self._effects_toolbar.show()
 
-        self._view_toolbar = ViewToolbar(activity)
-        self.add_toolbar(_('View'), self._view_toolbar)
-        self._view_toolbar.show()
+        #self._view_toolbar = ViewToolbar(activity)
+        #self.add_toolbar(_('View'), self._view_toolbar)
+        #self._view_toolbar.show()
         
     
 class DrawEditToolbar(EditToolbar):
@@ -54,8 +54,8 @@ class DrawEditToolbar(EditToolbar):
         self.redo.connect('clicked', redo, activity)
 
         #FIXME: buttons are not connected to the right callback
-        self.copy.connect('clicked', test_connect, activity, 'copy')
-        self.paste.connect('clicked', test_connect, activity, 'paste')
+        #self.copy.connect('clicked', test_connect, activity, 'copy')
+        #self.paste.connect('clicked', test_connect, activity, 'paste')
 
 
 class ToolsToolbar(gtk.Toolbar):
@@ -75,6 +75,8 @@ class ToolsToolbar(gtk.Toolbar):
         gtk.Toolbar.__init__(self)
 
          # FIXME: This should be a file picker instead of a combobox
+
+	"""
         self._icon_fill = ToolButton('icon-fill')
         self.insert(self._icon_fill, -1)
         self._icon_fill.show()
@@ -82,6 +84,7 @@ class ToolsToolbar(gtk.Toolbar):
         tool_item = ComboFillColors(activity)
         self.insert(tool_item, -1)
         tool_item.show()
+	"""
 
         self._icon_stroke = ToolButton('icon-stroke')
         self.insert(self._icon_stroke, -1)
@@ -104,15 +107,17 @@ class ToolsToolbar(gtk.Toolbar):
         self._tool_pencil.show()
         self._tool_pencil.set_tooltip(_('Pencil'))
 
-        self._tool_brush = ToolButton('tool-brush')
-        self.insert(self._tool_brush, -1)
-        self._tool_brush.show()
-        self._tool_brush.set_tooltip(_('Brush'))
+
 
         self._tool_eraser = ToolButton('tool-eraser')
         self.insert(self._tool_eraser, -1)
         self._tool_eraser.show()
         self._tool_eraser.set_tooltip(_('Eraser'))
+        """
+        self._tool_brush = ToolButton('tool-brush')
+        self.insert(self._tool_brush, -1)
+        self._tool_brush.show()
+        self._tool_brush.set_tooltip(_('Brush'))
 
         self._tool_bucket = ToolButton('tool-bucket')
         self.insert(self._tool_bucket, -1)
@@ -133,20 +138,20 @@ class ToolsToolbar(gtk.Toolbar):
         self.insert(self._tool_marquee_smart, -1)
         self._tool_marquee_smart.show()
         self._tool_marquee_smart.set_tooltip(_('Smart Marquee'))
-
+        """
         self._tool_marquee_rectangular = ToolButton('tool-marquee-rectangular')
         self.insert(self._tool_marquee_rectangular, -1)
         self._tool_marquee_rectangular.show()
         self._tool_marquee_rectangular.set_tooltip(_('Rectangular Marquee'))
 
         self._tool_pencil.connect('clicked', set_tool, activity, 'tool-pencil', self._TOOL_PENCIL)
-        self._tool_brush.connect('clicked', set_tool, activity, 'tool-brush', self._TOOL_BRUSH)
+        #self._tool_brush.connect('clicked', set_tool, activity, 'tool-brush', self._TOOL_BRUSH)
         self._tool_eraser.connect('clicked', set_tool, activity, 'tool-eraser', self._TOOL_ERASER)
-        self._tool_bucket.connect('clicked', set_tool, activity, 'tool-bucket', self._TOOL_BUCKET)
-        self._tool_marquee_elliptical.connect('clicked', set_tool, activity, 'tool-marquee-elliptical', self._TOOL_MARQUEE_ELLIPTICAL)
-        self._tool_marquee_freeform.connect('clicked', set_tool, activity, 'tool-marquee-freeform', self._TOOL_MARQUEE_FREEFORM)
+        #self._tool_bucket.connect('clicked', set_tool, activity, 'tool-bucket', self._TOOL_BUCKET)
+        #self._tool_marquee_elliptical.connect('clicked', set_tool, activity, 'tool-marquee-elliptical', self._TOOL_MARQUEE_ELLIPTICAL)
+        #self._tool_marquee_freeform.connect('clicked', set_tool, activity, 'tool-marquee-freeform', self._TOOL_MARQUEE_FREEFORM)
         self._tool_marquee_rectangular.connect('clicked', set_tool, activity, 'tool-marquee-rectangular', self._TOOL_MARQUEE_RECTANGULAR)
-        self._tool_marquee_smart.connect('clicked', set_tool, activity, 'tool-marquee-smart', self._TOOL_MARQUEE_SMART)
+        #self._tool_marquee_smart.connect('clicked', set_tool, activity, 'tool-marquee-smart', self._TOOL_MARQUEE_SMART)
 
 
 
@@ -176,13 +181,9 @@ class ComboFillColors(ToolComboBox):
         self._fill_color.append_item(self._ACTION_WHITE, _('White'))
 
         self._fill_color.set_active(0)
-        #self._fill_color.connect('changed', self._combo_changed_cb)
+
         self._fill_color.connect('changed', self.set_fill_color)
 
-
-#     def _combo_changed_cb(self, combo):
-#         set_fill_color(self._activity, combo.get_active())   
-#         print 'combo ativo' + str(combo.get_active())       
 
     def set_fill_color(self, combo):
         color = combo.get_active()
@@ -277,7 +278,7 @@ class ShapesToolbar(gtk.Toolbar):
     _TOOL_SHAPE_ELLIPSE = 5
     _TOOL_SHAPE_FREEFORM = 0
     _TOOL_SHAPE_HEART = 0
-    _TOOL_SHAPE_LINE = 0
+    _TOOL_SHAPE_LINE = 1
     _TOOL_SHAPE_PARALLELOGRAM = 0
     _TOOL_SHAPE_POLYGON = 27
     _TOOL_SHAPE_RECTANGLE = 6
@@ -314,15 +315,27 @@ class ShapesToolbar(gtk.Toolbar):
         self.insert(separator, -1)
         separator.show()
 
-        self._tool_shape_arrow = ToolButton('tool-shape-arrow')
-        self.insert(self._tool_shape_arrow, -1)
-        self._tool_shape_arrow.show()
-        self._tool_shape_arrow.set_tooltip(_('Arrow'))
-
         self._tool_shape_ellipse = ToolButton('tool-shape-ellipse')
         self.insert(self._tool_shape_ellipse, -1)
         self._tool_shape_ellipse.show()
         self._tool_shape_ellipse.set_tooltip(_('Ellipse'))
+
+        self._tool_shape_rectangle = ToolButton('tool-shape-rectangle')
+        self.insert(self._tool_shape_rectangle, -1)
+        self._tool_shape_rectangle.show()
+        self._tool_shape_rectangle.set_tooltip(_('Rectangle'))
+
+        self._tool_shape_line = ToolButton('tool-shape-line')
+        self.insert(self._tool_shape_line, -1)
+        self._tool_shape_line.show()
+        self._tool_shape_line.set_tooltip(_('Line'))
+
+        """
+
+        self._tool_shape_polygon = ToolButton('tool-shape-polygon')
+        self.insert(self._tool_shape_polygon, -1)
+        self._tool_shape_polygon.show()
+        self._tool_shape_polygon.set_tooltip(_('Polygon'))
 
         self._tool_shape_freeform = ToolButton('tool-shape-freeform')
         self.insert(self._tool_shape_freeform, -1)
@@ -334,25 +347,15 @@ class ShapesToolbar(gtk.Toolbar):
         self._tool_shape_heart.show()
         self._tool_shape_heart.set_tooltip(_('Heart'))
 
-        self._tool_shape_line = ToolButton('tool-shape-line')
-        self.insert(self._tool_shape_line, -1)
-        self._tool_shape_line.show()
-        self._tool_shape_line.set_tooltip(_('Line'))
-
         self._tool_shape_parallelogram = ToolButton('tool-shape-parallelogram')
         self.insert(self._tool_shape_parallelogram, -1)
         self._tool_shape_parallelogram.show()
         self._tool_shape_parallelogram.set_tooltip(_('Parallelogram'))
 
-        self._tool_shape_polygon = ToolButton('tool-shape-polygon')
-        self.insert(self._tool_shape_polygon, -1)
-        self._tool_shape_polygon.show()
-        self._tool_shape_polygon.set_tooltip(_('Polygon'))
-
-        self._tool_shape_rectangle = ToolButton('tool-shape-rectangle')
-        self.insert(self._tool_shape_rectangle, -1)
-        self._tool_shape_rectangle.show()
-        self._tool_shape_rectangle.set_tooltip(_('Rectangle'))
+        self._tool_shape_arrow = ToolButton('tool-shape-arrow')
+        self.insert(self._tool_shape_arrow, -1)
+        self._tool_shape_arrow.show()
+        self._tool_shape_arrow.set_tooltip(_('Arrow'))
 
         self._tool_shape_star = ToolButton('tool-shape-star')
         self.insert(self._tool_shape_star, -1)
@@ -368,24 +371,34 @@ class ShapesToolbar(gtk.Toolbar):
         self.insert(self._tool_shape_triangle, -1)
         self._tool_shape_triangle.show()
         self._tool_shape_triangle.set_tooltip(_('Triangle'))
-
-        self._tool_shape_arrow.connect('clicked', set_tool, activity, 'tool-shape-arrow', self._TOOL_SHAPE_ARROW)
+        """
+        #self._tool_shape_arrow.connect('clicked', set_tool, activity, 'tool-shape-arrow', self._TOOL_SHAPE_ARROW)
         self._tool_shape_ellipse.connect('clicked', set_tool, activity, 'tool-shape-ellipse', self._TOOL_SHAPE_ELLIPSE)
-        self._tool_shape_freeform.connect('clicked', set_tool, activity, 'tool-shape-freeform', self._TOOL_SHAPE_FREEFORM)
-        self._tool_shape_heart.connect('clicked', set_tool, activity, 'tool-shape-heart', self._TOOL_SHAPE_HEART)
+        #self._tool_shape_freeform.connect('clicked', set_tool, activity, 'tool-shape-freeform', self._TOOL_SHAPE_FREEFORM)
+        #self._tool_shape_heart.connect('clicked', set_tool, activity, 'tool-shape-heart', self._TOOL_SHAPE_HEART)
         self._tool_shape_line.connect('clicked', set_tool, activity, 'tool-shape-line', self._TOOL_SHAPE_LINE)
-        self._tool_shape_parallelogram.connect('clicked', set_tool, activity, 'tool-shape-parallelogram', self._TOOL_SHAPE_PARALLELOGRAM)
-        self._tool_shape_polygon.connect('clicked', set_tool, activity, 'tool-shape-polygon', self._TOOL_SHAPE_POLYGON)
+        #self._tool_shape_parallelogram.connect('clicked', set_tool, activity, 'tool-shape-parallelogram', self._TOOL_SHAPE_PARALLELOGRAM)
+        #self._tool_shape_polygon.connect('clicked', set_tool, activity, 'tool-shape-polygon', self._TOOL_SHAPE_POLYGON)
         self._tool_shape_rectangle.connect('clicked', set_tool, activity, 'tool-shape-rectangle', self._TOOL_SHAPE_RECTANGLE)
-        self._tool_shape_star.connect('clicked', set_tool, activity, 'tool-shape-star', self._TOOL_SHAPE_STAR)
-        self._tool_shape_trapezoid.connect('clicked', set_tool, activity, 'tool-shape-trapezoid', self._TOOL_SHAPE_TRAPEZOID)
-        self._tool_shape_triangle.connect('clicked', set_tool, activity, 'tool-shape-triangle', self._TOOL_SHAPE_TRIANGLE)
+        #self._tool_shape_star.connect('clicked', set_tool, activity, 'tool-shape-star', self._TOOL_SHAPE_STAR)
+        #self._tool_shape_trapezoid.connect('clicked', set_tool, activity, 'tool-shape-trapezoid', self._TOOL_SHAPE_TRAPEZOID)
+        #self._tool_shape_triangle.connect('clicked', set_tool, activity, 'tool-shape-triangle', self._TOOL_SHAPE_TRIANGLE)
 
 
 class TextToolbar(gtk.Toolbar):
+
+    _ACTION_TEXT = 4
+
     def __init__(self, activity):
         gtk.Toolbar.__init__(self)
-        
+
+        self._text = ToggleToolButton('text')
+        self.insert(self._text, -1)
+        self._text.show()
+        self._text.set_tooltip(_('Type'))
+        self._text.connect('clicked', set_tool, activity, 'text', self._ACTION_TEXT)
+
+        """
         #FIXME: this button is not connected to the right callback
         self._bold = ToggleToolButton('format-text-bold')
         self.insert(self._bold, -1)
@@ -415,6 +428,10 @@ class TextToolbar(gtk.Toolbar):
         #FIXME: must use a gtk.ToolItem to use 'insert' method
         #self.insert(self._text_color, -1)
         self._text_color.show()
+        """
+	def type_text(self, activity):
+        	set_tool(self._ACTION_TEXT, activity, 'text')
+        	activity._textview.show()
 
 
 class ImageToolbar(gtk.Toolbar):
@@ -438,7 +455,8 @@ class ImageToolbar(gtk.Toolbar):
         self.insert(separator, -1)
         separator.show()
         
-        self._object_rotate_left = ToolButton('object-rotate-left')
+        """        
+	self._object_rotate_left = ToolButton('object-rotate-left')
         self.insert(self._object_rotate_left, -1)
         self._object_rotate_left.show()
         self._object_rotate_left.set_tooltip(_('Rotate Left'))
@@ -459,13 +477,19 @@ class ImageToolbar(gtk.Toolbar):
         self._object_width.show()
         self._object_width.set_tooltip(_('Width'))
 
+
         self._object_height.connect('clicked', set_tool, activity, 'object-height', self._OBJECT_HEIGHT)
-        #self._object_insert.connect('clicked', insertImage, activity)
+        """
         self._object_insert.connect('clicked', self.insertImage, activity)
-        self._object_rotate_left.connect('clicked', set_tool, activity, 'object-rotate-left', self._OBJECT_ROTATE_LEFT)
-        self._object_rotate_right.connect('clicked', set_tool, activity, 'object-rotate-right', self._OBJECT_ROTATE_RIGHT)
-        self._object_width.connect('clicked', set_tool, activity, 'object-width', self._OBJECT_WIDTH)
-    
+        #self._object_rotate_left.connect('clicked', self.rotate_left, activity)
+        #self._object_rotate_right.connect('clicked', set_tool, activity, 'object-rotate-right', self._OBJECT_ROTATE_RIGHT)
+        #self._object_width.connect('clicked', set_tool, activity, 'object-width', self._OBJECT_WIDTH)
+	
+    def rotate_left(self, widget, activity):    
+        #activity._area._rotate_left()
+	pass
+
+
     def insertImage(self, widget, activity):
         dialog = gtk.FileChooserDialog(title=(_('Open File...')),   
                      action=gtk.FILE_CHOOSER_ACTION_OPEN,   
@@ -485,15 +509,26 @@ class ImageToolbar(gtk.Toolbar):
         dialog.destroy()
 
 
+
 class EffectsToolbar(gtk.Toolbar):
+
+    _ACTION_GRAYSCALE = 0
 
     def __init__(self, activity):
         gtk.Toolbar.__init__(self)
-      
+	
         separator = gtk.SeparatorToolItem()
         self.insert(separator, -1)
         separator.show()
 
+        self._effect_grayscale = ToolButton('effect-grayscale')
+        self.insert(self._effect_grayscale, -1)
+        self._effect_grayscale.show()
+        self._effect_grayscale.connect('clicked', test_connect, activity, 'effect-grayscale')
+        self._effect_grayscale.set_tooltip(_('Grayscale'))
+	
+	"""
+	#FIXME: Must be implemented
         self._black_and_white = ToolButton('black_and_white')
         self.insert(self._black_and_white, -1)
         self._black_and_white.show()
@@ -506,7 +541,12 @@ class EffectsToolbar(gtk.Toolbar):
         self._invert_colors.connect('clicked', test_connect, activity, 'invert-colors')
         self._invert_colors.set_tooltip(_('Invert Colors'))
 
-        
+        """
+        self._effect_grayscale.connect('clicked', self.grayscale, activity)
+
+    def grayscale(self, widget, activity):	
+        activity._area._set_grayscale()
+
 
 class ViewToolbar(gtk.Toolbar):
 
@@ -581,33 +621,17 @@ def set_tool(widget, activity, data=None, tool=None):
         cursor = gtk.gdk.Cursor(gtk.gdk.display_get_default() , pix, 6, 21)
         
     elif data == 'tool-marquee-rectangular':    
-        pix = gtk.gdk.pixbuf_new_from_file("./images/selecao_cursor.png")
-        cursor = gtk.gdk.Cursor(gtk.gdk.display_get_default() , pix, 6, 21)
+        cursor = gtk.gdk.Cursor(gtk.gdk.CROSSHAIR)
+	activity._area.move = False
 
-    elif data == 'tool-marquee-elliptical':  
-        pass
-
-    elif data == '':
-        pix = gtk.gdk.pixbuf_new_from_file("./images/linha_cursor.png")
-        cursor = gtk.gdk.Cursor(gtk.gdk.display_get_default() , pix, 6, 21)
-        
-    elif data == '':
+    elif data == 'text':
         pix = gtk.gdk.pixbuf_new_from_file("./images/letra_cursor.png")
         cursor = gtk.gdk.Cursor(gtk.gdk.display_get_default() , pix, 6, 21)
         
-    elif data == '':
-        pix = gtk.gdk.pixbuf_new_from_file("./images/selecao_cursor.png")
+    elif data == 'tool-shape-line':
+        pix = gtk.gdk.pixbuf_new_from_file("./images/linha_cursor.png")
         cursor = gtk.gdk.Cursor(gtk.gdk.display_get_default() , pix, 6, 21)
         
-    elif data == '':
-	activity._area.primeira = 1
-        pix = gtk.gdk.pixbuf_new_from_file("./images/poligono_cursor.png")
-        cursor = gtk.gdk.Cursor(gtk.gdk.display_get_default() , pix, 6, 21)
-        
-    elif data == '':
-        pix = gtk.gdk.pixbuf_new_from_file("./images/move_cursor.png")
-        cursor = gtk.gdk.Cursor(gtk.gdk.display_get_default() , pix, 6, 21)
-
     else:
         # Uses toolbar icon as cursor
         #FIXME: invert cursor color. Toolbar icons are white
@@ -618,17 +642,12 @@ def set_tool(widget, activity, data=None, tool=None):
             cursor = gtk.gdk.Cursor(gtk.gdk.display_get_default() , pix, 6, 21)
         except:
             cursor = None
-        
+
+       
     activity._area.window.set_cursor(cursor)
     #print cursor
     
 
-# def set_fill_color(activity, color):
-#     activity._area._set_fill_color(color)
-
-
-# def set_stroke_color(activity, color):
-#     activity._area._set_stroke_color(color)
 
 def set_stroke_size(activity, size):
      activity._area.configure_line(size)

@@ -10,7 +10,7 @@ import pango
 from Desenho import Desenho
 
 WIDTH = 1195
-HEIGHT = 780
+HEIGHT = 800
 
 class Area(gtk.DrawingArea):
 	def __init__(self, janela):		
@@ -68,7 +68,7 @@ class Area(gtk.DrawingArea):
 		colormap.alloc_color('#ffffff', True, True), # white	
 		colormap.alloc_color('#00aa00', True, True)  # green - selection
 		]
-		self.font = pango.FontDescription('Sans 8')
+		self.font = pango.FontDescription('Sans 9')
 		#self.mensagem = Mensagens(self)
 		#self.mensagem.criaConexao()
 		
@@ -119,7 +119,7 @@ class Area(gtk.DrawingArea):
 	def mousedown(self,widget,event): 		
 		# text
 		if self.tool == 4:
-			self.d.Texto(widget,event)
+			self.d.text(widget,event)
 		if not self.move or self.tool != 26:
 			self.oldx = int(event.x)
 			self.oldy = int(event.y)	
@@ -287,5 +287,23 @@ class Area(gtk.DrawingArea):
  	def _set_stroke_color(self, color):
 		self.color_line = color	
 		self.gc_line.set_foreground(self.cores[color])
-		self.gc_line.set_line_attributes(1, gtk.gdk.LINE_ON_OFF_DASH, gtk.gdk.CAP_ROUND, gtk.gdk.JOIN_ROUND)
-  
+		self.gc_line.set_line_attributes(1, gtk.gdk.LINE_ON_OFF_DASH, gtk.gdk.CAP_ROUND, gtk.gdk.JOIN_ROUND)  
+
+	def _set_grayscale(self):
+		pix = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, False, 8, WIDTH, HEIGHT)
+		pix_ = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, False, 8, WIDTH, HEIGHT)
+		pix.get_from_drawable(self.pixmap, gtk.gdk.colormap_get_system(), 0, 0, 0, 0, WIDTH, HEIGHT)
+		pix.saturate_and_pixelate(pix_, 0 ,0)
+
+		self.pixmap.draw_pixbuf(self.gc, pix_, 0, 0, 0, 0, WIDTH, HEIGHT, dither=gtk.gdk.RGB_DITHER_NORMAL, x_dither=0, y_dither=0)
+
+		self.pixmap_temp.draw_pixbuf(self.gc, pix_, 0, 0, 0, 0, WIDTH, HEIGHT, dither=gtk.gdk.RGB_DITHER_NORMAL, x_dither=0, y_dither=0)
+		self.queue_draw()
+
+	def _rotate_left(self):
+		pix = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, False, 8, WIDTH, HEIGHT)
+		pix_ = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, False, 8, WIDTH, HEIGHT)
+		pix.get_from_drawable(self.pixmap, gtk.gdk.colormap_get_system(), 0, 0, 0, 0, -1, -1)
+		pix_ = pix.rotate_simple(gtk.gdk.PIXBUF_ROTATE_COUNTERCLOCKWISE)
+		self.pixmap.draw_pixbuf(self.gc, pix_, 0, 0, 0, 0, width=-1, height=-1, dither=gtk.gdk.RGB_DITHER_NORMAL, x_dither=0, y_dither=0)
+		self.queue_draw()

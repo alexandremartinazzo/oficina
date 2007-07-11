@@ -9,7 +9,7 @@ import pango
 
 
 WIDTH = 1195
-HEIGHT = 780
+HEIGHT = 800
 
 class Desenho:
 	def __init__(self, d_):		
@@ -175,22 +175,23 @@ class Desenho:
 		if self.d.estadoTexto == 0:
 			self.d.estadoTexto = 1
 			print event.x
-			self.d.janela.areaFixa.move(self.d.janela.entrada, int(event.x), int(event.y))
-			self.d.janela.entrada.show()
+			self.d.janela._fixed.move(self.d.janela._textview, int(event.x), int(event.y))
+			self.d.janela._textview.show()
 		else:	
-			self.d.estadoTexto = 0
-			texto = self.d.janela.entrada.get_text()
+			self.d.estadoTexto = 0	
+			texto = self.d.janela._textview.get_text()
 			layout = self.d.create_pango_layout(texto)
 			layout.set_font_description(self.d.font)
 			self.d.pixmap.draw_layout(self.d.gc, self.d.oldx, self.d.oldy, layout)
 			self.d.pixmap_temp.draw_layout(self.d.gc, self.d.oldx, self.d.oldy, layout)
-			self.d.janela.entrada.hide()
+			self.d.janela._textview.hide()
 
 			widget.queue_draw()
 
 	def loadImage(self, name):
 		pixbuf = gtk.gdk.pixbuf_new_from_file(name) 
 		self.d.pixmap.draw_pixbuf(self.d.gc, pixbuf, 0, 0, 0, 0, width=-1, height=-1, dither=gtk.gdk.RGB_DITHER_NORMAL, x_dither=0, y_dither=0)
+                self.d.pixmap_temp.draw_pixbuf(self.d.gc, pixbuf, 0, 0, 0, 0, width=-1, height=-1, dither=gtk.gdk.RGB_DITHER_NORMAL, x_dither=0, y_dither=0)
 		self.d.queue_draw()	
 		
 	def moveSelection(self, widget, coords):		
