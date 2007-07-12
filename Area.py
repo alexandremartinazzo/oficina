@@ -13,7 +13,14 @@ WIDTH = 800
 HEIGHT = 600
 
 class Area(gtk.DrawingArea):
-	def __init__(self, janela):		
+	def __init__(self, janela):
+		""" Initialize the object from class Area which is derived from gtk.DrawingArea.
+
+			Keyword arguments:
+			self -- the Area object (GtkDrawingArea)
+			janela -- the parent window
+
+		"""
 		gtk.DrawingArea.__init__(self)
 		self.set_size_request(WIDTH, HEIGHT)
 		self.set_events(gtk.gdk.POINTER_MOTION_MASK |
@@ -82,7 +89,15 @@ class Area(gtk.DrawingArea):
 		self.undo_list=[]#pixmaps list to Undo func
 
 	# Create a new backing pixmap of the appropriate size
-	def configure_event(self, widget, event):		
+	def configure_event(self, widget, event):
+		"""Configure the Area object.
+
+		Keyword arguments:
+		self -- the Area object (GtkDrawingArea)
+		widget -- the Area object (GtkDrawingArea)
+		event -- GdkEvent
+
+		"""
 		win = widget.window
 		width = win.get_geometry()[2]
 		height = win.get_geometry()[3]	
@@ -109,10 +124,25 @@ class Area(gtk.DrawingArea):
 		
     # set the new line size
 	def configure_line(self, size):
+		"""Configure the line's size.
+
+		Keyword arguments:
+		self -- the Area object (GtkDrawingArea)
+		size -- 
+
+		"""		
 	    self.line_size = size
 	    self.gc_line.set_line_attributes(size, gtk.gdk.LINE_SOLID, gtk.gdk.CAP_ROUND, gtk.gdk.JOIN_ROUND)
 
-	def expose(self, widget, event):		
+	def expose(self, widget, event):
+		"""Show up the Area object (GtkDrawingArea).
+
+		Keyword arguments:
+		self -- the Area object (GtkDrawingArea)
+		widget -- the Area object (GtkDrawingArea)
+		event -- GdkEvent
+
+		"""	
 		area = event.area		
 		if self.desenha:
 			widget.window.draw_drawable(self.gc, self.pixmap_temp, area[0], area[1], area[0], area[1], area[2], area[3])	
@@ -120,7 +150,15 @@ class Area(gtk.DrawingArea):
 			widget.window.draw_drawable(self.gc, self.pixmap, area[0], area[1], area[0], area[1], area[2], area[3])		
 		return False
 
-	def mousedown(self,widget,event): 		
+	def mousedown(self,widget,event):
+		"""Make the Area object (GtkDrawingArea) recognize that the mouse button was pressed.
+
+		Keyword arguments:
+		self -- the Area object (GtkDrawingArea)
+		widget -- the Area object (GtkDrawingArea)
+		event -- GdkEvent
+
+		"""
 		# text
 		if self.tool == 4:
 			self.d.text(widget,event)
@@ -130,7 +168,15 @@ class Area(gtk.DrawingArea):
 			
 		self.desenha = True		
 		
-	def mousemove(self,widget,event): 		
+	def mousemove(self,widget,event):
+		"""Make the Area object (GtkDrawingArea) recognize that the mouse is moving.
+
+		Keyword arguments:
+		self -- the Area object (GtkDrawingArea)
+		widget -- the Area object (GtkDrawingArea)
+		event -- GdkEvent
+
+		"""
 		x , y, state = event.window.get_pointer()	
 		coords = int(x), int(y)
 						
@@ -170,7 +216,14 @@ class Area(gtk.DrawingArea):
 				    self.d.polygon(widget, coords)	
 		
 	def mouseup(self,widget,event):	
-		
+		"""Make the Area object (GtkDrawingArea) recognize that the mouse was released.
+
+		Keyword arguments:
+		self -- the Area object (GtkDrawingArea)
+		widget -- the Area object (GtkDrawingArea)
+		event -- GdkEvent
+
+		"""
 		if self.desenha:
 			# line
 			if self.tool == 1:
@@ -272,6 +325,12 @@ class Area(gtk.DrawingArea):
 		
     #this func make a basic Undo
 	def undo(self):
+		"""Undo the last drawing change.
+
+		Keyword arguments:
+		self -- the Area object (GtkDrawingArea)
+
+		"""
 		if self.first_undo:#if is the first time you click on UNDO
 			self.undo_times -= 1
 			self.redo_times = 1
@@ -300,6 +359,12 @@ class Area(gtk.DrawingArea):
 		
 		 
 	def redo(self):
+		"""Redo the last undo operation.
+
+		Keyword arguments:
+		self -- the Area object (GtkDrawingArea)
+
+		"""
 		#print "REDO no.%d" %(self.redo_times)
 		
 		if  (self.redo_times>0):
@@ -321,6 +386,13 @@ class Area(gtk.DrawingArea):
 			
 		   	
 	def enableUndo(self,widget):
+		"""Keep the last change in a list for Undo/Redo commands.
+
+		Keyword arguments:
+		self -- the Area object (GtkDrawingArea)
+		widget -- the Area object (GtkDrawingArea)
+
+		"""
 		if not self.first_undo and not self.first_redo:
 			self.undo_times += 1
 		
@@ -338,11 +410,25 @@ class Area(gtk.DrawingArea):
 		#	print "estourou"
 		
 	def _set_fill_color(self, color):
+		"""Set fill color.
+
+		Keyword arguments:
+		self -- the Area object (GtkDrawingArea)
+		color -- integer "enum"
+
+		"""
 		self.color_ = color		
 		self.gc.set_foreground(self.cores[color])
 		
  
  	def _set_stroke_color(self, color):
+		"""Set stroke color.
+
+		Keyword arguments:
+		self -- the Area object (GtkDrawingArea)
+		color -- integer "enum"
+
+		"""
 		self.color_line = color	
 		self.gc_line.set_foreground(self.cores[color])
 		self.gc_line.set_line_attributes(1, gtk.gdk.LINE_ON_OFF_DASH, gtk.gdk.CAP_ROUND, gtk.gdk.JOIN_ROUND)  
@@ -350,6 +436,12 @@ class Area(gtk.DrawingArea):
 		self.color_dec = self.cores[color].pixel
 
 	def _set_grayscale(self):
+		"""Apply grayscale effect.
+
+		Keyword arguments:
+		self -- the Area object (GtkDrawingArea)
+
+		"""
 		pix = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, False, 8, WIDTH, HEIGHT)
 		pix_ = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, False, 8, WIDTH, HEIGHT)
 		pix.get_from_drawable(self.pixmap, gtk.gdk.colormap_get_system(), 0, 0, 0, 0, WIDTH, HEIGHT)
@@ -361,6 +453,12 @@ class Area(gtk.DrawingArea):
 		self.queue_draw()
 
 	def _rotate_left(self):
+		"""Rotate the image.
+
+		Keyword arguments:
+		self -- the Area object (GtkDrawingArea)
+
+		"""
 		pix = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, False, 8, WIDTH, HEIGHT)
 		pix_ = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, False, 8, WIDTH, HEIGHT)
 		pix.get_from_drawable(self.pixmap, gtk.gdk.colormap_get_system(), 0, 0, 0, 0, -1, -1)

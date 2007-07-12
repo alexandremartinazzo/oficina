@@ -12,10 +12,25 @@ WIDTH = 1195
 HEIGHT = 800
 
 class Desenho:
-	def __init__(self, d_):		
+	def __init__(self, d_):
+		"""Initialize Desenho object.
+
+		Keyword arguments:
+		self -- Desenho.Desenho instance
+		d_ -- Area object (GtkDrawingArea)
+
+		"""
 		self.d = d_
 		
-	def line(self, widget, coords):		
+	def line(self, widget, coords):
+		"""Draw line.
+
+		Keyword arguments:
+		self -- Desenho.Desenho instance
+		widget -- Area object (GtkDrawingArea)
+		coords -- Two value tuple
+
+		"""
 		self.d.pixmap_temp.draw_drawable(self.d.gc,self.d.pixmap,  0 , 0 ,0,0, WIDTH, HEIGHT)
 		self.d.pixmap_temp.draw_line(self.d.gc_line,self.d.oldx,self.d.oldy,coords[0],coords[1])
 		self.d.newx = coords[0]	
@@ -23,6 +38,16 @@ class Desenho:
 		widget.queue_draw()
 	
 	def eraser(self, widget, coords, size = 30, shape = 'circle'):
+		"""Erase part of the drawing.
+
+		Keyword arguments:
+		self -- Desenho.Desenho instance
+		widget -- Area object (GtkDrawingArea)
+		coords -- Two value tuple
+		size -- integer (default 30)
+		shape -- string (default 'circle')
+
+		"""
 		self.d.desenha = False
 		if(shape == 'circle'):
 			self.d.pixmap.draw_arc(self.d.gc_eraser, True, coords[0], coords[1], size, size, 0, 360*64)
@@ -35,6 +60,16 @@ class Desenho:
 		widget.queue_draw()
 		
 	def brush(self, widget, coords, size = 5, shape = 'circle'):
+		"""Paint with brush.
+
+		Keyword arguments:
+		self -- Desenho.Desenho instance
+		widget -- Area object (GtkDrawingArea)
+		coords -- Two value tuple
+		size -- integer (default 30)
+		shape -- string (default 'circle')
+
+		"""
 		self.d.desenha = False
 		if(shape == 'circle'):
 			self.d.pixmap.draw_arc(self.d.gc_brush, True, coords[0], coords[1], size, size, 0, 360*64)
@@ -47,6 +82,14 @@ class Desenho:
 		widget.queue_draw()
 	
 	def square(self, widget, coords):
+		"""Draw a square.
+
+		Keyword arguments:
+		self -- Desenho.Desenho instance
+		widget -- Area object (GtkDrawingArea)
+		coords -- Two value tuple
+
+		"""
 		widget.queue_draw()		
 
 		if coords[0] > WIDTH:
@@ -88,6 +131,14 @@ class Desenho:
 
 
 	def selection(self, widget, coords):
+		"""Make a selection.
+
+		Keyword arguments:
+		self -- Desenho.Desenho instance
+		widget -- Area object (GtkDrawingArea)
+		coords -- Two value tuple
+
+		"""		
 		widget.queue_draw()		
 
 		if coords[0] > WIDTH:
@@ -128,6 +179,14 @@ class Desenho:
 
 	
 	def circle(self, widget, coords):
+		"""Draw a circle.
+
+		Keyword arguments:
+		self -- Desenho.Desenho instance
+		widget -- Area object (GtkDrawingArea)
+		coords -- Two value tuple
+
+		"""
 		widget.queue_draw()	
 		
 		if coords[0] > WIDTH:
@@ -170,6 +229,14 @@ class Desenho:
 
 	
 	def pencil(self, widget, coords):
+		"""Draw a pencil.
+
+		Keyword arguments:
+		self -- Desenho.Desenho instance
+		widget -- Area object (GtkDrawingArea)
+		coords -- Two value tuple
+
+		"""
 		self.d.pixmap_temp.draw_drawable(self.d.gc,self.d.pixmap,  0 , 0 ,0,0, WIDTH, HEIGHT)
 		self.d.pixmap.draw_line(self.d.gc_line,self.d.oldx,self.d.oldy,coords[0],coords[1])	
 		self.d.oldx = coords[0]
@@ -177,6 +244,12 @@ class Desenho:
 		widget.queue_draw()
 
 	def clear(self):
+		"""Clear the drawing.
+
+		Keyword arguments:
+		self -- Desenho.Desenho instance
+
+		"""
 		self.d.desenho = []
 		self.d.textos = []		
 		self.d.pixmap.draw_rectangle(self.d.get_style().white_gc, True,0, 0, WIDTH, HEIGHT)
@@ -184,6 +257,14 @@ class Desenho:
 		self.d.queue_draw()	
 	
 	def text(self,widget,event):
+		"""Make a selection.
+
+		Keyword arguments:
+		self -- Desenho.Desenho instance
+		widget -- Area object (GtkDrawingArea)
+		event -- GdkEvent
+
+		"""
 		if self.d.estadoTexto == 0:
 			self.d.estadoTexto = 1
 			print event.x
@@ -202,12 +283,27 @@ class Desenho:
 			widget.queue_draw()
 
 	def loadImage(self, name):
+		"""Load an image.
+
+		Keyword arguments:
+		self -- Desenho.Desenho instance
+		name -- string (image file path)
+
+		"""
 		pixbuf = gtk.gdk.pixbuf_new_from_file(name) 
 		self.d.pixmap.draw_pixbuf(self.d.gc, pixbuf, 0, 0, 0, 0, width=-1, height=-1, dither=gtk.gdk.RGB_DITHER_NORMAL, x_dither=0, y_dither=0)
                 self.d.pixmap_temp.draw_pixbuf(self.d.gc, pixbuf, 0, 0, 0, 0, width=-1, height=-1, dither=gtk.gdk.RGB_DITHER_NORMAL, x_dither=0, y_dither=0)
 		self.d.queue_draw()	
 		
-	def moveSelection(self, widget, coords):		
+	def moveSelection(self, widget, coords):
+		"""Move the selection.
+
+		Keyword arguments:
+		self -- Desenho.Desenho instance
+		widget -- Area object (GtkDrawingArea)
+		coords -- Two value tuple
+
+		"""	
 		self.d.pixmap_temp.draw_rectangle(self.d.get_style().white_gc, True,0, 0, WIDTH, HEIGHT)
 		self.d.pixmap_temp.draw_drawable(self.d.gc,self.d.pixmap,  0 , 0 ,0,0, WIDTH, HEIGHT)	
 		
@@ -234,6 +330,14 @@ class Desenho:
 		widget.queue_draw()
 	
 	def polygon(self, widget, coords):
+		"""Draw polygon.
+
+		Keyword arguments:
+		self -- Desenho.Desenho instance
+		widget -- Area object (GtkDrawingArea)
+		coords -- Two value tuple
+
+		"""	
 		self.d.pixmap_temp.draw_drawable(self.d.gc,self.d.pixmap,  0 , 0 ,0,0, WIDTH, HEIGHT)
 		if self.d.primeira == 1:
 			self.d.pixmap_temp.draw_line(self.d.gc_line,self.d.oldx,self.d.oldy,coords[0],coords[1]) 

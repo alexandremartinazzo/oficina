@@ -15,6 +15,13 @@ from Cursors import Cursors
 
 class OficinaActivity(activity.Activity):
     def __init__(self, handle):
+		"""Initialize the OficinaActivity object.
+
+		Keyword arguments:
+		self -- 
+		handle --
+
+		"""
         activity.Activity.__init__(self, handle)
 
         os.chdir(activity.get_bundle_path())
@@ -59,8 +66,11 @@ class OficinaActivity(activity.Activity):
 
 
     def read_file(self, file_path):
-        '''
-        Method to read file from Sugar Journal
+        '''Read file from Sugar Journal.
+
+		self --
+		file_path --
+
         '''
         print file_path
         #self._area.d.limpatudo()
@@ -69,8 +79,11 @@ class OficinaActivity(activity.Activity):
 
 
     def write_file(self, file_path):
-        '''
-        Method to save file on Sugar Journal
+        '''Save file on Sugar Journal.
+
+		self --
+		file_path -- 
+
         '''
         print file_path
         width, height = self._area.window.get_size()
