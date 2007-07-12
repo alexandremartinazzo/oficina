@@ -10,6 +10,8 @@ from gtk import gdk
 from Oficina import Oficina
 
 def main():
+	"""Run the program.
+	"""
 	oficina = Oficina()
 	gtk.main()	
 

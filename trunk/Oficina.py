@@ -13,6 +13,12 @@ DRAW_HEIGHT = 800
 
 class Oficina:
 	def __init__(self):
+		"""Initialize the Oficina object.
+
+		Keyword arguments:
+		self -- Oficina.Oficina instance
+
+		"""
 		#self.window = gtk.Window()
 
 		#self.areaFixa = gtk.Fixed()
@@ -96,7 +102,16 @@ class Oficina:
 		#self.area.show()
 		#
 
-	def mousedown(self,widget,event, ferramenta):	
+	def mousedown(self,widget,event, ferramenta):
+		"""Verify what event was called when the mouse pressed a button.
+
+		Keyword arguments:
+		self -- Oficina.Oficina instance
+		widget -- gtk.EventBox
+		event -- GdkEvent
+		ferramenta -- integer "enum"
+
+		"""
 		self.entrada.hide()
 		if ferramenta == 7:			
 			self.area.d.limpatudo()	#vassoura	
@@ -199,11 +214,25 @@ class Oficina:
 		self.area.d.loadImage(name)
 			
 	def save(self, name):
+		"""Save the drawing.
+
+		Keyword arguments:
+		self -- Oficina.Oficina instance
+		name -- string (path where the file will be saved)
+
+		"""
 		pixbuf = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, False, 8, DRAW_WIDTH, DRAW_HEIGHT)
 		pixbuf.get_from_drawable(self.area.pixmap, gtk.gdk.colormap_get_system(), 0, 0, 0, 0, -1, -1)
 		pixbuf.save(name + ".png", "png", {})	
 		
 	def decode_path(self, file_paths):
+		"""
+
+		Keyword arguments:
+		self -- Oficina.Oficina instance
+		file_paths -- tuple with the string of the path
+
+		"""
 		file_paths_list = list()
 		if os.name == 'nt': #  Windows 
 			for file_path in file_paths: 

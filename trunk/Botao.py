@@ -6,6 +6,13 @@ from gtk import gdk
 
 class Botao:
 	def __init__(self, area):
+		"""Initialize the Botao object.
+
+		Keyword arguments:
+		self -- Botao.Botao instance
+		area -- gtk.Fixed object
+
+		"""
 		self.area = area
 		self.botoes = []
 		self.id = 0
@@ -14,6 +21,18 @@ class Botao:
 		self.tooltip = gtk.Tooltips()
 		
 	def adicionaBotao(self, archive, tipo, x, y, mousedown, tooltip_):
+		"""Add button.
+
+		Keyword arguments:
+		self -- Botao.Botao instance
+		archive -- button icon (image file)
+		tipo -- integer "enum"
+		x -- integer (horizontal position)
+		y -- integer (vertical position)
+		mousedown -- method Oficina.mousedown of Oficina.Oficina instance
+		tooltip_ -- string (name of the button)
+
+		"""
 		img = gtk.Image()
 		img.set_from_file("./images/" + archive)
 		
@@ -39,16 +58,42 @@ class Botao:
 		self.tooltip.set_tip(eventbox, tooltip_, None)
 		#self.tooltip.enable()
 		
-	def mousedown(self,widget,event, id): 		
+	def mousedown(self,widget,event, id): 	
+		"""Recognize that the mouse was pressed in one of the buttons.
+
+		Keyword arguments:
+		self -- Botao.Botao instance
+		widget -- gtk.EventBox
+		event -- GdkEvent
+		id -- integer "enum"
+
+		"""
 		self.desenha = True
 		ex = event.x
 		ey = event.y 
 		self.local = ex, ey	
 	
-	def mouseup(self,widget,event): 		
+	def mouseup(self,widget,event): 
+		"""Recognize that the mouse was released in one of the buttons.
+
+		Keyword arguments:
+		self -- Botao.Botao instance
+		widget -- gtk.EventBox
+		event -- GdkEvent
+
+		"""		
 		self.desenha = False
 
-	def mousemove(self,widget,event, id): 		
+	def mousemove(self,widget,event, id):
+		"""Recognize that the mouse was moved.
+
+		Keyword arguments:
+		self -- Botao.Botao instance
+		widget -- gtk.EventBox
+		event -- GdkEvent
+		id -- integer "enum"
+
+		"""	
 		x , y, state = self.area.window.get_pointer()	
 		ex, ey = self.local
 		x_ = int(x - ex) 
