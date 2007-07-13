@@ -16,9 +16,9 @@ class Area(gtk.DrawingArea):
 	def __init__(self, janela):
 		""" Initialize the object from class Area which is derived from gtk.DrawingArea.
 
-			Keyword arguments:
-			self -- the Area object (GtkDrawingArea)
-			janela -- the parent window
+		Keyword arguments:
+		self -- the Area object (GtkDrawingArea)
+		janela -- the parent window
 
 		"""
 		gtk.DrawingArea.__init__(self)
@@ -131,8 +131,8 @@ class Area(gtk.DrawingArea):
 		size -- 
 
 		"""		
-	    self.line_size = size
-	    self.gc_line.set_line_attributes(size, gtk.gdk.LINE_SOLID, gtk.gdk.CAP_ROUND, gtk.gdk.JOIN_ROUND)
+		self.line_size = size
+		self.gc_line.set_line_attributes(size, gtk.gdk.LINE_SOLID, gtk.gdk.CAP_ROUND, gtk.gdk.JOIN_ROUND)
 
 	def expose(self, widget, event):
 		"""Show up the Area object (GtkDrawingArea).
@@ -154,7 +154,7 @@ class Area(gtk.DrawingArea):
 		"""Make the Area object (GtkDrawingArea) recognize that the mouse button was pressed.
 
 		Keyword arguments:
-		self -- the Area object (GtkDrawingArea)
+ 		self -- the Area object (GtkDrawingArea)
 		widget -- the Area object (GtkDrawingArea)
 		event -- GdkEvent
 
@@ -318,6 +318,7 @@ class Area(gtk.DrawingArea):
 						self.x_current = self.list_x.pop()
 						self.y_current = self.list_y.pop()
 					self.pixmap.draw_image(self.gc,self.imagem,0,0,0,0,WIDTH, HEIGHT)
+					self.pixmap_temp.draw_image(self.gc,self.imagem,0,0,0,0,WIDTH, HEIGHT)
 					widget.queue_draw()
 				self.enableUndo(widget)
 		self.desenha = False

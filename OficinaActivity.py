@@ -15,13 +15,13 @@ from Cursors import Cursors
 
 class OficinaActivity(activity.Activity):
     def __init__(self, handle):
-		"""Initialize the OficinaActivity object.
+        """Initialize the OficinaActivity object.
 
-		Keyword arguments:
-		self -- 
-		handle --
+            Keyword arguments:
+            self -- 
+            handle --
 
-		"""
+        """
         activity.Activity.__init__(self, handle)
 
         os.chdir(activity.get_bundle_path())
@@ -68,13 +68,13 @@ class OficinaActivity(activity.Activity):
     def read_file(self, file_path):
         '''Read file from Sugar Journal.
 
-		self --
+                self --
 		file_path --
 
         '''
         print file_path
         #self._area.d.limpatudo()
-        self._area.d.clear()
+        #self._area.d.clear()
         self._area.d.loadImage(file_path)
 
 
