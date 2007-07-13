@@ -1,56 +1,56 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Korean translations for Oficina package.
+# Copyright (C) 2007 GNU General Public License
+# This file is distributed under the same license as the Oficina package.
+# Do Young-Min <jeju123@gmail.com>, 2007.
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: \n"
+"Project-Id-Version: 1.0\n"
+"Report-Msgid-Bugs-To: Irene <irene@lsi.usp.br> \n"
 "POT-Creation-Date: 2007-07-13 17:56-0300\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"PO-Revision-Date: 2007-07-13 18:19-0300\n"
+"Last-Translator: Nathalia <nathalia.sautchuk@gmail.com>\n"
+"Language-Team: Korean\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #: toolbox.py:22
 msgid "Edit"
-msgstr ""
+msgstr "편집"
 
 #: toolbox.py:26
 msgid "Tools"
-msgstr ""
+msgstr "툴"
 
 #: toolbox.py:30
 msgid "Shapes"
-msgstr ""
+msgstr "도형"
 
 #: toolbox.py:34
 msgid "Text"
-msgstr ""
+msgstr "텍스트"
 
 #: toolbox.py:38
 msgid "Image"
-msgstr ""
+msgstr "이미지"
 
 #: toolbox.py:42
 msgid "Effects"
-msgstr ""
+msgstr "효과"
 
 #: toolbox.py:114
 msgid "Pencil"
-msgstr ""
+msgstr "연필"
 
 #: toolbox.py:119
 msgid "Brush"
-msgstr ""
+msgstr "붓"
 
 #: toolbox.py:126
 msgid "Eraser"
-msgstr ""
+msgstr "지우개"
 
 #: toolbox.py:131
 msgid "Polygon"
@@ -62,7 +62,7 @@ msgstr ""
 
 #: toolbox.py:159
 msgid "Rectangular Marquee"
-msgstr ""
+msgstr "사각 마퀴"
 
 #: toolbox.py:176
 msgid "Square"
@@ -74,132 +74,132 @@ msgstr ""
 
 #: toolbox.py:208 toolbox.py:243
 msgid "Black"
-msgstr ""
+msgstr "검정"
 
 #: toolbox.py:209 toolbox.py:244
 msgid "Purple"
-msgstr ""
+msgstr "자주"
 
 #: toolbox.py:210 toolbox.py:245
 msgid "Yellow"
-msgstr ""
+msgstr "노랑"
 
 #: toolbox.py:211 toolbox.py:246
 msgid "Blue"
-msgstr ""
+msgstr "파랑"
 
 #: toolbox.py:212 toolbox.py:247
 msgid "Green"
-msgstr ""
+msgstr "그린"
 
 #: toolbox.py:213 toolbox.py:248
 msgid "Red"
-msgstr ""
+msgstr "빨강"
 
 #: toolbox.py:214 toolbox.py:249
 msgid "Orange"
-msgstr ""
+msgstr "오렌지"
 
 #: toolbox.py:215 toolbox.py:250
 msgid "White"
-msgstr ""
+msgstr "하얀"
 
 #: toolbox.py:286
 msgid "1"
-msgstr ""
+msgstr "1"
 
 #: toolbox.py:287
 msgid "2"
-msgstr ""
+msgstr "2"
 
 #: toolbox.py:288
 msgid "3"
-msgstr ""
+msgstr "3"
 
 #: toolbox.py:289
 msgid "5"
-msgstr ""
+msgstr "5"
 
 #: toolbox.py:290 toolbox.py:606
 msgid "10"
-msgstr ""
+msgstr "10"
 
 #: toolbox.py:291
 msgid "20"
-msgstr ""
+msgstr "20"
 
 #: toolbox.py:292 toolbox.py:604
 msgid "50"
-msgstr ""
+msgstr "50"
 
 #: toolbox.py:293 toolbox.py:603
 msgid "100"
-msgstr ""
+msgstr "100"
 
 #: toolbox.py:294 toolbox.py:600
 msgid "500"
-msgstr ""
+msgstr "500"
 
 #: toolbox.py:295 toolbox.py:599
 msgid "1000"
-msgstr ""
+msgstr "1000"
 
 #: toolbox.py:296
 msgid "5000"
-msgstr ""
+msgstr "5000"
 
 #: toolbox.py:297
 msgid "10000"
-msgstr ""
+msgstr "10000"
 
 #: toolbox.py:298
 msgid "100000"
-msgstr ""
+msgstr "100000"
 
 #: toolbox.py:354
 msgid "Ellipse"
-msgstr ""
+msgstr "이클립스"
 
 #: toolbox.py:359
 msgid "Rectangle"
-msgstr ""
+msgstr "사각"
 
 #: toolbox.py:364
 msgid "Line"
-msgstr ""
+msgstr "선"
 
 #: toolbox.py:429
 msgid "Type"
-msgstr ""
+msgstr "타입"
 
 #: toolbox.py:482
 msgid "object-insert"
-msgstr ""
+msgstr "오브젝트 삽입"
 
 #: toolbox.py:525 toolbox.py:711
 msgid "Open File..."
-msgstr ""
+msgstr "파일 열기…"
 
 #: toolbox.py:559
 msgid "Grayscale"
-msgstr ""
+msgstr "그레이 스케일"
 
 #: toolbox.py:601
 msgid "200"
-msgstr ""
+msgstr "200"
 
 #: toolbox.py:602
 msgid "150"
-msgstr ""
+msgstr "150"
 
 #: toolbox.py:605
 msgid "25"
-msgstr ""
+msgstr "25"
 
 #: toolbox.py:619
 msgid "ZOOM +"
-msgstr ""
+msgstr "ZOOM +"
 
 #: toolbox.py:624
 msgid "ZOOM -"
-msgstr ""
+msgstr "ZOOM -"
