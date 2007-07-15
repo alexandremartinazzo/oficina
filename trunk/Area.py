@@ -47,7 +47,7 @@ class Area(gtk.DrawingArea):
         self.newx_ = 0
         self.newy_ = 0
         self.color_dec = 0
-        self.primeira = 1
+        self.polygon_start = True
         self.gc = None
         self.gc_line = None
         self.gc_eraser = None
@@ -262,25 +262,26 @@ class Area(gtk.DrawingArea):
                     self.enableUndo(widget)             
             # polygon
             elif self.tool == 27:
-                if self.primeira == 1:
+                if self.polygon_start:
                     self.pixmap.draw_line(self.gc_line,self.oldx,self.oldy, int (event.x), int( event.y ))
-                    self.antx = event.x
-                    self.anty = event.y
-                    self.px = self.oldx
-                    self.py = self.oldy
-                    self.primeira = 0
+                    self.lastx = event.x
+                    self.lasty = event.y
+                    self.firstx = self.oldx
+                    self.firsty = self.oldy
+                    self.polygon_start = False
                 else:
-                    self.dx = math.fabs(event.x - self.px)
-                    self.dy = math.fabs(event.y - self.py)
+                    self.dx = math.fabs(event.x - self.firstx)
+                    self.dy = math.fabs(event.y - self.firsty)
                     if (self.dx < 20) & (self.dy < 20):
-                        self.pixmap.draw_line(self.gc_line,int (self.px), int (self.py), int (self.antx), int (self.anty))
-                        self.primeira = 1
+                        self.pixmap.draw_line(self.gc_line,int (self.firstx), int (self.firsty), int (self.lastx), int (self.lasty))
+                        self.polygon_start = True
                         self.enableUndo(widget)
                     else:   
-                        self.pixmap.draw_line(self.gc_line,int (self.antx),int (self.anty), int (event.x), int( event.y ))
-                    self.antx = event.x
-                    self.anty = event.y
+                        self.pixmap.draw_line(self.gc_line,int (self.lastx),int (self.lasty), int (event.x), int( event.y ))
+                    self.lastx = event.x
+                    self.lasty = event.y
                 widget.queue_draw() 
+
             elif self.tool == 2:# or 3 or 4 check this before
                 widget.queue_draw() 
                 self.enableUndo(widget)
@@ -312,6 +313,7 @@ class Area(gtk.DrawingArea):
         self -- the Area object (GtkDrawingArea)
 
         """
+        self.polygon_start = True
         if self.first_undo:#if is the first time you click on UNDO
             self.undo_times -= 1
             self.redo_times = 1

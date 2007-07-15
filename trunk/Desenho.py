@@ -339,10 +339,10 @@ class Desenho:
 
         """ 
         self.d.pixmap_temp.draw_drawable(self.d.gc,self.d.pixmap,  0 , 0 ,0,0, WIDTH, HEIGHT)
-        if self.d.primeira == 1:
+        if self.d.polygon_start:
             self.d.pixmap_temp.draw_line(self.d.gc_line,self.d.oldx,self.d.oldy,coords[0],coords[1]) 
         else:
-            self.d.pixmap_temp.draw_line(self.d.gc_line,int (self.d.antx), int (self.d.anty),coords[0],coords[1]) 
+            self.d.pixmap_temp.draw_line(self.d.gc_line,int (self.d.lastx), int (self.d.lasty),coords[0],coords[1]) 
         self.d.newx = coords[0]     
         self.d.newy = coords[1]     
         widget.queue_draw()
