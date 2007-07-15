@@ -316,8 +316,8 @@ class ShapesToolbar(gtk.Toolbar):
     _TOOL_SHAPE_POLYGON = 27
     _TOOL_SHAPE_RECTANGLE = 6
     _TOOL_SHAPE_STAR = 0
-    _TOOL_SHAPE_TRAPEZOID = 0
-    _TOOL_SHAPE_TRIANGLE = 0
+    _TOOL_SHAPE_TRAPEZOID = 31
+    _TOOL_SHAPE_TRIANGLE = 30
 
     def __init__(self, activity):
         gtk.Toolbar.__init__(self)
@@ -393,6 +393,8 @@ class ShapesToolbar(gtk.Toolbar):
         self._tool_shape_star.show()
         self._tool_shape_star.set_tooltip(_('Star'))
 
+        """
+
         self._tool_shape_trapezoid = ToolButton('tool-shape-trapezoid')
         self.insert(self._tool_shape_trapezoid, -1)
         self._tool_shape_trapezoid.show()
@@ -402,7 +404,7 @@ class ShapesToolbar(gtk.Toolbar):
         self.insert(self._tool_shape_triangle, -1)
         self._tool_shape_triangle.show()
         self._tool_shape_triangle.set_tooltip(_('Triangle'))
-        """
+
         #self._tool_shape_arrow.connect('clicked', set_tool, activity, 'tool-shape-arrow', self._TOOL_SHAPE_ARROW)
         self._tool_shape_ellipse.connect('clicked', set_tool, activity, 'tool-shape-ellipse', self._TOOL_SHAPE_ELLIPSE)
         #self._tool_shape_freeform.connect('clicked', set_tool, activity, 'tool-shape-freeform', self._TOOL_SHAPE_FREEFORM)
@@ -412,8 +414,8 @@ class ShapesToolbar(gtk.Toolbar):
         #self._tool_shape_polygon.connect('clicked', set_tool, activity, 'tool-shape-polygon', self._TOOL_SHAPE_POLYGON)
         self._tool_shape_rectangle.connect('clicked', set_tool, activity, 'tool-shape-rectangle', self._TOOL_SHAPE_RECTANGLE)
         #self._tool_shape_star.connect('clicked', set_tool, activity, 'tool-shape-star', self._TOOL_SHAPE_STAR)
-        #self._tool_shape_trapezoid.connect('clicked', set_tool, activity, 'tool-shape-trapezoid', self._TOOL_SHAPE_TRAPEZOID)
-        #self._tool_shape_triangle.connect('clicked', set_tool, activity, 'tool-shape-triangle', self._TOOL_SHAPE_TRIANGLE)
+        self._tool_shape_trapezoid.connect('clicked', set_tool, activity, 'tool-shape-trapezoid', self._TOOL_SHAPE_TRAPEZOID)
+        self._tool_shape_triangle.connect('clicked', set_tool, activity, 'tool-shape-triangle', self._TOOL_SHAPE_TRIANGLE)
 
 
 class TextToolbar(gtk.Toolbar):
@@ -673,8 +675,16 @@ def set_tool(widget, activity, data=None, tool=None):
 
     elif data == 'tool-polygon':
         pix = gtk.gdk.pixbuf_new_from_file("./images/poligono_cursor.png")
-        cursor = gtk.gdk.Cursor(gtk.gdk.display_get_default() , pix, 6, 21)  
-        
+        cursor = gtk.gdk.Cursor(gtk.gdk.display_get_default() , pix, 6, 21)
+
+    elif data == 'tool-shape-triangle':
+        pix = gtk.gdk.pixbuf_new_from_file("./images/triangle_cursor.png")
+        cursor = gtk.gdk.Cursor(gtk.gdk.display_get_default() , pix, 6, 21)
+
+    elif data == 'tool-shape-trapezoid':
+        pix = gtk.gdk.pixbuf_new_from_file("./images/trapezoid_cursor.png")
+        cursor = gtk.gdk.Cursor(gtk.gdk.display_get_default() , pix, 6, 21)
+
     else:
         # Uses toolbar icon as cursor
         #FIXME: invert cursor color. Toolbar icons are white
