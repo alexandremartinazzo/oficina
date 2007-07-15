@@ -1,5 +1,5 @@
 [Activity]
-name = Oficina
+name = Paint
 activity_version = 1
 service_name = org.laptop.Oficina
 icon = activity-edit
