@@ -48,6 +48,7 @@ class Area(gtk.DrawingArea):
         self.newy_ = 0
         self.color_dec = 0
         self.polygon_start = True
+        self.busy = False
         self.gc = None
         self.gc_line = None
         self.gc_eraser = None
@@ -162,13 +163,14 @@ class Area(gtk.DrawingArea):
 
         """
         # text
-        if self.tool == 4:
-            self.d.text(widget,event)
-        if not self.move or self.tool != 26:
-            self.oldx = int(event.x)
-            self.oldy = int(event.y)    
+        if self.busy == False:
+            if self.tool == 4:
+                self.d.text(widget,event)
+            if not self.move or self.tool != 26:
+                self.oldx = int(event.x)
+                self.oldy = int(event.y)    
             
-        self.desenha = True     
+            self.desenha = True     
         
     def mousemove(self,widget,event):
         """Make the Area object (GtkDrawingArea) recognize that the mouse is moving.
@@ -179,43 +181,52 @@ class Area(gtk.DrawingArea):
         event -- GdkEvent
 
         """
-        x , y, state = event.window.get_pointer()   
-        coords = int(x), int(y)
+	if self.busy == False:
+            x , y, state = event.window.get_pointer()   
+            coords = int(x), int(y)
                         
-        if state & gtk.gdk.BUTTON1_MASK and self.pixmap != None:
-            if self.tool == 3:
-                self.d.eraser(widget, coords)
-            #brush
-            elif self.tool == 29:
+            if state & gtk.gdk.BUTTON1_MASK and self.pixmap != None:
+                if self.tool == 3:
+                    self.d.eraser(widget, coords)
+                #brush
+                elif self.tool == 29:
                     self.d.brush(widget, coords, self.line_size, self.brush_shape)
-            if self.desenha:
-                # line
-                if self.tool == 1:
-                    print self.oldx
-                    self.configure_line(self.line_size)
-                    self.d.line(widget, coords) 
-                # pencil
-                elif self.tool == 2:
-                    self.configure_line(self.line_size)
-                    self.d.pencil(widget, coords)       
-                # circle
-                elif self.tool == 5:
-                    self.configure_line(self.line_size)
-                    self.d.circle(widget,coords)    
-                # square
-                elif self.tool == 6:
-                    self.configure_line(self.line_size)
-                    self.d.square(widget,coords)    
-                # selection
-                elif self.tool == 26 and not self.move:
-                    self.d.selection(widget,coords)                     
-                # selection
-                elif self.tool == 26 and self.move:
-                    self.d.moveSelection(widget, coords)
-                #polygon    
-                elif self.tool == 27:
-                    self.configure_line(self.line_size)
-                    self.d.polygon(widget, coords)  
+                if self.desenha:
+                    # line
+                    if self.tool == 1:
+                        print self.oldx
+                        self.configure_line(self.line_size)
+                        self.d.line(widget, coords) 
+                    # pencil
+                    elif self.tool == 2:
+                        self.configure_line(self.line_size)
+                        self.d.pencil(widget, coords)       
+                    # circle
+                    elif self.tool == 5:
+                        self.configure_line(self.line_size)
+                        self.d.circle(widget,coords)    
+                    # square
+                    elif self.tool == 6:
+                        self.configure_line(self.line_size)
+                        self.d.square(widget,coords)    
+                    # selection
+                    elif self.tool == 26 and not self.move:
+                        self.d.selection(widget,coords)                     
+                    # selection
+                    elif self.tool == 26 and self.move:
+                        self.d.moveSelection(widget, coords)
+                    #polygon    
+                    elif self.tool == 27:
+                        self.configure_line(self.line_size)
+                        self.d.polygon(widget, coords)  
+                    #triangle
+                    elif self.tool == 30:
+                        self.configure_line(self.line_size)
+                        self.d.triangle(widget,coords)
+                    #trapezoid
+                    elif self.tool == 31:
+                        self.configure_line(self.line_size)
+                        self.d.trapezoid(widget,coords)
         
     def mouseup(self,widget,event): 
         """Make the Area object (GtkDrawingArea) recognize that the mouse was released.
@@ -226,7 +237,7 @@ class Area(gtk.DrawingArea):
         event -- GdkEvent
 
         """
-        if self.desenha:
+        if self.desenha == True and self.busy == False:
             # line
             if self.tool == 1:
                 self.pixmap.draw_line(self.gc_line,self.oldx,self.oldy, int (event.x), int(event.y))                
@@ -289,9 +300,10 @@ class Area(gtk.DrawingArea):
                 self.enableUndo(widget)
 
             #bucket
-            if self.tool == 28:
+            elif self.tool == 28:
             # New algorithm. See Desenho.py
                 width, height = self.window.get_size()
+                self.busy = True
                 image = self.pixmap.get_image(0,0, width, height)
                 fill_image = self.d.fill(image, int(event.x), int(event.y), self.color_dec)
                 
@@ -302,9 +314,22 @@ class Area(gtk.DrawingArea):
                 del fill_image
                 
                 widget.queue_draw()
+                self.busy = False
                 self.enableUndo(widget)
                 
-        self.desenha = False
+            elif self.tool == 30:
+                self.pixmap.draw_polygon(self.gc, True, self.d.points)
+                self.pixmap.draw_polygon(self.gc_line, False, self.d.points)
+                widget.queue_draw()
+                self.enableUndo(widget)
+
+            elif self.tool == 31:
+                self.pixmap.draw_polygon(self.gc, True, self.d.points)
+                self.pixmap.draw_polygon(self.gc_line, False, self.d.points)
+                widget.queue_draw()
+                self.enableUndo(widget)
+
+            self.desenha = False
         
         
     #this func make a basic Undo
