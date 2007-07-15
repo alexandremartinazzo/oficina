@@ -68,10 +68,11 @@ class OficinaActivity(activity.Activity):
     def read_file(self, file_path):
         '''Read file from Sugar Journal.
 
-                self --
+        self --
 		file_path --
 
         '''
+        print 'read file...'
         print file_path
         #self._area.d.limpatudo()
         #self._area.d.clear()
