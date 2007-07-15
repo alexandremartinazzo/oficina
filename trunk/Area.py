@@ -263,6 +263,7 @@ class Area(gtk.DrawingArea):
             # polygon
             elif self.tool == 27:
                 if self.polygon_start:
+		    self.enableUndo(widget)
                     self.pixmap.draw_line(self.gc_line,self.oldx,self.oldy, int (event.x), int( event.y ))
                     self.lastx = event.x
                     self.lasty = event.y
@@ -275,6 +276,7 @@ class Area(gtk.DrawingArea):
                     if (self.dx < 20) & (self.dy < 20):
                         self.pixmap.draw_line(self.gc_line,int (self.firstx), int (self.firsty), int (self.lastx), int (self.lasty))
                         self.polygon_start = True
+                        self.undo_times -= 1#destroy the undo screen of polygon start 
                         self.enableUndo(widget)
                     else:   
                         self.pixmap.draw_line(self.gc_line,int (self.lastx),int (self.lasty), int (event.x), int( event.y ))
@@ -282,7 +284,7 @@ class Area(gtk.DrawingArea):
                     self.lasty = event.y
                 widget.queue_draw() 
 
-            elif self.tool == 2:# or 3 or 4 check this before
+            elif self.tool == 2:# or 3 or 4 check this for desire tool
                 widget.queue_draw() 
                 self.enableUndo(widget)
 
@@ -339,6 +341,11 @@ class Area(gtk.DrawingArea):
             self.first_redo = True
             self.d.clear()#Undo the last action, so clear-all
         self.first_undo=False
+
+
+	#special case of func polygon
+        if self.tool == 27:		
+                self.polygon_start = True #start the polygon again
         
          
     def redo(self):
