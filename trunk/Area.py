@@ -296,7 +296,7 @@ class Area(gtk.DrawingArea):
                         self.lasty = event.y
                     widget.queue_draw() 
 
-                elif self.tool == 2:# or 3 or 4 check this for desire tool
+                elif self.tool == 2:# or 4 check this for desire tool
                     widget.queue_draw() 
                     self.enableUndo(widget)
 
@@ -329,7 +329,9 @@ class Area(gtk.DrawingArea):
                     self.pixmap.draw_polygon(self.gc_line, False, self.d.points)
                     widget.queue_draw()
                     self.enableUndo(widget)
-
+            if self.tool == 29 or self.tool == 3:
+                widget.queue_draw() 
+                self.enableUndo(widget)
             self.desenha = False
         
         
@@ -451,7 +453,7 @@ class Area(gtk.DrawingArea):
         self.gc_brush.set_foreground(self.cores[color])
         self.color_dec = self.cores[color].pixel
 
-    def _set_grayscale(self):
+    def _set_grayscale(self,widget):
         """Apply grayscale effect.
 
         Keyword arguments:
@@ -467,6 +469,7 @@ class Area(gtk.DrawingArea):
 
         self.pixmap_temp.draw_pixbuf(self.gc, pix_, 0, 0, 0, 0, WIDTH, HEIGHT, dither=gtk.gdk.RGB_DITHER_NORMAL, x_dither=0, y_dither=0)
         self.queue_draw()
+        self.enableUndo(widget)
 
     def _rotate_left(self):
         """Rotate the image.
