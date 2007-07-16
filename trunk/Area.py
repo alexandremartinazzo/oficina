@@ -332,6 +332,9 @@ class Area(gtk.DrawingArea):
             if self.tool == 29 or self.tool == 3:
                 widget.queue_draw() 
                 self.enableUndo(widget)
+            if self.tool == 4:
+                widget.queue_draw() 
+                self.enableUndo(widget)
             self.desenha = False
         
         
@@ -422,7 +425,7 @@ class Area(gtk.DrawingArea):
         self.first_undo = True
         
         #this is the part where we can limit the steps of undo/redo     
-        #if self.undo_times>=5:
+        #if self.undo_times>=2:
         #   self.undo_list.pop(0)
         #   self.undo_times-=1
         #   print "estourou"
