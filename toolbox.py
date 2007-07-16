@@ -578,7 +578,7 @@ class EffectsToolbar(gtk.Toolbar):
         self._effect_grayscale.connect('clicked', self.grayscale, activity)
 
     def grayscale(self, widget, activity):	
-        activity._area._set_grayscale()
+        activity._area._set_grayscale(widget)
 
 
 class ViewToolbar(gtk.Toolbar):
