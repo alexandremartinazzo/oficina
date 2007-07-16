@@ -237,97 +237,98 @@ class Area(gtk.DrawingArea):
         event -- GdkEvent
 
         """
-        if self.desenha == True and self.busy == False:
-            # line
-            if self.tool == 1:
-                self.pixmap.draw_line(self.gc_line,self.oldx,self.oldy, int (event.x), int(event.y))                
-                widget.queue_draw()
-                self.enableUndo(widget)
-            # circle
-            elif self.tool == 5:
-                self.pixmap.draw_arc(self.gc, True, self.newx, self.newy, self.newx_, self.newy_, 0, 360*64)
-                self.pixmap.draw_arc(self.gc_line, False, self.newx, self.newy, self.newx_, self.newy_, 0, 360*64)
+        if self.busy == False:
+            if self.desenha == True:
+                # line
+                if self.tool == 1:
+                    self.pixmap.draw_line(self.gc_line,self.oldx,self.oldy, int (event.x), int(event.y))                
+                    widget.queue_draw()
+                    self.enableUndo(widget)
+                # circle
+                elif self.tool == 5:
+                    self.pixmap.draw_arc(self.gc, True, self.newx, self.newy, self.newx_, self.newy_, 0, 360*64)
+                    self.pixmap.draw_arc(self.gc_line, False, self.newx, self.newy, self.newx_, self.newy_, 0, 360*64)
 
-                widget.queue_draw()
-                self.enableUndo(widget)
-            # square
-            elif self.tool == 6:    
-                self.pixmap.draw_rectangle(self.gc, True, self.newx,self.newy, self.newx_,self.newy_)
-                self.pixmap.draw_rectangle(self.gc_line, False, self.newx,self.newy, self.newx_,self.newy_)
+                    widget.queue_draw()
+                    self.enableUndo(widget)
+                # square
+                elif self.tool == 6:    
+                    self.pixmap.draw_rectangle(self.gc, True, self.newx,self.newy, self.newx_,self.newy_)
+                    self.pixmap.draw_rectangle(self.gc_line, False, self.newx,self.newy, self.newx_,self.newy_)
 
-                widget.queue_draw()
-                self.enableUndo(widget)
-            # selection
-            elif self.tool == 26:
-                if self.move == False:
-                    self.pixmap_temp.draw_drawable(self.gc,self.pixmap,  0 , 0 ,0,0, WIDTH, HEIGHT)
-                    self.move = True
-                    self.sx = int (event.x)
-                    self.sy = int(event.y)
-                    self.window.set_cursor(gtk.gdk.Cursor(gtk.gdk.FLEUR))
-                elif self.move == True:     
-                    self.pixmap.draw_drawable(self.gc, self.pixmap_temp, 0,0,0,0, WIDTH, HEIGHT)    
-                    # FIXME: Adicionar cursor formato selecao
-                    self.window.set_cursor(gtk.gdk.Cursor(gtk.gdk.CROSSHAIR))   
-                    self.move = False
-                    self.enableUndo(widget)             
-            # polygon
-            elif self.tool == 27:
-                if self.polygon_start:
-		    self.enableUndo(widget)
-                    self.pixmap.draw_line(self.gc_line,self.oldx,self.oldy, int (event.x), int( event.y ))
-                    self.lastx = event.x
-                    self.lasty = event.y
-                    self.firstx = self.oldx
-                    self.firsty = self.oldy
-                    self.polygon_start = False
-                else:
-                    self.dx = math.fabs(event.x - self.firstx)
-                    self.dy = math.fabs(event.y - self.firsty)
-                    if (self.dx < 20) & (self.dy < 20):
-                        self.pixmap.draw_line(self.gc_line,int (self.firstx), int (self.firsty), int (self.lastx), int (self.lasty))
-                        self.polygon_start = True
-                        self.undo_times -= 1#destroy the undo screen of polygon start 
+                    widget.queue_draw()
+                    self.enableUndo(widget)
+                # selection
+                elif self.tool == 26:
+                    if self.move == False:
+                        self.pixmap_temp.draw_drawable(self.gc,self.pixmap,  0 , 0 ,0,0, WIDTH, HEIGHT)
+                        self.move = True
+                        self.sx = int (event.x)
+                        self.sy = int(event.y)
+                        self.window.set_cursor(gtk.gdk.Cursor(gtk.gdk.FLEUR))
+                    elif self.move == True:     
+                        self.pixmap.draw_drawable(self.gc, self.pixmap_temp, 0,0,0,0, WIDTH, HEIGHT)    
+                        # FIXME: Adicionar cursor formato selecao
+                        self.window.set_cursor(gtk.gdk.Cursor(gtk.gdk.CROSSHAIR))   
+                        self.move = False
+                        self.enableUndo(widget)             
+                # polygon
+                elif self.tool == 27:
+                    if self.polygon_start:
                         self.enableUndo(widget)
-                    else:   
-                        self.pixmap.draw_line(self.gc_line,int (self.lastx),int (self.lasty), int (event.x), int( event.y ))
-                    self.lastx = event.x
-                    self.lasty = event.y
-                widget.queue_draw() 
+                        self.pixmap.draw_line(self.gc_line,self.oldx,self.oldy, int (event.x), int( event.y ))
+                        self.lastx = event.x
+                        self.lasty = event.y
+                        self.firstx = self.oldx
+                        self.firsty = self.oldy
+                        self.polygon_start = False
+                    else:
+                        self.dx = math.fabs(event.x - self.firstx)
+                        self.dy = math.fabs(event.y - self.firsty)
+                        if (self.dx < 20) & (self.dy < 20):
+                            self.pixmap.draw_line(self.gc_line,int (self.firstx), int (self.firsty), int (self.lastx), int (self.lasty))
+                            self.polygon_start = True
+                            self.undo_times -= 1#destroy the undo screen of polygon start 
+                            self.enableUndo(widget)
+                        else:   
+                            self.pixmap.draw_line(self.gc_line,int (self.lastx),int (self.lasty), int (event.x), int( event.y ))
+                        self.lastx = event.x
+                        self.lasty = event.y
+                    widget.queue_draw() 
 
-            elif self.tool == 2:# or 3 or 4 check this for desire tool
-                widget.queue_draw() 
-                self.enableUndo(widget)
+                elif self.tool == 2:# or 3 or 4 check this for desire tool
+                    widget.queue_draw() 
+                    self.enableUndo(widget)
 
-            #bucket
-            elif self.tool == 28:
-            # New algorithm. See Desenho.py
-                width, height = self.window.get_size()
-                self.busy = True
-                image = self.pixmap.get_image(0,0, width, height)
-                fill_image = self.d.fill(image, int(event.x), int(event.y), self.color_dec)
+                #bucket
+                elif self.tool == 28:
+                # New algorithm. See Desenho.py
+                    width, height = self.window.get_size()
+                    self.busy = True
+                    image = self.pixmap.get_image(0,0, width, height)
+                    fill_image = self.d.fill(image, int(event.x), int(event.y), self.color_dec)
                 
-                self.pixmap.draw_image(self.gc, fill_image,0,0,0,0, width, height)
-                self.pixmap_temp.draw_image(self.gc, fill_image,0,0,0,0, width, height)
+                    self.pixmap.draw_image(self.gc, fill_image,0,0,0,0, width, height)
+                    self.pixmap_temp.draw_image(self.gc, fill_image,0,0,0,0, width, height)
                 
-                del image
-                del fill_image
+                    del image
+                    del fill_image
                 
-                widget.queue_draw()
-                self.busy = False
-                self.enableUndo(widget)
+                    widget.queue_draw()
+                    self.busy = False
+                    self.enableUndo(widget)
                 
-            elif self.tool == 30:
-                self.pixmap.draw_polygon(self.gc, True, self.d.points)
-                self.pixmap.draw_polygon(self.gc_line, False, self.d.points)
-                widget.queue_draw()
-                self.enableUndo(widget)
+                elif self.tool == 30:
+                    self.pixmap.draw_polygon(self.gc, True, self.d.points)
+                    self.pixmap.draw_polygon(self.gc_line, False, self.d.points)
+                    widget.queue_draw()
+                    self.enableUndo(widget)
 
-            elif self.tool == 31:
-                self.pixmap.draw_polygon(self.gc, True, self.d.points)
-                self.pixmap.draw_polygon(self.gc_line, False, self.d.points)
-                widget.queue_draw()
-                self.enableUndo(widget)
+                elif self.tool == 31:
+                    self.pixmap.draw_polygon(self.gc, True, self.d.points)
+                    self.pixmap.draw_polygon(self.gc_line, False, self.d.points)
+                    widget.queue_draw()
+                    self.enableUndo(widget)
 
             self.desenha = False
         
