@@ -195,6 +195,114 @@ class Desenho:
         self.d.pixmap_temp.draw_polygon(self.d.gc, True, self.points)
         self.d.pixmap_temp.draw_polygon(self.d.gc_line, False, self.points)
 
+    def arrow(self, widget, coords):
+        """Draw a arrow.
+
+        Keyword arguments:
+        self -- Desenho.Desenho instance
+        widget -- Area object (GtkDrawingArea)
+        coords -- Two value tuple
+
+        """
+        widget.queue_draw()     
+
+        if coords[0] > WIDTH:
+            coords0 = WIDTH
+        else:
+            coords0 = coords[0]
+            
+        if coords [1] > HEIGHT:
+            coords1 = HEIGHT
+        else:
+            coords1 = coords[1]
+
+        if coords0 < 0:
+            coords0 = 0
+
+        if coords1 < 0:
+            coords1 = 0
+        self.width = coords0 - self.d.oldx
+        self.height = coords1 - self.d.oldy
+        self.points = [(self.d.oldx,self.d.oldy), (self.d.oldx+int(self.width/6),coords1), (self.d.oldx+int(self.width/6),self.d.oldy+int(self.height/3)), (coords0,self.d.oldy+int(self.height/3)), (coords0,self.d.oldy-int(self.height/3)), (self.d.oldx+int(self.width/6),self.d.oldy-int(self.height/3)), (self.d.oldx+int(self.width/6),self.d.oldy-self.height)]
+        self.d.pixmap_temp.draw_drawable(self.d.gc,self.d.pixmap,  0 , 0 ,0,0, WIDTH, HEIGHT)
+        self.d.pixmap_temp.draw_polygon(self.d.gc, True, self.points)
+        self.d.pixmap_temp.draw_polygon(self.d.gc_line, False, self.points)
+
+    def parallelogram(self, widget, coords):
+        """Draw a parallelogram.
+
+        Keyword arguments:
+        self -- Desenho.Desenho instance
+        widget -- Area object (GtkDrawingArea)
+        coords -- Two value tuple
+
+        """
+        widget.queue_draw()     
+
+        if coords[0] > WIDTH:
+            coords0 = WIDTH
+        else:
+            coords0 = coords[0]
+            
+        if coords[1] > HEIGHT:
+            coords1 = HEIGHT
+        else:
+            coords1 = coords[1]
+
+        if coords0 < 0:
+            coords0 = 0
+
+        if coords1 < 0:
+            coords1 = 0
+
+        self.width = int((coords0 - self.d.oldx)/4)
+        self.points = [(self.d.oldx,self.d.oldy), (coords0-self.width, self.d.oldy), (coords0,coords1), (self.d.oldx+self.width,coords1)]
+        self.d.pixmap_temp.draw_drawable(self.d.gc,self.d.pixmap,  0 , 0 ,0,0, WIDTH, HEIGHT)
+        self.d.pixmap_temp.draw_polygon(self.d.gc, True, self.points)
+        self.d.pixmap_temp.draw_polygon(self.d.gc_line, False, self.points)
+
+    def star(self, widget, coords):
+        """Draw a arrow.
+
+        Keyword arguments:
+        self -- Desenho.Desenho instance
+        widget -- Area object (GtkDrawingArea)
+        coords -- Two value tuple
+
+        """
+        widget.queue_draw()     
+
+        if coords[0] > WIDTH:
+            coords0 = WIDTH
+        else:
+            coords0 = coords[0]
+            
+        if coords [1] > HEIGHT:
+            coords1 = HEIGHT
+        else:
+            coords1 = coords[1]
+
+        if coords0 < 0:
+            coords0 = 0
+
+        if coords1 < 0:
+            coords1 = 0
+        self.width = coords0 - self.d.oldx
+        self.height = coords1 - self.d.oldy
+        self.points = [(self.d.oldx,self.d.oldy),\
+(self.d.oldx+int(self.width*0.25), self.d.oldy+int(self.height*0.4)),\
+(self.d.oldx+int(self.width),self.d.oldy+int(self.height*0.4)),\
+(self.d.oldx+int(self.width*0.35), self.d.oldy+int(self.height*0.6)),\
+(self.d.oldx+int(self.width*0.6), self.d.oldy+self.height),\
+(self.d.oldx, self.d.oldy+int(self.height*0.75)),\
+(self.d.oldx-int(self.width*0.6), self.d.oldy+self.height),\
+(self.d.oldx-int(self.width*0.35), self.d.oldy+int(self.height*0.6)),\
+(self.d.oldx-int(self.width),self.d.oldy+int(self.height*0.4)),\
+(self.d.oldx-int(self.width*0.25), self.d.oldy+int(self.height*0.4))]
+        self.d.pixmap_temp.draw_drawable(self.d.gc,self.d.pixmap,  0 , 0 ,0,0, WIDTH, HEIGHT)
+        self.d.pixmap_temp.draw_polygon(self.d.gc, True, self.points)
+        self.d.pixmap_temp.draw_polygon(self.d.gc_line, False, self.points)
+
 
     def selection(self, widget, coords):
         """Make a selection.

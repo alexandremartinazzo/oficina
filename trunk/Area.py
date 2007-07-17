@@ -227,6 +227,18 @@ class Area(gtk.DrawingArea):
                     elif self.tool == 31:
                         self.configure_line(self.line_size)
                         self.d.trapezoid(widget,coords)
+                    #arrow
+                    elif self.tool == 32:
+                        self.configure_line(self.line_size)
+                        self.d.arrow(widget,coords)
+                    #parallelogram
+                    elif self.tool == 33:
+                        self.configure_line(self.line_size)
+                        self.d.parallelogram(widget,coords)
+                    #star
+                    elif self.tool == 34:
+                        self.configure_line(self.line_size)
+                        self.d.star(widget,coords)
         
     def mouseup(self,widget,event): 
         """Make the Area object (GtkDrawingArea) recognize that the mouse was released.
@@ -329,6 +341,25 @@ class Area(gtk.DrawingArea):
                     self.pixmap.draw_polygon(self.gc_line, False, self.d.points)
                     widget.queue_draw()
                     self.enableUndo(widget)
+
+                elif self.tool == 32:
+                    self.pixmap.draw_polygon(self.gc, True, self.d.points)
+                    self.pixmap.draw_polygon(self.gc_line, False, self.d.points)
+                    widget.queue_draw()
+                    self.enableUndo(widget)
+
+                elif self.tool == 33:
+                    self.pixmap.draw_polygon(self.gc, True, self.d.points)
+                    self.pixmap.draw_polygon(self.gc_line, False, self.d.points)
+                    widget.queue_draw()
+                    self.enableUndo(widget)
+
+                elif self.tool == 34:
+                    self.pixmap.draw_polygon(self.gc, True, self.d.points)
+                    self.pixmap.draw_polygon(self.gc_line, False, self.d.points)
+                    widget.queue_draw()
+                    self.enableUndo(widget)
+
             if self.tool == 29 or self.tool == 3:
                 widget.queue_draw() 
                 self.enableUndo(widget)
