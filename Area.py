@@ -65,6 +65,7 @@ class Area(gtk.DrawingArea):
         self.d = Desenho(self)
         self.line_size = 2
         self.brush_shape = 'circle'
+        self.eraser_shape = 'circle'
 
         colormap = self.get_colormap()
         
@@ -187,7 +188,7 @@ class Area(gtk.DrawingArea):
                         
             if state & gtk.gdk.BUTTON1_MASK and self.pixmap != None:
                 if self.tool == 3:
-                    self.d.eraser(widget, coords)
+                    self.d.eraser(widget, coords, self.line_size, self.eraser_shape)
                 #brush
                 elif self.tool == 29:
                     self.d.brush(widget, coords, self.line_size, self.brush_shape)

@@ -124,6 +124,8 @@ class ToolsToolbar(gtk.Toolbar):
         self.insert(self._tool_eraser, -1)
         self._tool_eraser.show()
         self._tool_eraser.set_tooltip(_('Eraser'))
+        self._eraser_palette = self.create_palette('Eraser')
+        self._tool_eraser.set_palette(self._eraser_palette)
 
         self._tool_polygon = ToolButton('tool-polygon')
         self.insert(self._tool_polygon, -1)
@@ -172,7 +174,7 @@ class ToolsToolbar(gtk.Toolbar):
     def create_palette(self, data=None):
         if data == None:
             return None
-        elif data == 'Brush':
+        elif (data == 'Brush') | (data == 'Eraser'):
             palette = Palette(_(data))
             item_1 = gtk.MenuItem(_('Square'))
             item_2 = gtk.MenuItem(_('Circle'))
@@ -285,7 +287,7 @@ class ComboStrokeSize(ToolComboBox):
 
         self._stroke_size = self.combo
         self._stroke_size.append_item(self._ACTION_1, _('1'))
-	self._stroke_size.append_item(self._ACTION_2, _('2'))
+        self._stroke_size.append_item(self._ACTION_2, _('2'))
         self._stroke_size.append_item(self._ACTION_3, _('3'))        
         self._stroke_size.append_item(self._ACTION_5, _('5'))
         self._stroke_size.append_item(self._ACTION_10, _('10')) 
