@@ -72,7 +72,7 @@ class ToolsToolbar(gtk.Toolbar):
     _TOOL_MARQUEE_ELLIPTICAL = 5
     _TOOL_MARQUEE_FREEFORM = 2
     _TOOL_MARQUEE_RECTANGULAR = 26
-    _TOOL_MARQUEE_SMART = 2
+    _TOOL_MARQUEE_SMART = 32
 
     
     def __init__(self, activity):
@@ -137,7 +137,6 @@ class ToolsToolbar(gtk.Toolbar):
         
         """
 
-
         self._tool_marquee_elliptical = ToolButton('tool-marquee-elliptical')
         self.insert(self._tool_marquee_elliptical, -1)
         self._tool_marquee_elliptical.show()
@@ -152,7 +151,9 @@ class ToolsToolbar(gtk.Toolbar):
         self.insert(self._tool_marquee_smart, -1)
         self._tool_marquee_smart.show()
         self._tool_marquee_smart.set_tooltip(_('Smart Marquee'))
+
         """
+
         self._tool_marquee_rectangular = ToolButton('tool-marquee-rectangular')
         self.insert(self._tool_marquee_rectangular, -1)
         self._tool_marquee_rectangular.show()
@@ -306,16 +307,16 @@ class ComboStrokeSize(ToolComboBox):
 
 class ShapesToolbar(gtk.Toolbar):
 
-    _TOOL_SHAPE_ARROW = 0
+    _TOOL_SHAPE_ARROW = 32
     _TOOL_SHAPE_CURVE = 0
     _TOOL_SHAPE_ELLIPSE = 5
     _TOOL_SHAPE_FREEFORM = 0
     _TOOL_SHAPE_HEART = 0
     _TOOL_SHAPE_LINE = 1
-    _TOOL_SHAPE_PARALLELOGRAM = 0
+    _TOOL_SHAPE_PARALLELOGRAM = 33
     _TOOL_SHAPE_POLYGON = 27
     _TOOL_SHAPE_RECTANGLE = 6
-    _TOOL_SHAPE_STAR = 0
+    _TOOL_SHAPE_STAR = 34
     _TOOL_SHAPE_TRAPEZOID = 31
     _TOOL_SHAPE_TRIANGLE = 30
 
@@ -378,6 +379,8 @@ class ShapesToolbar(gtk.Toolbar):
         self._tool_shape_heart.show()
         self._tool_shape_heart.set_tooltip(_('Heart'))
 
+        """
+
         self._tool_shape_parallelogram = ToolButton('tool-shape-parallelogram')
         self.insert(self._tool_shape_parallelogram, -1)
         self._tool_shape_parallelogram.show()
@@ -393,8 +396,6 @@ class ShapesToolbar(gtk.Toolbar):
         self._tool_shape_star.show()
         self._tool_shape_star.set_tooltip(_('Star'))
 
-        """
-
         self._tool_shape_trapezoid = ToolButton('tool-shape-trapezoid')
         self.insert(self._tool_shape_trapezoid, -1)
         self._tool_shape_trapezoid.show()
@@ -405,15 +406,15 @@ class ShapesToolbar(gtk.Toolbar):
         self._tool_shape_triangle.show()
         self._tool_shape_triangle.set_tooltip(_('Triangle'))
 
-        #self._tool_shape_arrow.connect('clicked', set_tool, activity, 'tool-shape-arrow', self._TOOL_SHAPE_ARROW)
+        self._tool_shape_arrow.connect('clicked', set_tool, activity, 'tool-shape-arrow', self._TOOL_SHAPE_ARROW)
         self._tool_shape_ellipse.connect('clicked', set_tool, activity, 'tool-shape-ellipse', self._TOOL_SHAPE_ELLIPSE)
         #self._tool_shape_freeform.connect('clicked', set_tool, activity, 'tool-shape-freeform', self._TOOL_SHAPE_FREEFORM)
         #self._tool_shape_heart.connect('clicked', set_tool, activity, 'tool-shape-heart', self._TOOL_SHAPE_HEART)
         self._tool_shape_line.connect('clicked', set_tool, activity, 'tool-shape-line', self._TOOL_SHAPE_LINE)
-        #self._tool_shape_parallelogram.connect('clicked', set_tool, activity, 'tool-shape-parallelogram', self._TOOL_SHAPE_PARALLELOGRAM)
+        self._tool_shape_parallelogram.connect('clicked', set_tool, activity, 'tool-shape-parallelogram', self._TOOL_SHAPE_PARALLELOGRAM)
         #self._tool_shape_polygon.connect('clicked', set_tool, activity, 'tool-shape-polygon', self._TOOL_SHAPE_POLYGON)
         self._tool_shape_rectangle.connect('clicked', set_tool, activity, 'tool-shape-rectangle', self._TOOL_SHAPE_RECTANGLE)
-        #self._tool_shape_star.connect('clicked', set_tool, activity, 'tool-shape-star', self._TOOL_SHAPE_STAR)
+        self._tool_shape_star.connect('clicked', set_tool, activity, 'tool-shape-star', self._TOOL_SHAPE_STAR)
         self._tool_shape_trapezoid.connect('clicked', set_tool, activity, 'tool-shape-trapezoid', self._TOOL_SHAPE_TRAPEZOID)
         self._tool_shape_triangle.connect('clicked', set_tool, activity, 'tool-shape-triangle', self._TOOL_SHAPE_TRIANGLE)
 
