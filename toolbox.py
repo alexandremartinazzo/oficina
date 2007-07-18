@@ -277,11 +277,13 @@ class ComboStrokeSize(ToolComboBox):
     _ACTION_20 = 20
     _ACTION_50 = 50
     _ACTION_100 = 100
+    """
     _ACTION_500 = 500
     _ACTION_1000 = 1000
     _ACTION_5000 = 5000
     _ACTION_10000 = 10000
     _ACTION_100000 = 100000
+    """
 
     def __init__(self, activity):
         ToolComboBox.__init__(self)
@@ -296,19 +298,24 @@ class ComboStrokeSize(ToolComboBox):
         self._stroke_size.append_item(self._ACTION_20, _('20'))
         self._stroke_size.append_item(self._ACTION_50, _('50'))
         self._stroke_size.append_item(self._ACTION_100, _('100'))
+        """
         self._stroke_size.append_item(self._ACTION_500, _('500'))
         self._stroke_size.append_item(self._ACTION_1000, _('1000'))
         self._stroke_size.append_item(self._ACTION_5000, _('5000'))
         self._stroke_size.append_item(self._ACTION_10000, _('10000'))
         self._stroke_size.append_item(self._ACTION_100000, _('100000'))
+        """
 
         self._stroke_size.set_active(0)
         self._stroke_size.connect('changed', self._combo_changed_cb)
 
     def _combo_changed_cb(self, combo):
-        set_stroke_size(self._activity, combo.get_active())  
-        print combo.get_active()
+        model = combo.get_model()
+        active = combo.get_active()
+        self.set_stroke_size(model[active][0]) 
         
+    def set_stroke_size(self, size):
+        self._activity._area.configure_line(size)
 
 class ShapesToolbar(gtk.Toolbar):
 
@@ -707,9 +714,9 @@ def set_tool(widget, activity, data=None, tool=None):
     #print cursor
     
 
-
-def set_stroke_size(activity, size):
-     activity._area.configure_line(size)
+#move to class ComboStrokeSize
+#def set_stroke_size(activity, size):
+     #activity._area.configure_line(size)
             
 def undo(widget, activity):
     activity._area.undo()		
