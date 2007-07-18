@@ -116,14 +116,14 @@ class ToolsToolbar(gtk.Toolbar):
         self._tool_brush = ToolButton('tool-brush')
         self.insert(self._tool_brush, -1)
         self._tool_brush.show()
-        self._tool_brush.set_tooltip(_('Brush'))
+        #self._tool_brush.set_tooltip(_('Brush'))
         self._brush_palette = self.create_palette('Brush')
         self._tool_brush.set_palette(self._brush_palette)
 
         self._tool_eraser = ToolButton('tool-eraser')
         self.insert(self._tool_eraser, -1)
         self._tool_eraser.show()
-        self._tool_eraser.set_tooltip(_('Eraser'))
+        #self._tool_eraser.set_tooltip(_('Eraser'))
         self._eraser_palette = self.create_palette('Eraser')
         self._tool_eraser.set_palette(self._eraser_palette)
 
@@ -171,11 +171,11 @@ class ToolsToolbar(gtk.Toolbar):
         self._tool_marquee_rectangular.connect('clicked', set_tool, activity, 'tool-marquee-rectangular', self._TOOL_MARQUEE_RECTANGULAR)
         #self._tool_marquee_smart.connect('clicked', set_tool, activity, 'tool-marquee-smart', self._TOOL_MARQUEE_SMART)
 
-    def create_palette(self, data=None):
-        if data == None:
+    def create_palette(self, tool=None):
+        if tool == None:
             return None
-        elif (data == 'Brush') | (data == 'Eraser'):
-            palette = Palette(_(data))
+        elif (tool == 'Brush') or (tool == 'Eraser'):
+            palette = Palette(_(tool))
             item_1 = gtk.MenuItem(_('Square'))
             item_2 = gtk.MenuItem(_('Circle'))
 
@@ -183,14 +183,16 @@ class ToolsToolbar(gtk.Toolbar):
             palette.append_menu_item(item_2)
             item_1.show()
             item_2.show()
-            item_1.connect('activate', self.test, 'square')
-            item_2.connect('activate', self.test, 'circle')
+            item_1.connect('activate', self.set_shape, tool, 'square')
+            item_2.connect('activate', self.set_shape, tool,'circle')
             
             return palette
 
-    def test(self, button, data=None):
-        print button, data
-        self._activity._area.brush_shape = data
+    def set_shape(self, button, tool, shape):
+        if tool == 'Brush':
+            self._activity._area.brush_shape = shape
+        elif tool == 'Eraser':
+            self._activity._area.eraser_shape = shape
 
 class ComboFillColors(ToolComboBox):
 
@@ -304,8 +306,9 @@ class ComboStrokeSize(ToolComboBox):
         self._stroke_size.connect('changed', self._combo_changed_cb)
 
     def _combo_changed_cb(self, combo):
-        set_stroke_size(self._activity, combo.get_active())   
-
+        set_stroke_size(self._activity, combo.get_active())  
+        print combo.get_active()
+        
 
 class ShapesToolbar(gtk.Toolbar):
 
