@@ -38,7 +38,8 @@ class Area(gtk.DrawingArea):
         
         self.tool = None
         self.desenha = False
-        self.move = False
+        self.selmove = False
+        self.sel_get_out = False
         self.connect("configure_event", self.configure_event)
         self.oldx = 0
         self.oldy = 0
@@ -167,11 +168,21 @@ class Area(gtk.DrawingArea):
         if self.busy == False:
             if self.tool == 4:
                 self.d.text(widget,event)
-            if not self.move or self.tool != 26:
+            if not self.selmove or self.tool != 26:
                 self.oldx = int(event.x)
                 self.oldy = int(event.y)    
+        
+            if self.selmove and self.tool != 26 : #get out of the func selection
+                self.pixmap.draw_drawable(self.gc, self.pixmap_temp, 0,0,0,0, WIDTH, HEIGHT)
+                self.selmove = False
+                self.enableUndo(widget)	
             
-            self.desenha = True     
+            x , y, state = event.window.get_pointer()
+            if state & gtk.gdk.BUTTON3_MASK:
+                self.sel_get_out = True
+
+            self.desenha = True  
+           
         
     def mousemove(self,widget,event):
         """Make the Area object (GtkDrawingArea) recognize that the mouse is moving.
@@ -211,10 +222,10 @@ class Area(gtk.DrawingArea):
                         self.configure_line(self.line_size)
                         self.d.square(widget,coords)    
                     # selection
-                    elif self.tool == 26 and not self.move:
+                    elif self.tool == 26 and not self.selmove:
                         self.d.selection(widget,coords)                     
                     # selection
-                    elif self.tool == 26 and self.move:
+                    elif self.tool == 26 and self.selmove:
                         self.d.moveSelection(widget, coords)
                     #polygon    
                     elif self.tool == 27:
@@ -273,18 +284,26 @@ class Area(gtk.DrawingArea):
                     self.enableUndo(widget)
                 # selection
                 elif self.tool == 26:
-                    if self.move == False:
+                # FIXME: Adicionar cursor formato selecao
+                    if self.selmove == False:
                         self.pixmap_temp.draw_drawable(self.gc,self.pixmap,  0 , 0 ,0,0, WIDTH, HEIGHT)
-                        self.move = True
                         self.sx = int (event.x)
                         self.sy = int(event.y)
                         self.window.set_cursor(gtk.gdk.Cursor(gtk.gdk.FLEUR))
-                    elif self.move == True:     
-                        self.pixmap.draw_drawable(self.gc, self.pixmap_temp, 0,0,0,0, WIDTH, HEIGHT)    
-                        # FIXME: Adicionar cursor formato selecao
-                        self.window.set_cursor(gtk.gdk.Cursor(gtk.gdk.CROSSHAIR))   
-                        self.move = False
-                        self.enableUndo(widget)             
+                        self.selmove = True
+                        self.sel_get_out = False
+                    elif self.selmove and self.sel_get_out: #get out of the func selection
+	    				self.pixmap.draw_drawable(self.gc, self.pixmap_temp, 0,0,0,0, WIDTH, HEIGHT)
+	    				self.selmove = False
+	    				self.window.set_cursor(gtk.gdk.Cursor(gtk.gdk.TCROSS))
+	    				self.oldx = event.x
+	    				self.oldy = event.y
+    					self.enableUndo(widget)	
+                    #elif self.move == True:     
+                     #   self.pixmap.draw_drawable(self.gc, self.pixmap_temp, 0,0,0,0, WIDTH, HEIGHT)
+                      #  self.window.set_cursor(gtk.gdk.Cursor(gtk.gdk.CROSSHAIR))   
+                       # self.move = False
+                        #self.enableUndo(widget)             
                 # polygon
                 elif self.tool == 27:
                     if self.polygon_start:
@@ -309,7 +328,7 @@ class Area(gtk.DrawingArea):
                         self.lasty = event.y
                     widget.queue_draw() 
 
-                elif self.tool == 2:# or 4 check this for desire tool
+                elif self.tool == 2: #to undo pencil
                     widget.queue_draw() 
                     self.enableUndo(widget)
 
@@ -364,9 +383,6 @@ class Area(gtk.DrawingArea):
             if self.tool == 29 or self.tool == 3:
                 widget.queue_draw() 
                 self.enableUndo(widget)
-            if self.tool == 4:
-                widget.queue_draw() 
-                self.enableUndo(widget)
             self.desenha = False
         
         
@@ -381,7 +397,8 @@ class Area(gtk.DrawingArea):
         self.polygon_start = True
         if self.first_undo:#if is the first time you click on UNDO
             self.undo_times -= 1
-            self.redo_times = 1
+            if self.undo_times == 0: #to work when clear screen (bug fixed)
+                self.redo_times = 1
         
         elif (self.first_redo) and (self.undo_times!=0):
             self.undo_times += 1
@@ -419,16 +436,15 @@ class Area(gtk.DrawingArea):
 
         """
         #print "REDO no.%d" %(self.redo_times)
+        if self.first_redo:
+            self.undo_times -=1
+            self.redo_times +=1
+        self.first_redo=False
         
         if  (self.redo_times>0):
             self.redo_times -= 1
             self.undo_times += 1
-
             
-            if self.first_redo:
-                self.undo_times -=1
-                self.redo_times +=1
-            self.first_redo=False
             try: #to not try paint someting wrong 
                 #print "Drawing undo[%d]" %(self.undo_times)
                 self.pixmap.draw_drawable(self.gc, self.undo_list[self.undo_times], 0,0,0,0, WIDTH, HEIGHT)
