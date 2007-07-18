@@ -71,16 +71,21 @@ class Area(gtk.DrawingArea):
 
         colormap = self.get_colormap()
         
-        self.cores = [      
-        colormap.alloc_color('#000000', True, True), # black
-        colormap.alloc_color('#ee33ee', True, True), # purple
-        colormap.alloc_color('#f4ee56', True, True), # yellow       
-        colormap.alloc_color('#45a5dc', True, True), # blue
-        colormap.alloc_color('#44aa44', True, True), # green
-        colormap.alloc_color('#dd5555', True, True), # red
-        colormap.alloc_color('#ffaa11', True, True), # orange       
-        colormap.alloc_color('#ffffff', True, True), # white    
-        colormap.alloc_color('#00aa00', True, True)  # green - selection
+        self.cores = [ 
+        colormap.alloc_color('#ffffff', True, True), # white     
+        colormap.alloc_color('#800000', True, True), # maroon
+        colormap.alloc_color('#ff0000', True, True), # red
+        colormap.alloc_color('#808000', True, True), # olive
+        colormap.alloc_color('#ffff00', True, True), # yellow
+        colormap.alloc_color('#008000', True, True), # green
+        colormap.alloc_color('#00ff00', True, True), # lime
+        colormap.alloc_color('#008080', True, True), # teal
+        colormap.alloc_color('#00ffff', True, True), # aqua
+        colormap.alloc_color('#000080', True, True), # navy
+        colormap.alloc_color('#0000ff', True, True), # blue
+        colormap.alloc_color('#800080', True, True), # purple
+        colormap.alloc_color('#ff00ff', True, True), # fuchsia
+        colormap.alloc_color('#000000', True, True)  # black - selection
         ]
         self.font = pango.FontDescription('Sans 9')
         #self.mensagem = Mensagens(self)
