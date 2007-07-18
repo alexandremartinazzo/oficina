@@ -96,15 +96,16 @@ class ToolsToolbar(gtk.Toolbar):
         self.insert(self._icon_stroke, -1)
         self._icon_stroke.show()
 
-        tool_item = ComboStrokeColors(activity)
-        self.insert(tool_item, -1)
-        tool_item.show()
+        self._stroke_color = ComboStrokeColors(activity)
+        self.insert(self._stroke_color, -1)
+        self._stroke_color.show()
 
-        tool_item = ComboStrokeSize(activity)
-        self.insert(tool_item, -1)
-        tool_item.show()
+        self._stroke_size = ComboStrokeSize(activity)
+        self.insert(self._stroke_size, -1)
+        self._stroke_size.show()
         
         separator = gtk.SeparatorToolItem()
+        separator.set_draw(True)
         self.insert(separator, -1)
         separator.show()
 
@@ -155,12 +156,13 @@ class ToolsToolbar(gtk.Toolbar):
         self._tool_marquee_smart.set_tooltip(_('Smart Marquee'))
 
         """
-
+        
         self._tool_marquee_rectangular = ToolButton('tool-marquee-rectangular')
         self.insert(self._tool_marquee_rectangular, -1)
         self._tool_marquee_rectangular.show()
         self._tool_marquee_rectangular.set_tooltip(_('Rectangular Marquee'))
-
+        
+        '''
         self._tool_polygon.connect('clicked', set_tool, activity, 'tool-polygon', self._TOOL_POLYGON)
         self._tool_pencil.connect('clicked', set_tool, activity, 'tool-pencil', self._TOOL_PENCIL)
         self._tool_brush.connect('clicked', set_tool, activity, 'tool-brush', self._TOOL_BRUSH)
@@ -170,8 +172,22 @@ class ToolsToolbar(gtk.Toolbar):
         #self._tool_marquee_freeform.connect('clicked', set_tool, activity, 'tool-marquee-freeform', self._TOOL_MARQUEE_FREEFORM)
         self._tool_marquee_rectangular.connect('clicked', set_tool, activity, 'tool-marquee-rectangular', self._TOOL_MARQUEE_RECTANGULAR)
         #self._tool_marquee_smart.connect('clicked', set_tool, activity, 'tool-marquee-smart', self._TOOL_MARQUEE_SMART)
+        '''
+        
+        # New connect method
+        self._tool_polygon.connect('clicked', self.set_tool, 'tool-polygon', self._TOOL_POLYGON)
+        self._tool_pencil.connect('clicked', self.set_tool, 'tool-pencil', self._TOOL_PENCIL)
+        self._tool_brush.connect('clicked', self.set_tool, 'tool-brush', self._TOOL_BRUSH)
+        self._tool_eraser.connect('clicked', self.set_tool, 'tool-eraser', self._TOOL_ERASER)
+        self._tool_bucket.connect('clicked', self.set_tool, 'tool-bucket', self._TOOL_BUCKET)
+        #self._tool_marquee_elliptical.connect('clicked', self.set_tool, 'tool-marquee-elliptical', self._TOOL_MARQUEE_ELLIPTICAL)
+        #self._tool_marquee_freeform.connect('clicked', self.set_tool, 'tool-marquee-freeform', self._TOOL_MARQUEE_FREEFORM)
+        self._tool_marquee_rectangular.connect('clicked', self.set_tool, 'tool-marquee-rectangular', self._TOOL_MARQUEE_RECTANGULAR)
+        #self._tool_marquee_smart.connect('clicked', self.set_tool, 'tool-marquee-smart', self._TOOL_MARQUEE_SMART)
 
     def create_palette(self, tool=None):
+    
+        #TODO: create palettes for other tools.
         if tool == None:
             return None
         elif (tool == 'Brush') or (tool == 'Eraser'):
@@ -189,10 +205,64 @@ class ToolsToolbar(gtk.Toolbar):
             return palette
 
     def set_shape(self, button, tool, shape):
+        '''
+        Set a tool shape according to user choice at Tool Palette
+        '''
+        
         if tool == 'Brush':
             self._activity._area.brush_shape = shape
         elif tool == 'Eraser':
             self._activity._area.eraser_shape = shape
+            
+    def set_tool(self, widget, data, tool_number):
+        '''
+        Set tool to the Area object. Configures tool's color and size.
+        '''
+        
+        # setting tool
+        self._activity._area.tool = tool_number
+        
+        # setting size and color
+        size = self._stroke_size.get_size()
+        self._stroke_size.set_stroke_size(size)
+        
+        color = self._stroke_color.get_color()
+        self._stroke_color.set_stroke_color(color)
+        
+        #setting cursor
+        #FIXME: cursors are not correct
+        if data == 'tool-pencil':
+            pix = gtk.gdk.pixbuf_new_from_file("./images/lapis_cursor.png")
+            cursor = gtk.gdk.Cursor(gtk.gdk.display_get_default() , pix, 6, 21)
+            
+        elif data == 'tool-eraser':
+            pix = gtk.gdk.pixbuf_new_from_file("./images/borracha_cursor.png")
+            cursor = gtk.gdk.Cursor(gtk.gdk.display_get_default() , pix, 6, 21)
+            
+        elif data == 'tool-brush':
+            pix = gtk.gdk.pixbuf_new_from_file("./icons/brush_cursor.svg")
+            cursor = gtk.gdk.Cursor(gtk.gdk.display_get_default() , pix, 6, 21)
+
+        elif data == 'tool-bucket':
+            pix = gtk.gdk.pixbuf_new_from_file("./icons/bucket_cursor.svg")
+            cursor = gtk.gdk.Cursor(gtk.gdk.display_get_default() , pix, 6, 21)
+
+        elif data == 'tool-polygon':
+            pix = gtk.gdk.pixbuf_new_from_file("./images/poligono_cursor.png")
+            cursor = gtk.gdk.Cursor(gtk.gdk.display_get_default() , pix, 6, 21)
+
+        else:
+            # Uses toolbar icon as cursor
+            #FIXME: invert cursor color. Toolbar icons are white
+            try:
+                archive = './icons/' + data + '.svg'
+                pix = gtk.gdk.pixbuf_new_from_file(archive)
+                print archive, pix
+                cursor = gtk.gdk.Cursor(gtk.gdk.display_get_default() , pix, 6, 21)
+            except:
+                cursor = None
+
+        self._activity._area.window.set_cursor(cursor)
 
 class ComboFillColors(ToolComboBox):
 
@@ -206,6 +276,8 @@ class ComboFillColors(ToolComboBox):
     _ACTION_WHITE = 7
  
     def __init__(self, activity):
+    
+        #FIXME: we should not use gdk.Color objects instead of numbers
         ToolComboBox.__init__(self)
         self._activity = activity
 
@@ -220,12 +292,21 @@ class ComboFillColors(ToolComboBox):
         self._fill_color.append_item(self._ACTION_WHITE, _('White'))
 
         self._fill_color.set_active(0)
-        self._fill_color.connect('changed', self.set_fill_color)
+        self._fill_color.connect('changed', self._combo_changed_cb)
 
 
-    def set_fill_color(self, combo):
-        color = combo.get_active()
+    def _combo_changed_cb(self, combo):
+        color = self.get_color()
+        self.set_fill_color(color)
+
+    def set_fill_color(self, color):
+#         color = combo.get_active()
+#         color = self.combo.get_active()
         self._activity._area._set_fill_color(color)
+        
+    def get_color(self):
+        #FIXME: return gdk.Color instead of numbers
+        return self.combo.get_active()
 
 
 
@@ -241,6 +322,8 @@ class ComboStrokeColors(ToolComboBox):
     _ACTION_WHITE = 7
 
     def __init__(self, activity):
+        
+        #FIXME: we should not use gdk.Color objects instead of numbers
         ToolComboBox.__init__(self)
         self._stroke_color = self.combo
         self._activity = activity
@@ -255,15 +338,23 @@ class ComboStrokeColors(ToolComboBox):
         self._stroke_color.append_item(self._ACTION_WHITE, _('White'))
 
         self._stroke_color.set_active(0)
-        #self._stroke_color.connect('changed', self._combo_changed_cb)
-        self._stroke_color.connect('changed', self.set_stroke_color)
+        self._stroke_color.connect('changed', self._combo_changed_cb)
+        #self._stroke_color.connect('changed', self.set_stroke_color)
         self.connect("focus", self.event_focus)
        
     def event_focus(self, combo):
         print 'combostroke gained focus' 	
 
-    def set_stroke_color(self, combo):
-        color = combo.get_active()
+    def _combo_changed_cb(self, combo):
+        color = self.get_color()
+        self.set_stroke_color(color)
+
+    def get_color(self):
+        #FIXME: return gdk.Color instead of numbers
+        return self.combo.get_active()
+
+    def set_stroke_color(self, color):
+#         color = combo.get_active()
         self._activity._area._set_stroke_color(color)
 
 
@@ -310,12 +401,19 @@ class ComboStrokeSize(ToolComboBox):
         self._stroke_size.connect('changed', self._combo_changed_cb)
 
     def _combo_changed_cb(self, combo):
-        model = combo.get_model()
-        active = combo.get_active()
-        self.set_stroke_size(model[active][0]) 
+#         model = combo.get_model()
+#         active = combo.get_active()
+#         self.set_stroke_size(model[active][0])
+        size = self.get_size()
+        self.set_stroke_size(size)
         
     def set_stroke_size(self, size):
         self._activity._area.configure_line(size)
+        
+    def get_size(self):
+        model = self.combo.get_model()
+        active = self.combo.get_active()
+        return model[active][0]
 
 class ShapesToolbar(gtk.Toolbar):
 
