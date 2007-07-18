@@ -1,3 +1,4 @@
+Fixed undo bugs and new selection function (pekayatt)
 Added MANIFEST and changed activity icon (alexandre)
 trapezoid and triangle functions added, minor changes on fill function, bug on fuction undo solved (andre)
 Fill function changed (alexandre)

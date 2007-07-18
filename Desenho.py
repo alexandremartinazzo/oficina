@@ -454,6 +454,8 @@ class Desenho:
             self.d.janela._textview.hide()
             self.d.janela._textview.set_text('')
 
+            self.d.enableUndo(widget)
+            
             widget.queue_draw()
 
     def loadImage(self, name):
