@@ -679,11 +679,11 @@ def set_tool(widget, activity, data=None, tool=None):
         cursor = gtk.gdk.Cursor(gtk.gdk.display_get_default() , pix, 6, 21)
 
     elif data == 'tool-brush':
-        pix = gtk.gdk.pixbuf_new_from_file("./icons/brush_cursor.svg")
+        pix = gtk.gdk.pixbuf_new_from_file("./images/brush_cursor.png")
         cursor = gtk.gdk.Cursor(gtk.gdk.display_get_default() , pix, 6, 21)
 
     elif data == 'tool-bucket':
-        pix = gtk.gdk.pixbuf_new_from_file("./icons/bucket_cursor.svg")
+        pix = gtk.gdk.pixbuf_new_from_file("./images/bucket_cursor.png")
         cursor = gtk.gdk.Cursor(gtk.gdk.display_get_default() , pix, 6, 21)
 
     elif data == 'tool-polygon':
@@ -696,6 +696,22 @@ def set_tool(widget, activity, data=None, tool=None):
 
     elif data == 'tool-shape-trapezoid':
         pix = gtk.gdk.pixbuf_new_from_file("./images/trapezoid_cursor.png")
+        cursor = gtk.gdk.Cursor(gtk.gdk.display_get_default() , pix, 6, 21)
+        
+    elif data == 'tool-shape-star':
+        pix = gtk.gdk.pixbuf_new_from_file("./images/star_cursor.png")
+        cursor = gtk.gdk.Cursor(gtk.gdk.display_get_default() , pix, 6, 21)
+       
+    elif data == 'tool-shape-heart':
+        pix = gtk.gdk.pixbuf_new_from_file("./images/heart_cursor.png")
+        cursor = gtk.gdk.Cursor(gtk.gdk.display_get_default() , pix, 6, 21)
+        
+    elif data == 'tool-shape-parallelogram':
+        pix = gtk.gdk.pixbuf_new_from_file("./images/parallelogram_cursor.png")
+        cursor = gtk.gdk.Cursor(gtk.gdk.display_get_default() , pix, 6, 21)
+        
+    elif data == 'tool-shape-arrow':
+        pix = gtk.gdk.pixbuf_new_from_file("./images/arrow_cursor.png")
         cursor = gtk.gdk.Cursor(gtk.gdk.display_get_default() , pix, 6, 21)
 
     else:
