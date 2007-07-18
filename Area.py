@@ -57,6 +57,7 @@ class Area(gtk.DrawingArea):
         self.gc_selection = None
         self.pixmap = None  
         self.pixmap_temp = None
+        self.pixmap_sel = None
         self.desenho = []   
         self.textos = []    
         self.color_ = 0
@@ -107,8 +108,12 @@ class Area(gtk.DrawingArea):
         
         self.pixmap = gtk.gdk.Pixmap(win, width, height, -1)
         self.pixmap.draw_rectangle(widget.get_style().white_gc, True, 0, 0, width, height)
+        
         self.pixmap_temp = gtk.gdk.Pixmap(win, width, height, -1)
         self.pixmap_temp.draw_rectangle(widget.get_style().white_gc, True, 0, 0, width, height)
+        
+        self.pixmap_sel = gtk.gdk.Pixmap(win, width, height, -1)
+        self.pixmap_sel.draw_rectangle(widget.get_style().white_gc, True, 0, 0, width, height)
         
         self.gc = widget.window.new_gc()    
         self.gc_eraser = widget.window.new_gc()     
@@ -148,9 +153,12 @@ class Area(gtk.DrawingArea):
         event -- GdkEvent
 
         """ 
-        area = event.area       
+        area = event.area      
         if self.desenha:
-            widget.window.draw_drawable(self.gc, self.pixmap_temp, area[0], area[1], area[0], area[1], area[2], area[3])    
+            if self.selmove :
+                widget.window.draw_drawable(self.gc, self.pixmap_sel, area[0], area[1], area[0], area[1], area[2], area[3])
+            else:
+                widget.window.draw_drawable(self.gc, self.pixmap_temp, area[0], area[1], area[0], area[1], area[2], area[3])  
         else:
             widget.window.draw_drawable(self.gc, self.pixmap, area[0], area[1], area[0], area[1], area[2], area[3])     
         return False
@@ -180,7 +188,9 @@ class Area(gtk.DrawingArea):
             x , y, state = event.window.get_pointer()
             if state & gtk.gdk.BUTTON3_MASK:
                 self.sel_get_out = True
+                self.pixmap_sel.draw_drawable(self.gc, self.pixmap_temp, 0,0,0,0, WIDTH, HEIGHT)
 
+            widget.queue_draw()
             self.desenha = True  
            
         
@@ -198,6 +208,7 @@ class Area(gtk.DrawingArea):
             coords = int(x), int(y)
                         
             if state & gtk.gdk.BUTTON1_MASK and self.pixmap != None:
+                #eraser
                 if self.tool == 3:
                     self.d.eraser(widget, coords, self.line_size, self.eraser_shape)
                 #brush
@@ -298,12 +309,7 @@ class Area(gtk.DrawingArea):
 	    				self.window.set_cursor(gtk.gdk.Cursor(gtk.gdk.TCROSS))
 	    				self.oldx = event.x
 	    				self.oldy = event.y
-    					self.enableUndo(widget)	
-                    #elif self.move == True:     
-                     #   self.pixmap.draw_drawable(self.gc, self.pixmap_temp, 0,0,0,0, WIDTH, HEIGHT)
-                      #  self.window.set_cursor(gtk.gdk.Cursor(gtk.gdk.CROSSHAIR))   
-                       # self.move = False
-                        #self.enableUndo(widget)             
+    					self.enableUndo(widget)         
                 # polygon
                 elif self.tool == 27:
                     if self.polygon_start:
