@@ -481,7 +481,10 @@ class Desenho:
 
         """ 
         self.d.pixmap_temp.draw_rectangle(self.d.get_style().white_gc, True,0, 0, WIDTH, HEIGHT)
-        self.d.pixmap_temp.draw_drawable(self.d.gc,self.d.pixmap,  0 , 0 ,0,0, WIDTH, HEIGHT)   
+        self.d.pixmap_temp.draw_drawable(self.d.gc,self.d.pixmap,  0 , 0 ,0,0, WIDTH, HEIGHT)
+        
+        self.d.pixmap_sel.draw_rectangle(self.d.get_style().white_gc, True,0, 0, WIDTH, HEIGHT)
+        self.d.pixmap_sel.draw_drawable(self.d.gc,self.d.pixmap,  0 , 0 ,0,0, WIDTH, HEIGHT)   
         
         if self.d.sx > self.d.oldx:
             x0 = self.d.oldx
@@ -503,6 +506,12 @@ class Desenho:
         
         self.d.pixmap_temp.draw_rectangle(self.d.get_style().white_gc, True, x0, x1, w, h)
         self.d.pixmap_temp.draw_drawable(self.d.gc, self.d.pixmap, x0, x1, coords[0] - w/2, coords[1]- h/2, w, h)       
+        
+        self.d.pixmap_sel.draw_rectangle(self.d.get_style().white_gc, True, x0, x1, w, h)
+        self.d.pixmap_sel.draw_drawable(self.d.gc, self.d.pixmap, x0, x1, coords[0] - w/2, coords[1]- h/2, w, h)
+	    #to draw the selection green line rectangle
+        self.d.pixmap_sel.draw_rectangle(self.d.gc_selection, False ,coords[0] - w/2, coords[1]- h/2, w, h)
+        
         widget.queue_draw()
     
     def polygon(self, widget, coords):
