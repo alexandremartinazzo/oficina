@@ -1,3 +1,4 @@
+Changing and Adding new colors (nathalia.sautchuk)
 ToolsToolbar now keeps color and size when user chooses different tools (alexandre)
 Adding new cursors (nathalia.sautchuk)
 New selection, the selectionbox remains (pekayatt)
@@ -8,5 +9,5 @@ Added MANIFEST and changed activity icon (alexandre)
 trapezoid and triangle functions added, minor changes on fill function, bug on fuction undo solved (andre)
 Fill function changed (alexandre)
 Activity name changed to "Paint" (alexandre)
-First Sugar Version (joyce, andremossinato, pekayatt, barbolo, nathalia.sautchuk, alexandremartinazzo)
+First Sugar Version (joyce, andremossinato, pekayatt, barbolo, nathalia.sautchuk, alexandre)
 
