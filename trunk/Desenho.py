@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """Pixmap manipulation
 Copyright 2007, NATE-LSI-EPUSP
 
@@ -26,7 +27,6 @@ The copy of the GNU General Public License is found in the
 COPYING file included in the source distribution.
 """
 
-# -*- coding: utf-8 -*-
 import  pygtk
 pygtk.require('2.0')
 import gtk
