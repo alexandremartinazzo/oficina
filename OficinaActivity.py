@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """Create Oficina Activity
 Copyright 2007, NATE-LSI-EPUSP
 
@@ -36,7 +37,6 @@ from sugar.activity import activity
 #from Oficina import Oficina
 from toolbox import Toolbox
 from Area import Area
-from Cursors import Cursors
 
 # DRAW_WIDTH  = 1195
 # DRAW_HEIGHT = 800

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """Create Oficina Toolbar
 Copyright 2007, NATE-LSI-EPUSP
 
@@ -37,8 +38,6 @@ from sugar.graphics.toolbutton import ToolButton
 from sugar.graphics.toggletoolbutton import ToggleToolButton
 from sugar.graphics.combobox import ComboBox
 from sugar.graphics.palette import Palette
-
-from Cursors import Cursors
 
 class Toolbox(ActivityToolbox):
     def __init__(self, activity):

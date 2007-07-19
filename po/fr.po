@@ -1,8 +1,8 @@
 """French translations for Oficina
 Copyright 2007, NATE-LSI-EPUSP
 
-Oficina is developed in Brazil at Escola Politécnica of 
-Universidade de São Paulo. NATE is part of LSI (Integrated 
+Oficina is developed in Brazil at Escola Politecnica of 
+Universidade de Sao Paulo. NATE is part of LSI (Integrated 
 Systems Laboratory) and stands for Learning, Work and 
 Entertainment Center. Visit our web page: 
 www.nate.lsi.usp.br
