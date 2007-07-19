@@ -64,15 +64,15 @@ class DrawEditToolbar(EditToolbar):
 
 class ToolsToolbar(gtk.Toolbar):
 
-    _TOOL_PENCIL = 2
-    _TOOL_BRUSH = 29
-    _TOOL_ERASER = 3
-    _TOOL_POLYGON = 27
-    _TOOL_BUCKET = 28
-    _TOOL_MARQUEE_ELLIPTICAL = 5
-    _TOOL_MARQUEE_FREEFORM = 2
-    _TOOL_MARQUEE_RECTANGULAR = 26
-    _TOOL_MARQUEE_SMART = 32
+    _TOOL_PENCIL = 'pencil'
+    _TOOL_BRUSH = 'brush'
+    _TOOL_ERASER = 'eraser'
+    _TOOL_POLYGON = 'polygon'
+    _TOOL_BUCKET = 'bucket'
+    _TOOL_MARQUEE_ELLIPTICAL = 'marquee-elliptical'
+    _TOOL_MARQUEE_FREEFORM = 'marquee-freeform'
+    _TOOL_MARQUEE_RECTANGULAR = 'marquee-rectangular'
+    _TOOL_MARQUEE_SMART = 'marquee-smart'
 
     
     def __init__(self, activity):
@@ -240,11 +240,11 @@ class ToolsToolbar(gtk.Toolbar):
             cursor = gtk.gdk.Cursor(gtk.gdk.display_get_default() , pix, 6, 21)
             
         elif data == 'tool-brush':
-            pix = gtk.gdk.pixbuf_new_from_file("./icons/brush_cursor.svg")
+            pix = gtk.gdk.pixbuf_new_from_file("./images/brush_cursor.png")
             cursor = gtk.gdk.Cursor(gtk.gdk.display_get_default() , pix, 6, 21)
 
         elif data == 'tool-bucket':
-            pix = gtk.gdk.pixbuf_new_from_file("./icons/bucket_cursor.svg")
+            pix = gtk.gdk.pixbuf_new_from_file("./images/bucket_cursor.png")
             cursor = gtk.gdk.Cursor(gtk.gdk.display_get_default() , pix, 6, 21)
 
         elif data == 'tool-polygon':
@@ -422,7 +422,7 @@ class ComboStrokeSize(ToolComboBox):
         self._stroke_size.append_item(self._ACTION_100000, _('100000'))
         """
 
-        self._stroke_size.set_active(0)
+        self._stroke_size.set_active(1)
         self._stroke_size.connect('changed', self._combo_changed_cb)
 
     def _combo_changed_cb(self, combo):
@@ -442,18 +442,18 @@ class ComboStrokeSize(ToolComboBox):
 
 class ShapesToolbar(gtk.Toolbar):
 
-    _TOOL_SHAPE_ARROW = 32
-    _TOOL_SHAPE_CURVE = 0
-    _TOOL_SHAPE_ELLIPSE = 5
-    _TOOL_SHAPE_FREEFORM = 0
-    _TOOL_SHAPE_HEART = 0
-    _TOOL_SHAPE_LINE = 1
-    _TOOL_SHAPE_PARALLELOGRAM = 33
-    _TOOL_SHAPE_POLYGON = 27
-    _TOOL_SHAPE_RECTANGLE = 6
-    _TOOL_SHAPE_STAR = 34
-    _TOOL_SHAPE_TRAPEZOID = 31
-    _TOOL_SHAPE_TRIANGLE = 30
+    _TOOL_SHAPE_ARROW = 'arrow'
+    _TOOL_SHAPE_CURVE = 'curve'
+    _TOOL_SHAPE_ELLIPSE = 'ellipse'
+    _TOOL_SHAPE_FREEFORM = 'freeform'
+    _TOOL_SHAPE_HEART = 'heart'
+    _TOOL_SHAPE_LINE = 'line'
+    _TOOL_SHAPE_PARALLELOGRAM = 'parallelogram'
+    _TOOL_SHAPE_POLYGON = 'polygon'
+    _TOOL_SHAPE_RECTANGLE = 'rectangle'
+    _TOOL_SHAPE_STAR = 'star'
+    _TOOL_SHAPE_TRAPEZOID = 'trapezoid'
+    _TOOL_SHAPE_TRIANGLE = 'triangle'
 
     def __init__(self, activity):
         gtk.Toolbar.__init__(self)
@@ -556,7 +556,7 @@ class ShapesToolbar(gtk.Toolbar):
 
 class TextToolbar(gtk.Toolbar):
 
-    _ACTION_TEXT = 4
+    _ACTION_TEXT = 'text'
 
     def __init__(self, activity):
         gtk.Toolbar.__init__(self)
@@ -605,11 +605,11 @@ class TextToolbar(gtk.Toolbar):
 
 class ImageToolbar(gtk.Toolbar):
 
-    _OBJECT_HEIGHT = 30
-    _OBJECT_INSERT = 31
-    _OBJECT_ROTATE_LEFT = 32
-    _OBJECT_ROTATE_RIGHT = 33
-    _OBJECT_WIDTH = 34
+    _OBJECT_HEIGHT = 'height'
+    _OBJECT_INSERT = 'insert'
+    _OBJECT_ROTATE_LEFT = 'rotate-left'
+    _OBJECT_ROTATE_RIGHT = 'rotate-right'
+    _OBJECT_WIDTH = 'width'
 
     def __init__(self, activity):
         gtk.Toolbar.__init__(self)
@@ -681,7 +681,7 @@ class ImageToolbar(gtk.Toolbar):
 
 class EffectsToolbar(gtk.Toolbar):
 
-    _ACTION_GRAYSCALE = 0
+    _ACTION_GRAYSCALE = 'grayscale'
 
     def __init__(self, activity):
         gtk.Toolbar.__init__(self)
