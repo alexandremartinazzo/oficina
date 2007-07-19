@@ -266,14 +266,21 @@ class ToolsToolbar(gtk.Toolbar):
 
 class ComboFillColors(ToolComboBox):
 
-    _ACTION_BLACK = 0
-    _ACTION_PURPLE = 1
-    _ACTION_YELLOW = 2
-    _ACTION_BLUE = 3
-    _ACTION_GREEN = 4
-    _ACTION_RED = 5
-    _ACTION_ORANGE = 6
-    _ACTION_WHITE = 7
+    _ACTION_WHITE = 0
+    _ACTION_MAROON = 1
+    _ACTION_RED = 2
+    _ACTION_OLIVE = 3
+    _ACTION_YELLOW = 4
+    _ACTION_GREEN = 5
+    _ACTION_LIME = 6
+    _ACTION_TEAL = 7
+    _ACTION_AQUA = 8
+    _ACTION_NAVY = 9
+    _ACTION_BLUE = 10
+    _ACTION_PURPLE = 11
+    _ACTION_FUCHSIA = 12
+    _ACTION_BLACK = 13
+    
  
     def __init__(self, activity):
     
@@ -282,16 +289,22 @@ class ComboFillColors(ToolComboBox):
         self._activity = activity
 
         self._fill_color = self.combo
-        self._fill_color.append_item(self._ACTION_BLACK, _('Black'))
-        self._fill_color.append_item(self._ACTION_PURPLE, _('Purple'))
-        self._fill_color.append_item(self._ACTION_YELLOW, _('Yellow'))        
-        self._fill_color.append_item(self._ACTION_BLUE, _('Blue'))
-        self._fill_color.append_item(self._ACTION_GREEN, _('Green')) 
-        self._fill_color.append_item(self._ACTION_RED, _('Red'))
-        self._fill_color.append_item(self._ACTION_ORANGE, _('Orange'))
         self._fill_color.append_item(self._ACTION_WHITE, _('White'))
+        self._fill_color.append_item(self._ACTION_MAROON, _('Maroon'))
+        self._fill_color.append_item(self._ACTION_RED, _('Red'))        
+        self._fill_color.append_item(self._ACTION_OLIVE, _('Olive'))
+        self._fill_color.append_item(self._ACTION_YELLOW, _('Yellow')) 
+        self._fill_color.append_item(self._ACTION_GREEN, _('Green'))
+        self._fill_color.append_item(self._ACTION_LIME, _('Lime'))
+        self._fill_color.append_item(self._ACTION_TEAL, _('Teal'))
+        self._fill_color.append_item(self._ACTION_AQUA, _('Aqua'))
+        self._fill_color.append_item(self._ACTION_NAVY, _('Navy'))
+        self._fill_color.append_item(self._ACTION_BLUE, _('Blue'))
+        self._fill_color.append_item(self._ACTION_PURPLE, _('Purple'))
+        self._fill_color.append_item(self._ACTION_FUCHSIA, _('Fuchsia'))
+        self._fill_color.append_item(self._ACTION_BLACK, _('Black'))
 
-        self._fill_color.set_active(0)
+        self._fill_color.set_active(13)
         self._fill_color.connect('changed', self._combo_changed_cb)
 
 
@@ -312,14 +325,20 @@ class ComboFillColors(ToolComboBox):
 
 class ComboStrokeColors(ToolComboBox):
 
-    _ACTION_BLACK = 0
-    _ACTION_PURPLE = 1
-    _ACTION_YELLOW = 2
-    _ACTION_BLUE = 3
-    _ACTION_GREEN = 4
-    _ACTION_RED = 5
-    _ACTION_ORANGE = 6
-    _ACTION_WHITE = 7
+    _ACTION_WHITE = 0
+    _ACTION_MAROON = 1
+    _ACTION_RED = 2
+    _ACTION_OLIVE = 3
+    _ACTION_YELLOW = 4
+    _ACTION_GREEN = 5
+    _ACTION_LIME = 6
+    _ACTION_TEAL = 7
+    _ACTION_AQUA = 8
+    _ACTION_NAVY = 9
+    _ACTION_BLUE = 10
+    _ACTION_PURPLE = 11
+    _ACTION_FUCHSIA = 12
+    _ACTION_BLACK = 13
 
     def __init__(self, activity):
         
@@ -328,16 +347,22 @@ class ComboStrokeColors(ToolComboBox):
         self._stroke_color = self.combo
         self._activity = activity
         
-        self._stroke_color.append_item(self._ACTION_BLACK, _('Black'))
-        self._stroke_color.append_item(self._ACTION_PURPLE, _('Purple'))
-        self._stroke_color.append_item(self._ACTION_YELLOW, _('Yellow'))
-        self._stroke_color.append_item(self._ACTION_BLUE, _('Blue'))
-        self._stroke_color.append_item(self._ACTION_GREEN, _('Green')) 
-        self._stroke_color.append_item(self._ACTION_RED, _('Red'))
-        self._stroke_color.append_item(self._ACTION_ORANGE, _('Orange'))
         self._stroke_color.append_item(self._ACTION_WHITE, _('White'))
+        self._stroke_color.append_item(self._ACTION_MAROON, _('Maroon'))
+        self._stroke_color.append_item(self._ACTION_RED, _('Red'))        
+        self._stroke_color.append_item(self._ACTION_OLIVE, _('Olive'))
+        self._stroke_color.append_item(self._ACTION_YELLOW, _('Yellow')) 
+        self._stroke_color.append_item(self._ACTION_GREEN, _('Green'))
+        self._stroke_color.append_item(self._ACTION_LIME, _('Lime'))
+        self._stroke_color.append_item(self._ACTION_TEAL, _('Teal'))
+        self._stroke_color.append_item(self._ACTION_AQUA, _('Aqua'))
+        self._stroke_color.append_item(self._ACTION_NAVY, _('Navy'))
+        self._stroke_color.append_item(self._ACTION_BLUE, _('Blue'))
+        self._stroke_color.append_item(self._ACTION_PURPLE, _('Purple'))
+        self._stroke_color.append_item(self._ACTION_FUCHSIA, _('Fuchsia'))
+        self._stroke_color.append_item(self._ACTION_BLACK, _('Black'))
 
-        self._stroke_color.set_active(0)
+        self._stroke_color.set_active(13)
         self._stroke_color.connect('changed', self._combo_changed_cb)
         #self._stroke_color.connect('changed', self.set_stroke_color)
         self.connect("focus", self.event_focus)
