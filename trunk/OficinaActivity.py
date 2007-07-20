@@ -1,11 +1,16 @@
 # -*- coding: utf-8 -*-
-"""Create Oficina Activity
+"""
+Desenho.py
+
+Create Oficina Activity
+
+
 Copyright 2007, NATE-LSI-EPUSP
 
 Oficina is developed in Brazil at Escola Politécnica of 
-Universidade de São Paulo. NATE is part of LSI (Integrated 
-Systems Laboratory) and stands for Learning, Work and 
-Entertainment Center. Visit our web page: 
+Universidade de São Paulo. NATE is part of LSI (Integrable
+Systems Laboratory) and stands for Learning, Work and Entertainment
+Research Group. Visit our web page: 
 www.nate.lsi.usp.br
 Suggestions, bugs and doubts, please email oficina@lsi.usp.br
 
@@ -25,7 +30,19 @@ Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
 Boston, MA  02110-1301  USA.
 The copy of the GNU General Public License is found in the 
 COPYING file included in the source distribution.
+
+
+Authors:
+
+Joyce Alessandra Saul               (joycealess@gmail.com)
+Andre Mossinato                     (andremossinato@gmail.com)
+Nathalia Sautchuk Patrício          (nathalia.sautchuk@gmail.com)
+Pedro Kayatt                        (pekayatt@gmail.com)
+Rafael Barbolo Lopes                (barbolo@gmail.com)
+Alexandre A. Gonçalves Martinazzo   (alexandremartinazzo@gmail.com)
+
 """
+
 
 import os
 from gettext import gettext as _
@@ -104,7 +121,9 @@ class OficinaActivity(activity.Activity):
         print file_path
         #self._area.d.limpatudo()
         #self._area.d.clear()
-        self._area.d.loadImage(file_path)
+        self._area.d.loadImage(file_path, self._area)
+        self._area.undo_times = 1
+        self._area.redo_times = 0
 
 
     def write_file(self, file_path):

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Area.py
+Desenho.py
 
 Tools and events manipulation
 
@@ -8,9 +8,9 @@ Tools and events manipulation
 Copyright 2007, NATE-LSI-EPUSP
 
 Oficina is developed in Brazil at Escola Politécnica of 
-Universidade de São Paulo. NATE is part of LSI (Integrated 
-Systems Laboratory) and stands for Learning, Work and 
-Entertainment Center. Visit our web page: 
+Universidade de São Paulo. NATE is part of LSI (Integrable
+Systems Laboratory) and stands for Learning, Work and Entertainment
+Research Group. Visit our web page: 
 www.nate.lsi.usp.br
 Suggestions, bugs and doubts, please email oficina@lsi.usp.br
 
@@ -30,7 +30,19 @@ Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
 Boston, MA  02110-1301  USA.
 The copy of the GNU General Public License is found in the 
 COPYING file included in the source distribution.
+
+
+Authors:
+
+Joyce Alessandra Saul               (joycealess@gmail.com)
+Andre Mossinato                     (andremossinato@gmail.com)
+Nathalia Sautchuk Patrício          (nathalia.sautchuk@gmail.com)
+Pedro Kayatt                        (pekayatt@gmail.com)
+Rafael Barbolo Lopes                (barbolo@gmail.com)
+Alexandre A. Gonçalves Martinazzo   (alexandremartinazzo@gmail.com)
+
 """
+
 
 import  pygtk
 pygtk.require('2.0')
@@ -130,6 +142,7 @@ class Area(gtk.DrawingArea):
         
         #start of UNDO and REDO
         self.first_undo = True
+        self.first_redo = True
         self.undo_times = 0
         self.redo_times = 0
         self.undo_list=[]#pixmaps list to Undo func
