@@ -44,8 +44,6 @@ from sugar.graphics.toggletoolbutton import ToggleToolButton
 from sugar.graphics.combobox import ComboBox
 from sugar.graphics.palette import Palette
 
-from Cursors import Cursors
-
 class Toolbox(ActivityToolbox):
     def __init__(self, activity):
         ActivityToolbox.__init__(self, activity)
@@ -745,7 +743,7 @@ class ImageToolbar(gtk.Toolbar):
             file_path = dialog.get_filename()
             #file_path = decode_path((file_path,))[0]
             #open(activity, file_path)
-            activity._area.d.loadImage(file_path)
+            activity._area.d.loadImage(file_path,widget)
         elif response == gtk.RESPONSE_CANCEL:
             print 'Closed, no files selected'
         dialog.destroy()

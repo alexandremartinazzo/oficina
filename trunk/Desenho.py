@@ -486,7 +486,7 @@ class Desenho:
             
             widget.queue_draw()
 
-    def loadImage(self, name):
+    def loadImage(self, name, widget):
         """Load an image.
 
         Keyword arguments:
@@ -498,7 +498,7 @@ class Desenho:
         self.d.pixmap.draw_pixbuf(self.d.gc, pixbuf, 0, 0, 0, 0, width=-1, height=-1, dither=gtk.gdk.RGB_DITHER_NORMAL, x_dither=0, y_dither=0)
         self.d.pixmap_temp.draw_pixbuf(self.d.gc, pixbuf, 0, 0, 0, 0, width=-1, height=-1, dither=gtk.gdk.RGB_DITHER_NORMAL, x_dither=0, y_dither=0)
         
-        self.d.enableUndo(self.d.widget)
+        self.d.enableUndo(widget)
         
         self.d.queue_draw()
         
