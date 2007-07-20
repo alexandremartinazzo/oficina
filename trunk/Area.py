@@ -374,6 +374,49 @@ class Area(gtk.DrawingArea):
                 #bucket
                 elif self.tool == 'bucket':
                 # New algorithm. See Desenho.py
+                    x_current = int (event.x)
+                    y_current = int (event.y)
+                    imagem = self.pixmap.get_image(0,0, WIDTH, HEIGHT)
+                    color_start = imagem.get_pixel(x_current, y_current)
+                    
+                    if (color_start != self.color_dec):
+                        list_x = c_int * 100000
+                        list_y = c_int * 100000
+                        xy_count = 0
+                        loop_count = 0
+                        imagem.put_pixel(x_current,y_current,self.color_dec)
+                        while (loop_count <= xy_count):
+                            
+                            loop_count += 1
+                            if x_current+1 < WIDTH:
+                                if imagem.get_pixel(x_current+1, y_current) == color_start:
+                                    imagem.put_pixel(x_current+1, y_current, self.color_dec)
+                                    list_x(xy_count) = x_current+1
+                                    list_y(xy_count) = y_current
+                                    xy_count += 1
+                                pass
+                            if x_current-1 >= 0:
+                                if imagem.get_pixel(x_current -1, y_current) == color_start:
+                                    imagem.put_pixel(x_current-1, y_current, self.color_dec)
+                                    list_x(xy_count) = x_current-1
+                                    list_y(xy_count) = y_current
+                                    xy_count += 1
+                            if y_current+1 < HEIGHT:
+                                if imagem.get_pixel(x_current, y_current+1) == color_start:
+                                    imagem.put_pixel(x_current, y_current+1, self.color_dec)
+                                    list_x(xy_count) = x_current
+                                    list_y(xy_count) = y_current+1
+                                    xy_count += 1
+                            if y_current-1 >= 0:
+                                if imagem.get_pixel(x_current, y_current-1) == color_start:
+                                    imagem.put_pixel(x_current, y_current-1, self.color_dec)
+                                    list_x(xy_count) = x_current
+                                    list_y(xy_count) = y_current-1
+                                    xy_count += 1
+                        self.pixmap.draw_image(self.gc,imagem,0,0,0,0,WIDTH, HEIGHT)
+                        widget.queue_draw()
+                    self.enableUndo(widget)
+                    """
                     width, height = self.window.get_size()
                     self.busy = True
                     image = self.pixmap.get_image(0,0, width, height)
@@ -387,7 +430,7 @@ class Area(gtk.DrawingArea):
                 
                     widget.queue_draw()
                     self.busy = False
-                    self.enableUndo(widget)
+                    self.enableUndo(widget)"""
                 
                 elif self.tool == 'triangle':
                     self.pixmap.draw_polygon(self.gc, True, self.d.points)
