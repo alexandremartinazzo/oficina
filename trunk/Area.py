@@ -1,5 +1,10 @@
 # -*- coding: utf-8 -*-
-"""Tools and events manipulation
+"""
+Area.py
+
+Tools and events manipulation
+
+
 Copyright 2007, NATE-LSI-EPUSP
 
 Oficina is developed in Brazil at Escola Politécnica of 
@@ -88,8 +93,8 @@ class Area(gtk.DrawingArea):
         self.pixmap_sel = None
         self.desenho = []   
         self.textos = []    
-        self.color_ = 0
-        self.color_line = 0
+        #self.color_ = 0
+        #self.color_line = 0
         self.estadoTexto = 0
         self.janela = janela    
         self.d = Desenho(self)
@@ -97,6 +102,8 @@ class Area(gtk.DrawingArea):
         self.brush_shape = 'circle'
         self.eraser_shape = 'circle'
 
+        #This list must not be used. Using gdk.Color objects.
+        '''      
         colormap = self.get_colormap()
         
         self.cores = [ 
@@ -115,6 +122,8 @@ class Area(gtk.DrawingArea):
         colormap.alloc_color('#ff00ff', True, True), # fuchsia
         colormap.alloc_color('#000000', True, True)  # black - selection
         ]
+        '''
+        
         self.font = pango.FontDescription('Sans 9')
         #self.mensagem = Mensagens(self)
         #self.mensagem.criaConexao()
@@ -149,17 +158,20 @@ class Area(gtk.DrawingArea):
         self.pixmap_sel.draw_rectangle(widget.get_style().white_gc, True, 0, 0, width, height)
         
         self.gc = widget.window.new_gc()    
-        self.gc_eraser = widget.window.new_gc()     
-        self.gc_eraser.set_foreground(self.cores[0])
+        self.gc_eraser = widget.window.new_gc()
+        colormap = self.get_colormap()
+        white = colormap.alloc_color('#ffffff', True, True) # white      
+        self.gc_eraser.set_foreground(white)
         
         self.gc_brush = widget.window.new_gc()      
-        self.gc_brush.set_foreground(self.cores[0])
+        self.gc_brush.set_foreground(white)
                 
         self.gc_line = widget.window.new_gc()   
 
         self.gc_selection = widget.window.new_gc()  
         self.gc_selection.set_line_attributes(1, gtk.gdk.LINE_ON_OFF_DASH, gtk.gdk.CAP_ROUND, gtk.gdk.JOIN_ROUND)
-        self.gc_selection.set_foreground(self.cores[8])
+        black = colormap.alloc_color('#000000', True, True)  # black
+        self.gc_selection.set_foreground(black)
         
         print 'configure event'
         
@@ -522,11 +534,12 @@ class Area(gtk.DrawingArea):
 
         Keyword arguments:
         self -- the Area object (GtkDrawingArea)
-        color -- integer "enum"
+        color -- a gdk.Color object
 
         """
-        self.color_ = color     
-        self.gc.set_foreground(self.cores[color])
+        #self.color_ = color     
+        #self.gc.set_foreground(self.cores[color])
+        self.gc.set_foreground(color)
         
  
     def _set_stroke_color(self, color):
@@ -534,14 +547,22 @@ class Area(gtk.DrawingArea):
 
         Keyword arguments:
         self -- the Area object (GtkDrawingArea)
-        color -- integer "enum"
+        color -- a gdk.Color object
 
         """
+        '''
         self.color_line = color 
         self.gc_line.set_foreground(self.cores[color])
         self.gc_line.set_line_attributes(1, gtk.gdk.LINE_ON_OFF_DASH, gtk.gdk.CAP_ROUND, gtk.gdk.JOIN_ROUND)  
         self.gc_brush.set_foreground(self.cores[color])
         self.color_dec = self.cores[color].pixel
+        '''
+        
+        #self.color_line = color 
+        self.gc_line.set_foreground(color)
+        self.gc_line.set_line_attributes(1, gtk.gdk.LINE_ON_OFF_DASH, gtk.gdk.CAP_ROUND, gtk.gdk.JOIN_ROUND)  
+        self.gc_brush.set_foreground(color)
+        self.color_dec = color.pixel
 
     def _set_grayscale(self,widget):
         """Apply grayscale effect.

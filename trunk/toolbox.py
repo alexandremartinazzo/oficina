@@ -290,121 +290,144 @@ class ToolsToolbar(gtk.Toolbar):
         self._activity._area.window.set_cursor(cursor)
 
 class ComboFillColors(ToolComboBox):
-
-    _ACTION_WHITE = 0
-    _ACTION_MAROON = 1
-    _ACTION_RED = 2
-    _ACTION_OLIVE = 3
-    _ACTION_YELLOW = 4
-    _ACTION_GREEN = 5
-    _ACTION_LIME = 6
-    _ACTION_TEAL = 7
-    _ACTION_AQUA = 8
-    _ACTION_NAVY = 9
-    _ACTION_BLUE = 10
-    _ACTION_PURPLE = 11
-    _ACTION_FUCHSIA = 12
-    _ACTION_BLACK = 13
-    
- 
+    """Class to manage Fill colors """   
+            
     def __init__(self, activity):
+        """Initialize the object
+
+        Keyword arguments:
+        activity -- the OficinaActivity object
+        """
     
-        #FIXME: we should not use gdk.Color objects instead of numbers
         ToolComboBox.__init__(self)
         self._activity = activity
 
         self._fill_color = self.combo
-        self._fill_color.append_item(self._ACTION_WHITE, _('White'))
-        self._fill_color.append_item(self._ACTION_MAROON, _('Maroon'))
-        self._fill_color.append_item(self._ACTION_RED, _('Red'))        
-        self._fill_color.append_item(self._ACTION_OLIVE, _('Olive'))
-        self._fill_color.append_item(self._ACTION_YELLOW, _('Yellow')) 
-        self._fill_color.append_item(self._ACTION_GREEN, _('Green'))
-        self._fill_color.append_item(self._ACTION_LIME, _('Lime'))
-        self._fill_color.append_item(self._ACTION_TEAL, _('Teal'))
-        self._fill_color.append_item(self._ACTION_AQUA, _('Aqua'))
-        self._fill_color.append_item(self._ACTION_NAVY, _('Navy'))
-        self._fill_color.append_item(self._ACTION_BLUE, _('Blue'))
-        self._fill_color.append_item(self._ACTION_PURPLE, _('Purple'))
-        self._fill_color.append_item(self._ACTION_FUCHSIA, _('Fuchsia'))
-        self._fill_color.append_item(self._ACTION_BLACK, _('Black'))
+        self._fill_color.append_item(self.alloc_color('#000000'), _('Black'))
+        self._fill_color.append_item(self.alloc_color('#ffffff'), _('White'))
+        self._fill_color.append_item(self.alloc_color('#800000'), _('Maroon'))
+        self._fill_color.append_item(self.alloc_color('#ff0000'), _('Red'))        
+        self._fill_color.append_item(self.alloc_color('#808000'), _('Olive'))
+        self._fill_color.append_item(self.alloc_color('#ffff00'), _('Yellow')) 
+        self._fill_color.append_item(self.alloc_color('#008000'), _('Green'))
+        self._fill_color.append_item(self.alloc_color('#00ff00'), _('Lime'))
+        self._fill_color.append_item(self.alloc_color('#008080'), _('Teal'))
+        self._fill_color.append_item(self.alloc_color('#00ffff'), _('Aqua'))
+        self._fill_color.append_item(self.alloc_color('#000080'), _('Navy'))
+        self._fill_color.append_item(self.alloc_color('#0000ff'), _('Blue'))
+        self._fill_color.append_item(self.alloc_color('#800080'), _('Purple'))
+        self._fill_color.append_item(self.alloc_color('#ff00ff'), _('Fuchsia'))
 
-        self._fill_color.set_active(13)
+        self._fill_color.set_active(0)
         self._fill_color.connect('changed', self._combo_changed_cb)
 
+    def alloc_color(self, color):
+        """Alloc new color.
+
+        Keyword arguments:
+        color -- hexadecimal number
+        
+        Return:
+        a gdk.Color object
+
+        """
+        colormap = self.get_colormap()
+        _COLOR_ = colormap.alloc_color(color, True, True) 
+        return _COLOR_  
 
     def _combo_changed_cb(self, combo):
         color = self.get_color()
         self.set_fill_color(color)
 
     def set_fill_color(self, color):
-#         color = combo.get_active()
-#         color = self.combo.get_active()
-        self._activity._area._set_fill_color(color)
-        
-    def get_color(self):
-        #FIXME: return gdk.Color instead of numbers
-        return self.combo.get_active()
+        """Set the fill color in Area
 
+        Keyword arguments:
+        color -- a gdk.Color object
+
+        """
+        self._activity._area._set_fill_color(color)
+    
+    def get_color(self):  
+        """Get the fill color from combobox
+
+        Return:
+        a gdk.Color object
+
+        """      
+        model = self.combo.get_model()
+        active = self.combo.get_active()
+        return model[active][0]
 
 
 class ComboStrokeColors(ToolComboBox):
-
-    _ACTION_WHITE = 0
-    _ACTION_MAROON = 1
-    _ACTION_RED = 2
-    _ACTION_OLIVE = 3
-    _ACTION_YELLOW = 4
-    _ACTION_GREEN = 5
-    _ACTION_LIME = 6
-    _ACTION_TEAL = 7
-    _ACTION_AQUA = 8
-    _ACTION_NAVY = 9
-    _ACTION_BLUE = 10
-    _ACTION_PURPLE = 11
-    _ACTION_FUCHSIA = 12
-    _ACTION_BLACK = 13
-
+    """Class to manage Stroke colors """   
+    
     def __init__(self, activity):
+        """Initialize the object
+
+        Keyword arguments:
+        activity -- the OficinaActivity object
+        """
         
-        #FIXME: we should not use gdk.Color objects instead of numbers
         ToolComboBox.__init__(self)
-        self._stroke_color = self.combo
         self._activity = activity
         
-        self._stroke_color.append_item(self._ACTION_WHITE, _('White'))
-        self._stroke_color.append_item(self._ACTION_MAROON, _('Maroon'))
-        self._stroke_color.append_item(self._ACTION_RED, _('Red'))        
-        self._stroke_color.append_item(self._ACTION_OLIVE, _('Olive'))
-        self._stroke_color.append_item(self._ACTION_YELLOW, _('Yellow')) 
-        self._stroke_color.append_item(self._ACTION_GREEN, _('Green'))
-        self._stroke_color.append_item(self._ACTION_LIME, _('Lime'))
-        self._stroke_color.append_item(self._ACTION_TEAL, _('Teal'))
-        self._stroke_color.append_item(self._ACTION_AQUA, _('Aqua'))
-        self._stroke_color.append_item(self._ACTION_NAVY, _('Navy'))
-        self._stroke_color.append_item(self._ACTION_BLUE, _('Blue'))
-        self._stroke_color.append_item(self._ACTION_PURPLE, _('Purple'))
-        self._stroke_color.append_item(self._ACTION_FUCHSIA, _('Fuchsia'))
-        self._stroke_color.append_item(self._ACTION_BLACK, _('Black'))
+        self._stroke_color = self.combo
+        self._stroke_color.append_item(self.alloc_color('#000000'), _('Black'))
+        self._stroke_color.append_item(self.alloc_color('#ffffff'), _('White'))
+        self._stroke_color.append_item(self.alloc_color('#800000'), _('Maroon'))
+        self._stroke_color.append_item(self.alloc_color('#ff0000'), _('Red'))        
+        self._stroke_color.append_item(self.alloc_color('#808000'), _('Olive'))
+        self._stroke_color.append_item(self.alloc_color('#ffff00'), _('Yellow')) 
+        self._stroke_color.append_item(self.alloc_color('#008000'), _('Green'))
+        self._stroke_color.append_item(self.alloc_color('#00ff00'), _('Lime'))
+        self._stroke_color.append_item(self.alloc_color('#008080'), _('Teal'))
+        self._stroke_color.append_item(self.alloc_color('#00ffff'), _('Aqua'))
+        self._stroke_color.append_item(self.alloc_color('#000080'), _('Navy'))
+        self._stroke_color.append_item(self.alloc_color('#0000ff'), _('Blue'))
+        self._stroke_color.append_item(self.alloc_color('#800080'), _('Purple'))
+        self._stroke_color.append_item(self.alloc_color('#ff00ff'), _('Fuchsia'))
 
-        self._stroke_color.set_active(13)
+        self._stroke_color.set_active(0)
         self._stroke_color.connect('changed', self._combo_changed_cb)
-        #self._stroke_color.connect('changed', self.set_stroke_color)
-        self.connect("focus", self.event_focus)
-       
-    def event_focus(self, combo):
-        print 'combostroke gained focus' 	
 
+    def alloc_color(self, color):
+        """Alloc new color.
+
+        Keyword arguments:
+        color -- hexadecimal number
+        
+        Return:
+        a gdk.Color object
+
+        """
+        colormap = self.get_colormap()
+        _COLOR_ = colormap.alloc_color(color, True, True) 
+        return _COLOR_
+    
     def _combo_changed_cb(self, combo):
         color = self.get_color()
         self.set_stroke_color(color)
 
     def get_color(self):
-        #FIXME: return gdk.Color instead of numbers
-        return self.combo.get_active()
+        """Get the fill color from combobox
+
+        Return:
+        a gdk.Color object
+
+        """        
+        model = self.combo.get_model()
+        active = self.combo.get_active()
+        return model[active][0]
 
     def set_stroke_color(self, color):
-#         color = combo.get_active()
+        """Set the fill color in Area
+
+        Keyword arguments:
+        color -- a gdk.Color object
+
+        """
         self._activity._area._set_stroke_color(color)
 
 

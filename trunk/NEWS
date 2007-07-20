@@ -1,4 +1,6 @@
-Fixed Image load bug, now enableUndo is working with it, Nath fixed Cursors errors (pekayatt)
+Color list in Area.py is not used anymore. Toolbox.py now passes a gdk.Color (nathalia.sautchuk, alexandre)
+Fixed Cursors errors (nathalia.sautchuk)
+Fixed Image load bug, now enableUndo is working with it (pekayatt)
 Added COPYING (alexandre)
 Fixed bug that corrupted colors in toolbox.py (alexandre)
 Adding file header and cleaning unused files (nathalia.sautchuk)
