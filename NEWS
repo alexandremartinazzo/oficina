@@ -1,3 +1,4 @@
+Fixed Image load bug, now enableUndo is working with it, Nath fixed Cursors errors (pekayatt)
 Added COPYING (alexandre)
 Fixed bug that corrupted colors in toolbox.py (alexandre)
 Adding file header and cleaning unused files (nathalia.sautchuk)

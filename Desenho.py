@@ -497,7 +497,10 @@ class Desenho:
         pixbuf = gtk.gdk.pixbuf_new_from_file(name) 
         self.d.pixmap.draw_pixbuf(self.d.gc, pixbuf, 0, 0, 0, 0, width=-1, height=-1, dither=gtk.gdk.RGB_DITHER_NORMAL, x_dither=0, y_dither=0)
         self.d.pixmap_temp.draw_pixbuf(self.d.gc, pixbuf, 0, 0, 0, 0, width=-1, height=-1, dither=gtk.gdk.RGB_DITHER_NORMAL, x_dither=0, y_dither=0)
-        self.d.queue_draw() 
+        
+        self.d.enableUndo(self.d.widget)
+        
+        self.d.queue_draw()
         
     def moveSelection(self, widget, coords):
         """Move the selection.
