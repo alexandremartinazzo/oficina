@@ -51,6 +51,7 @@ import sys, gobject, socket
 from gtk import gdk
 import math
 import pango
+from fill import *
 
 from Desenho import Desenho
 
@@ -401,15 +402,21 @@ class Area(gtk.DrawingArea):
                 # New algorithm. See Desenho.py
                     width, height = self.window.get_size()
                     self.busy = True
-                    image = self.pixmap.get_image(0,0, width, height)
+                    
+                    fill(self.pixmap_temp, self.gc, int(event.x), int(event.y), width, height, self.color_dec)
+                    
+                    """image = self.pixmap.get_image(0,0, width, height)
                     fill_image = self.d.fill(image, int(event.x), int(event.y), self.color_dec)
                 
                     self.pixmap.draw_image(self.gc, fill_image,0,0,0,0, width, height)
                     self.pixmap_temp.draw_image(self.gc, fill_image,0,0,0,0, width, height)
+                    
                 
                     del image
                     del fill_image
-                
+                    """
+                    self.pixmap.draw_drawable(self.gc, self.pixmap_temp,0,0,0,0, width, height)
+                    
                     widget.queue_draw()
                     self.busy = False
                     self.enableUndo(widget)
