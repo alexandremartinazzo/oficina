@@ -1,3 +1,4 @@
+New FILL fuction, linked to C module (pekayatt)
 Color list in Area.py is not used anymore. Toolbox.py now passes a gdk.Color (nathalia.sautchuk, alexandre)
 Fixed Cursors errors (nathalia.sautchuk)
 Fixed Image load bug, now enableUndo is working with it (pekayatt)
