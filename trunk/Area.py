@@ -41,6 +41,15 @@ Pedro Kayatt                        (pekayatt@gmail.com)
 Rafael Barbolo Lopes                (barbolo@gmail.com)
 Alexandre A. Gonçalves Martinazzo   (alexandremartinazzo@gmail.com)
 
+Colaborators:
+Bruno Gola                          (brunogola@gmail.com)
+
+Group Manager:
+Irene Karaguilla Ficheman           (irene@lsi.usp.br)
+
+Cientific Coordinator:
+Roseli de Deus Lopes                (roseli@lsi.usp.br)
+
 """
 
 
