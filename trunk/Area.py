@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Desenho.py
+Area.py
 
 Tools and events manipulation
 
@@ -231,8 +231,6 @@ class Area(gtk.DrawingArea):
 
         """
         # text
-        self.pixmap_temp.draw_drawable(self.gc, self.pixmap, 0,0,0,0, WIDTH, HEIGHT)
-        # text
         if self.tool == 'text':
             self.d.text(widget,event)
         if not self.selmove or self.tool != 'marquee-rectangular':
@@ -246,6 +244,8 @@ class Area(gtk.DrawingArea):
         if state & gtk.gdk.BUTTON3_MASK:
             self.sel_get_out = True
             self.pixmap_sel.draw_drawable(self.gc, self.pixmap_temp, 0,0,0,0, WIDTH, HEIGHT)
+        if state & gtk.gdk.BUTTON1_MASK:
+            self.pixmap_temp.draw_drawable(self.gc, self.pixmap, 0,0,0,0, WIDTH, HEIGHT)
         widget.queue_draw()
         self.desenha = True  
            
