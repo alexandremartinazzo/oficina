@@ -11,7 +11,7 @@ Oficina is developed in Brazil at Escola Politécnica of
 Universidade de São Paulo. NATE is part of LSI (Integrable
 Systems Laboratory) and stands for Learning, Work and Entertainment
 Research Group. Visit our web page: 
-www.nate.lsi.usp.br
+www.lsi.usp.br/nate
 Suggestions, bugs and doubts, please email oficina@lsi.usp.br
 
 Oficina is free software; you can redistribute it and/or
@@ -112,49 +112,27 @@ class Area(gtk.DrawingArea):
         self.pixmap = None  
         self.pixmap_temp = None
         self.pixmap_sel = None
+        self.pixmap_copy = None
         self.desenho = []   
-        self.textos = []    
-        #self.color_ = 0
-        #self.color_line = 0
+        self.textos = []
         self.estadoTexto = 0
         self.janela = janela    
         self.d = Desenho(self)
         self.line_size = 2
         self.brush_shape = 'circle'
         self.eraser_shape = 'circle'
-
-        #This list must not be used. Using gdk.Color objects.
-        '''      
-        colormap = self.get_colormap()
-        
-        self.cores = [ 
-        colormap.alloc_color('#ffffff', True, True), # white     
-        colormap.alloc_color('#800000', True, True), # maroon
-        colormap.alloc_color('#ff0000', True, True), # red
-        colormap.alloc_color('#808000', True, True), # olive
-        colormap.alloc_color('#ffff00', True, True), # yellow
-        colormap.alloc_color('#008000', True, True), # green
-        colormap.alloc_color('#00ff00', True, True), # lime
-        colormap.alloc_color('#008080', True, True), # teal
-        colormap.alloc_color('#00ffff', True, True), # aqua
-        colormap.alloc_color('#000080', True, True), # navy
-        colormap.alloc_color('#0000ff', True, True), # blue
-        colormap.alloc_color('#800080', True, True), # purple
-        colormap.alloc_color('#ff00ff', True, True), # fuchsia
-        colormap.alloc_color('#000000', True, True)  # black - selection
-        ]
-        '''
-        
+                
         self.font = pango.FontDescription('Sans 9')
         #self.mensagem = Mensagens(self)
         #self.mensagem.criaConexao()
         
         #start of UNDO and REDO
         self.first_undo = True
-        self.first_redo = True
+        self.undo_surf = False
         self.undo_times = 0
         self.redo_times = 0
         self.undo_list=[]#pixmaps list to Undo func
+        
 
     # Create a new backing pixmap of the appropriate size
     def configure_event(self, widget, event):
@@ -195,7 +173,12 @@ class Area(gtk.DrawingArea):
         black = colormap.alloc_color('#000000', True, True)  # black
         self.gc_selection.set_foreground(black)
         
+        self.gc_selection1 = widget.window.new_gc()  #this make another white line out of the black line
+        self.gc_selection1.set_line_attributes(1, gtk.gdk.LINE_ON_OFF_DASH, gtk.gdk.CAP_ROUND, gtk.gdk.JOIN_ROUND)
+        self.gc_selection1.set_foreground(white)
         print 'configure event'
+        
+        self.enableUndo(widget)
         
         return True
         
@@ -358,6 +341,7 @@ class Area(gtk.DrawingArea):
             # FIXME: Adicionar cursor formato selecao
                 if self.selmove == False:
                     self.pixmap_temp.draw_drawable(self.gc,self.pixmap,  0 , 0 ,0,0, WIDTH, HEIGHT)
+                    self.pixmap_sel.draw_drawable(self.gc,self.pixmap,  0 , 0 ,0,0, WIDTH, HEIGHT)#avoid blink
                     self.sx = int (event.x)
                     self.sy = int(event.y)
                     self.window.set_cursor(gtk.gdk.Cursor(gtk.gdk.FLEUR))
@@ -450,16 +434,10 @@ class Area(gtk.DrawingArea):
         self -- the Area object (GtkDrawingArea)
 
         """
-        self.polygon_start = True
         if self.first_undo:#if is the first time you click on UNDO
             self.undo_times -= 1
-            if self.undo_times == 0: #to work when clear screen (bug fixed)
-                self.redo_times = 1
-        
-        elif (self.first_redo) and (self.undo_times!=0):
-            self.undo_times += 1
-        
-        print "Undo no.%d" %(self.undo_times)
+            
+        #print "Undo no.%d" %(self.undo_times)
         if self.undo_times >0 : 
             self.undo_times -= 1
             self.redo_times += 1
@@ -470,16 +448,14 @@ class Area(gtk.DrawingArea):
                 print "Can't draw"
                 pass
             self.queue_draw()
-            self.first_redo=False
         else:   
             self.undo_times = 0
-            #self.redo_times = 1
-            self.first_redo = True
-            self.d.clear()#Undo the last action, so clear-all
+            
         self.first_undo=False
+        self.undo_surf = True
 
 
-	#special case of func polygon
+	    #special case for func polygon
         if self.tool == 'polygon':		
                 self.polygon_start = True #start the polygon again
         
@@ -492,11 +468,6 @@ class Area(gtk.DrawingArea):
 
         """
         #print "REDO no.%d" %(self.redo_times)
-        if self.first_redo:
-            self.undo_times -=1
-            self.redo_times +=1
-        self.first_redo=False
-        
         if  (self.redo_times>0):
             self.redo_times -= 1
             self.undo_times += 1
@@ -518,7 +489,7 @@ class Area(gtk.DrawingArea):
         widget -- the Area object (GtkDrawingArea)
 
         """
-        if not self.first_undo and not self.first_redo:
+        if self.undo_surf:
             self.undo_times += 1
         
         self.undo_list.append(None)#alloc memory
@@ -527,13 +498,70 @@ class Area(gtk.DrawingArea):
         self.undo_times += 1
         self.redo_times = 0 
         self.first_undo = True
+        self.undo_surf = False
         
         #this is the part where we can limit the steps of undo/redo     
-        #if self.undo_times>=2:
-        #   self.undo_list.pop(0)
-        #   self.undo_times-=1
-        #   print "estourou"
+        if self.undo_times==12:
+           self.undo_list.pop(0)
+           self.undo_times-=1
+           #print "estourou"
         
+    def copy(self):
+        """ Copy Image.
+        When the tool selection is working make the change the copy of selectioned area"""
+        if self.selmove:
+    
+            if self.sx > self.oldx:
+                x = self.oldx
+            else:
+                x = self.sx
+            
+            if self.sy > self.oldy:
+                y = self.oldy
+            else:
+                y = self.sy
+
+            w = self.sx - self.oldx
+            if w < 0:
+                w = - w
+                
+            h = self.sy - self.oldy         
+            if h < 0:
+                h = - h
+
+            self.pixmap_copy = gtk.gdk.Pixmap(self.window, w, h, -1)
+            self.pixmap_copy.draw_drawable(self.gc, self.pixmap, x, y, 0, 0, w, h)  
+        else :
+            print "Please select some area first"
+            self.pixmap_copy == None
+            
+    def past(self):
+        """ Past image.
+        Past image that is in pixmap_copy"""
+        if self.pixmap_copy != None :
+            
+
+            w, h = self.pixmap_copy.get_size()
+            
+            #to draw everthing done until this moment
+            #self.pixmap.draw_drawable(self.gc, self.pixmap_temp, 0,0,0,0, WIDTH, HEIGHT)
+            
+            #to get out of sel func
+            if self.tool == 'marquee-rectangular': 
+                self.pixmap_sel.draw_drawable(self.gc, self.pixmap_copy, 0,0,0,0, w, h)   
+                #self.enableUndo(self)
+                self.sel_get_out = True
+                self.selmove = False
+                
+            #to draw the new area on screen
+            self.pixmap.draw_drawable(self.gc, self.pixmap_copy, 0,0,0,0, w, h)  
+            
+                      
+            self.enableUndo(self)     
+            self.queue_draw()
+        else :
+            print "Nothing is copied yet"
+            
     def _set_fill_color(self, color):
         """Set fill color.
 
@@ -542,8 +570,6 @@ class Area(gtk.DrawingArea):
         color -- a gdk.Color object
 
         """
-        #self.color_ = color     
-        #self.gc.set_foreground(self.cores[color])
         self.gc.set_foreground(color)
         
  
@@ -555,15 +581,7 @@ class Area(gtk.DrawingArea):
         color -- a gdk.Color object
 
         """
-        '''
-        self.color_line = color 
-        self.gc_line.set_foreground(self.cores[color])
-        self.gc_line.set_line_attributes(1, gtk.gdk.LINE_ON_OFF_DASH, gtk.gdk.CAP_ROUND, gtk.gdk.JOIN_ROUND)  
-        self.gc_brush.set_foreground(self.cores[color])
-        self.color_dec = self.cores[color].pixel
-        '''
         
-        #self.color_line = color 
         self.gc_line.set_foreground(color)
         self.gc_line.set_line_attributes(1, gtk.gdk.LINE_ON_OFF_DASH, gtk.gdk.CAP_ROUND, gtk.gdk.JOIN_ROUND)  
         self.gc_brush.set_foreground(color)
