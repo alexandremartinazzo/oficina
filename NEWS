@@ -1,3 +1,8 @@
+4
+===
+Colors now are choosen from a ColorButton. Selected color is shown, not its name (alexandre)
+Adjust in Undo/Redo functions, now we have a limit (on 10 times) (pekayatt)
+New past and copy funcions, improvements on selection func (pekayatt)
 Fixed bug with pixmap_temp
 New FILL fuction, linked to C module (pekayatt)
 Color list in Area.py is not used anymore. Toolbox.py now passes a gdk.Color (nathalia.sautchuk, alexandre)
@@ -14,9 +19,18 @@ New selection, the selectionbox remains (pekayatt)
 Fixed line size (nathalia.sautchuk, alexandre)
 Implemented Eraser shapes (nathalia.sautchuk)
 Fixed undo bugs and new selection function (pekayatt)
-Added MANIFEST and changed activity icon (alexandre)
-trapezoid and triangle functions added, minor changes on fill function, bug on fuction undo solved (andre)
+Trapezoid and triangle functions added, minor changes on fill function, bug on fuction undo solved (andre)
 Fill function changed (alexandre)
-Activity name changed to "Paint" (alexandre)
-First Sugar Version (joyce, andremossinato, pekayatt, barbolo, nathalia.sautchuk, alexandre)
+
+3
+===
+Addition of a new SVG Icon with fixes to some bugs. Project name changed from Oficina to Paint
+
+2
+===
+Make it work with python setup.py: John Palmeiri and Manusheel Gupta
+
+1
+===
+First Sugar Version: joyce, andremossinato, pekayatt, barbolo, nathalia.sautchuk, alexandremartinazzo from LSI Research Group, University of Sau Paulo,Brazil with manusheel gupta(manu@laptop.org) and Eben Eliason(eben@laptop.org)from OLPC, Cambridge
 
