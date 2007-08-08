@@ -103,15 +103,21 @@ class DrawEditToolbar(EditToolbar):
         EditToolbar.__init__(self)
         
         self._activity = activity
-
+        
+        self.undo.set_tooltip(_('Undo'))
+        self.redo.set_tooltip(_('Redo'))
+        self.copy.set_tooltip(_('Copy'))
+        self.paste.set_tooltip(_('Paste'))
+        
         self.undo.connect('clicked', self._undo_cb)
         self.redo.connect('clicked', self._redo_cb)
 
         self.copy.connect('clicked', self._copy_cb)
         self.paste.connect('clicked', self._paste_cb)
         
-        self._activity._area.connect('undo', self._enable_undo_button_cb)
-        self._activity._area.connect('redo', self._enable_redo_button_cb)
+        self._activity._area.connect('undo', self._on_signal_undo_cb)
+        self._activity._area.connect('redo', self._on_signal_redo_cb)
+        self._activity._area.connect('action-saved', self._on_signal_action_saved_cb)
         
     def _undo_cb(self, widget, data=None):
         self._activity._area.undo()
@@ -125,12 +131,21 @@ class DrawEditToolbar(EditToolbar):
     def _paste_cb(self, widget, data=None):
         self._activity._area.past()
         
-    def _enable_undo_button_cb(self, widget, data=None):
+    def _on_signal_undo_cb(self, widget, data=None):
+        self._verify_sensitive_buttons()
+        
+    def _on_signal_redo_cb(self, widget, data=None):
+        self._verify_sensitive_buttons()
+        
+    def _on_signal_action_saved_cb(self, widget, data=None):
+        self._verify_sensitive_buttons()
+        
+    def _verify_sensitive_buttons(self):
         self.undo.set_sensitive( self._activity._area.can_undo() )
-        
-    def _enable_redo_button_cb(self, widget, data=None):
         self.redo.set_sensitive( self._activity._area.can_redo() )
-        
+        #TODO: it is not possible to verify these yet.
+        #self.copy.set_sensitive( self._activity._area.can_copy() )
+        #self.paste.set_sensitive( self._activity._area.can_paste() )
 
 class ToolsToolbar(gtk.Toolbar):
 
@@ -152,19 +167,10 @@ class ToolsToolbar(gtk.Toolbar):
          
         self._activity = activity
 
-	"""
-        self._icon_fill = ToolButton('icon-fill')
-        self.insert(self._icon_fill, -1)
-        self._icon_fill.show()
-
-        tool_item = ComboFillColors(activity)
-        self.insert(tool_item, -1)
-        tool_item.show()
-	"""
-
         self._icon_stroke = ToolButton('icon-stroke')
         self.insert(self._icon_stroke, -1)
         self._icon_stroke.show()
+        self._icon_stroke.set_tooltip(_('Tool Color'))
         
         # Changing widget: using toolbox.ButtonStrokeColor instead of toolbox.ComboStrokeColors
         '''
@@ -243,6 +249,8 @@ class ToolsToolbar(gtk.Toolbar):
         self._tool_marquee_rectangular.show()
         self._tool_marquee_rectangular.set_tooltip(_('Rectangular Marquee'))
         
+        self._icon_stroke.connect('clicked', self._on_icon_stroke_clicked)
+        
         # New connect method
         self._tool_polygon.connect('clicked', self.set_tool, self._TOOL_POLYGON)
         self._tool_pencil.connect('clicked', self.set_tool, self._TOOL_PENCIL)
@@ -304,16 +312,10 @@ class ToolsToolbar(gtk.Toolbar):
             cursor = gtk.gdk.Cursor(gtk.gdk.display_get_default() , pixbuf, 6, 21)
         except:
             cursor = None
-        
         self._activity._area.window.set_cursor(cursor)
         
-#     def _color_button_cb(self, widget):
-#         newcolor = self._color_button.get_color()
-# #         colormap = gtk.gdk.colormap_get_system()
-#         colormap = self._activity._area.get_colormap()
-#         
-#         color = colormap.alloc_color(newcolor.red, newcolor.green, newcolor.blue)
-#         self._activity._area._set_stroke_color(color)
+    def _on_icon_stroke_clicked(self, widget, data=None):
+        self._stroke_color.clicked()
         
         
 
@@ -582,6 +584,7 @@ class ShapesToolbar(gtk.Toolbar):
         self._icon_fill = ToolButton('icon-fill')
         self.insert(self._icon_fill, -1)
         self._icon_fill.show()
+        self._icon_fill.set_tooltip(_('Fill Color'))
         
         # Changing widget: using toolbox.ButtonFillColor instead of toolbox.ComboFillColors
         '''
@@ -599,6 +602,7 @@ class ShapesToolbar(gtk.Toolbar):
         self._icon_stroke = ToolButton('icon-stroke')
         self.insert(self._icon_stroke, -1)
         self._icon_stroke.show()
+        self._icon_stroke.set_tooltip(_('Stroke Color'))
         
         # Changing widget: using toolbox.ButtonStrokeColor instead of toolbox.ComboStrokeColors
         '''
@@ -680,20 +684,11 @@ class ShapesToolbar(gtk.Toolbar):
         self._tool_shape_triangle.show()
         self._tool_shape_triangle.set_tooltip(_('Triangle'))
 
-        '''
-        self._tool_shape_arrow.connect('clicked', set_tool, activity, 'tool-shape-arrow', self._TOOL_SHAPE_ARROW)
-        self._tool_shape_ellipse.connect('clicked', set_tool, activity, 'tool-shape-ellipse', self._TOOL_SHAPE_ELLIPSE)
-        #self._tool_shape_freeform.connect('clicked', set_tool, activity, 'tool-shape-freeform', self._TOOL_SHAPE_FREEFORM)
-        #self._tool_shape_heart.connect('clicked', set_tool, activity, 'tool-shape-heart', self._TOOL_SHAPE_HEART)
-        self._tool_shape_line.connect('clicked', set_tool, activity, 'tool-shape-line', self._TOOL_SHAPE_LINE)
-        self._tool_shape_parallelogram.connect('clicked', set_tool, activity, 'tool-shape-parallelogram', self._TOOL_SHAPE_PARALLELOGRAM)
-        #self._tool_shape_polygon.connect('clicked', set_tool, activity, 'tool-shape-polygon', self._TOOL_SHAPE_POLYGON)
-        self._tool_shape_rectangle.connect('clicked', set_tool, activity, 'tool-shape-rectangle', self._TOOL_SHAPE_RECTANGLE)
-        self._tool_shape_star.connect('clicked', set_tool, activity, 'tool-shape-star', self._TOOL_SHAPE_STAR)
-        self._tool_shape_trapezoid.connect('clicked', set_tool, activity, 'tool-shape-trapezoid', self._TOOL_SHAPE_TRAPEZOID)
-        self._tool_shape_triangle.connect('clicked', set_tool, activity, 'tool-shape-triangle', self._TOOL_SHAPE_TRIANGLE)
-        '''
         
+        
+        self._icon_stroke.connect('clicked', self._on_icon_stroke_clicked)
+        self._icon_fill.connect('clicked', self._on_icon_fill_clicked)
+
         self._tool_shape_arrow.connect('clicked', self.set_tool, self._TOOL_SHAPE_ARROW)
         self._tool_shape_ellipse.connect('clicked', self.set_tool, self._TOOL_SHAPE_ELLIPSE)
         #self._tool_shape_freeform.connect('clicked', self.set_tool, self._TOOL_SHAPE_FREEFORM)
@@ -730,6 +725,11 @@ class ShapesToolbar(gtk.Toolbar):
         
         self._activity._area.window.set_cursor(cursor)
         
+    def _on_icon_stroke_clicked(self, widget, data=None):
+        self._stroke_color.clicked()
+        
+    def _on_icon_fill_clicked(self, widget, data=None):
+        self._fill_color.clicked()
 
 class TextToolbar(gtk.Toolbar):
 
