@@ -516,7 +516,7 @@ class Desenho:
         
         self.d.queue_draw()
 
-    def selection(self, widget, coords):
+    def selection(self, widget, coords, temp, fill):
         """Make a selection.
 
         Keyword arguments:
@@ -524,7 +524,7 @@ class Desenho:
         widget -- Area object (GtkDrawingArea)
         coords -- Two value tuple
 
-        """     
+    
         widget.queue_draw()     
 
         if coords[0] > WIDTH:
@@ -564,6 +564,32 @@ class Desenho:
         self.d.pixmap_temp.draw_rectangle(self.d.gc_selection, False ,self.d.newx,self.d.newy,self.d.newx_,self.d.newy_)
         self.d.pixmap_temp.draw_rectangle(self.d.gc_selection1, False, \
                                         self.d.newx-1,self.d.newy-1,self.d.newx_+2,self.d.newy_+2)
+        """ 
+        
+        if temp == True:
+            pixmap = self.d.pixmap_temp
+        else:
+            pixmap = self.d.pixmap
+        width, height = self.d.window.get_size()
+        
+        dx = math.fabs(coords[0] - self.d.oldx)
+        dy = math.fabs(coords[1] - self.d.oldy)
+        
+        if coords[0] < self.d.oldx:
+            x = coords[0]
+        else:
+            x = self.d.oldx
+        if coords[1] < self.d.oldy:
+            y = coords[1]
+        else:
+            y = self.d.oldy
+        
+        pixmap.draw_drawable(self.d.gc,self.d.pixmap,0,0,0,0,width,height)
+        if fill == True:
+            pixmap.draw_rectangle(self.d.gc,True,x,y,dx,dy)
+        pixmap.draw_rectangle(self.d.gc_line,False,x,y,dx,dy)
+        widget.queue_draw()
+        return self.d.oldx, self.d.oldy, coords[0], coords[1]        
         
     def moveSelection(self, widget, coords):
         """Move the selection.
