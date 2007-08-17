@@ -294,17 +294,17 @@ class Area(gtk.DrawingArea):
                 # ellipse
                 elif self.tool == 'ellipse':
                     self.configure_line(self.line_size)
-                    self.d.circle(widget,coords)    
+                    self.d.circle(widget,coords,True,True)    
                 # rectangle
                 elif self.tool == 'rectangle':
                     self.configure_line(self.line_size)
-                    self.d.square(widget,coords)    
+                    self.d.square(widget,coords,True,True)
                 # selection
                 elif self.tool == 'marquee-rectangular' and not self.selmove:
                     self.d.selection(widget,coords)                     
                 # selection
                 elif self.tool == 'marquee-rectangular' and self.selmove:
-                    self.d.moveSelection(widget, coords)
+                    self.d.moveSelection(widget,coords)
                 #polygon    
                 elif self.tool == 'polygon':
                     self.configure_line(self.line_size)
@@ -312,28 +312,28 @@ class Area(gtk.DrawingArea):
                 #triangle
                 elif self.tool == 'triangle':
                     self.configure_line(self.line_size)
-                    self.d.triangle(widget,coords,True)
+                    self.d.triangle(widget,coords,True,True)
                 #trapezoid
                 elif self.tool == 'trapezoid':
                     self.configure_line(self.line_size)
-                    self.d.trapezoid(widget,coords,True)
+                    self.d.trapezoid(widget,coords,True,True)
                 #arrow
                 elif self.tool == 'arrow':
                     self.configure_line(self.line_size)
-                    self.d.arrow(widget,coords,True)
+                    self.d.arrow(widget,coords,True,True)
                 #parallelogram
                 elif self.tool == 'parallelogram':
                     self.configure_line(self.line_size)
-                    self.d.parallelogram(widget,coords,True)
+                    self.d.parallelogram(widget,coords,True,True)
                 #star
                 elif self.tool == 'star':
                     self.configure_line(self.line_size)
-                    self.d.star(widget,coords,True)
+                    self.d.star(widget,coords,True,True)
                 #polygon regular
                 elif self.tool == 'polygon_regular':
                     self.configure_line(self.line_size)
                     n = 7
-                    self.d.polygon_regular(widget,coords,n,True)
+                    self.d.polygon_regular(widget,coords,n,True,True)
 
     def mouseup(self,widget,event): 
         """Make the Area object (GtkDrawingArea) recognize that the mouse was released.
@@ -353,15 +353,17 @@ class Area(gtk.DrawingArea):
                 self.enableUndo(widget)
             # ellipse
             elif self.tool == 'ellipse':
-                self.pixmap.draw_arc(self.gc, True, self.newx, self.newy, self.newx_, self.newy_, 0, 360*64)
-                self.pixmap.draw_arc(self.gc_line, False, self.newx, self.newy, self.newx_, self.newy_, 0, 360*64)
-                widget.queue_draw()
+                self.d.circle(widget,coords,False,True)
+                #self.pixmap.draw_arc(self.gc, True, self.newx, self.newy, self.newx_, self.newy_, 0, 360*64)
+                #self.pixmap.draw_arc(self.gc_line, False, self.newx, self.newy, self.newx_, self.newy_, 0, 360*64)
+                #widget.queue_draw()
                 self.enableUndo(widget)
             # rectangle
-            elif self.tool == 'rectangle':    
-                self.pixmap.draw_rectangle(self.gc, True, self.newx,self.newy, self.newx_,self.newy_)
-                self.pixmap.draw_rectangle(self.gc_line, False, self.newx,self.newy, self.newx_,self.newy_)
-                widget.queue_draw()
+            elif self.tool == 'rectangle':
+                self.d.square(widget,coords,False,True)
+                #self.pixmap.draw_rectangle(self.gc, True, self.newx,self.newy, self.newx_,self.newy_)
+                #self.pixmap.draw_rectangle(self.gc_line, False, self.newx,self.newy, self.newx_,self.newy_)
+                #widget.queue_draw()
                 self.enableUndo(widget)
             # selection
             elif self.tool == 'marquee-rectangular':
@@ -396,28 +398,28 @@ class Area(gtk.DrawingArea):
                 self.enableUndo(widget)
             #triangle
             elif self.tool == 'triangle':
-                self.d.triangle(widget,coords,False)
+                self.d.triangle(widget,coords,False,True)
                 self.enableUndo(widget)
             #trapezoid
             elif self.tool == 'trapezoid':
-                self.d.trapezoid(widget,coords,False)
+                self.d.trapezoid(widget,coords,False,True)
                 self.enableUndo(widget)
             #arrow
             elif self.tool == 'arrow':
-                self.d.arrow(widget,coords,False)
+                self.d.arrow(widget,coords,False,True)
                 self.enableUndo(widget)
             #parallelogram
             elif self.tool == 'parallelogram':
-                self.d.parallelogram(widget,coords,False)
+                self.d.parallelogram(widget,coords,False,True)
                 self.enableUndo(widget)
             #star
             elif self.tool == 'star':
-                self.d.star(widget,coords,False)
+                self.d.star(widget,coords,False,True)
                 self.enableUndo(widget)
             #polygon regular
             elif self.tool == 'polygon_regular':
                 n = 7
-                self.d.polygon_regular(widget,coords,n,False)
+                self.d.polygon_regular(widget,coords,n,False,True)
                 self.enableUndo(widget)
 
         if self.tool == 'brush' or self.tool == 'eraser':
