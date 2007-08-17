@@ -825,13 +825,12 @@ class ImageToolbar(gtk.Toolbar):
         separator.set_draw(True)
         self.insert(separator, -1)
         separator.show()
-        
-        """        
-	self._object_rotate_left = ToolButton('object-rotate-left')
+        """         
+        self._object_rotate_left = ToolButton('object-rotate-left')
         self.insert(self._object_rotate_left, -1)
         self._object_rotate_left.show()
         self._object_rotate_left.set_tooltip(_('Rotate Left'))
-
+    
         self._object_rotate_right = ToolButton('object-rotate-right')
         self.insert(self._object_rotate_right, -1)
         self._object_rotate_right.show()
@@ -857,7 +856,7 @@ class ImageToolbar(gtk.Toolbar):
         #self._object_width.connect('clicked', set_tool, activity, 'object-width', self._OBJECT_WIDTH)
 	
     def rotate_left(self, widget, activity):    
-        #activity._area._rotate_left()
+        #activity._area._rotate_left(widget)
         pass
 
 
