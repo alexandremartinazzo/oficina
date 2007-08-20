@@ -915,7 +915,7 @@ class ImageToolbar(gtk.Toolbar):
             logging.debug(file_path)
             #file_path = decode_path((file_path,))[0]
             #open(activity, file_path)
-            activity._area.d.loadImage(file_path,widget)
+            activity._area.loadImage(file_path,widget,True)
         elif response == gtk.RESPONSE_CANCEL:
             logging.debug('Closed, no files selected')
             

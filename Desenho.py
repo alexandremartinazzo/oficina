@@ -142,41 +142,6 @@ class Desenho:
         self -- Desenho.Desenho instance
         widget -- Area object (GtkDrawingArea)
         coords -- Two value tuple
-
-        
-        if coords[0] > WIDTH:
-            coords0 = WIDTH
-        else:
-            coords0 = coords[0]
-            
-        if coords [1] > HEIGHT:
-            coords1 = HEIGHT
-        else:
-            coords1 = coords[1]
-            
-        self.d.newx_ = coords0 - self.d.oldx
-        self.d.newy_ = coords1 - self.d.oldy
-
-        if self.d.newx_ >= 0:
-            self.d.newx = self.d.oldx   
-        else:   
-            if coords0 > 0:
-                self.d.newx = coords0
-                self.d.newx_ = - self.d.newx_
-            else:
-                self.d.newx = 0
-                self.d.newx_ = self.d.oldx
-                    
-        if self.d.newy_ >= 0:
-            self.d.newy = self.d.oldy   
-        else:               
-            if coords1 > 0:
-                self.d.newy_ = - self.d.newy_
-                self.d.newy = coords1
-            else:
-                self.d.newy = 0
-                self.d.newy_ = self.d.oldy
-
         """
         if temp == True:
             pixmap = self.d.pixmap_temp
@@ -430,39 +395,6 @@ class Desenho:
         widget -- Area object (GtkDrawingArea)
         coords -- Two value tuple
 
-        if coords[0] > WIDTH:
-            coords0 = WIDTH
-        else:
-            coords0 = coords[0]
-            
-        if coords [1] > HEIGHT:
-            coords1 = HEIGHT
-        else:
-            coords1 = coords[1]
-            
-        self.d.newx_ = coords0 - self.d.oldx
-        self.d.newy_ = coords1 - self.d.oldy
-
-        if self.d.newx_ >= 0:
-            self.d.newx = self.d.oldx   
-        else:   
-            if coords0 > 0:
-                self.d.newx = coords0
-                self.d.newx_ = - self.d.newx_
-            else:
-                self.d.newx = 0
-                self.d.newx_ = self.d.oldx
-                    
-        if self.d.newy_ >= 0:
-            self.d.newy = self.d.oldy   
-        else:               
-            if coords1 > 0:
-                self.d.newy_ = - self.d.newy_
-                self.d.newy = coords1
-            else:
-                self.d.newy = 0
-                self.d.newy_ = self.d.oldy
-
         """
 
         if temp == True:
@@ -546,21 +478,6 @@ class Desenho:
             
             widget.queue_draw()
 
-    def loadImage(self, name, widget):
-        """Load an image.
-
-        Keyword arguments:
-        self -- Desenho.Desenho instance
-        name -- string (image file path)
-
-        """
-        pixbuf = gtk.gdk.pixbuf_new_from_file(name) 
-        self.d.pixmap.draw_pixbuf(self.d.gc, pixbuf, 0, 0, 0, 0, width=-1, height=-1, dither=gtk.gdk.RGB_DITHER_NORMAL, x_dither=0, y_dither=0)
-        self.d.pixmap_temp.draw_pixbuf(self.d.gc, pixbuf, 0, 0, 0, 0, width=-1, height=-1, dither=gtk.gdk.RGB_DITHER_NORMAL, x_dither=0, y_dither=0)
-        
-        self.d.enableUndo(widget)
-        
-        self.d.queue_draw()
 
     def selection(self, widget, coords, temp, fill):
         """Make a selection.
@@ -569,47 +486,6 @@ class Desenho:
         self -- Desenho.Desenho instance
         widget -- Area object (GtkDrawingArea)
         coords -- Two value tuple
-
-    
-        widget.queue_draw()     
-
-        if coords[0] > WIDTH:
-            coords0 = WIDTH
-        else:
-            coords0 = coords[0]
-            
-        if coords [1] > HEIGHT:
-            coords1 = HEIGHT
-        else:
-            coords1 = coords[1]
-            
-        self.d.newx_ = coords0 - self.d.oldx
-        self.d.newy_ = coords1 - self.d.oldy
-
-        if self.d.newx_ >= 0:
-            self.d.newx = self.d.oldx   
-        else:   
-            if coords0 > 0:
-                self.d.newx = coords0
-                self.d.newx_ = - self.d.newx_
-            else:
-                self.d.newx = 0
-                self.d.newx_ = self.d.oldx
-                    
-        if self.d.newy_ >= 0:
-            self.d.newy = self.d.oldy   
-        else:               
-            if coords1 > 0:
-                self.d.newy_ = - self.d.newy_
-                self.d.newy = coords1
-            else:
-                self.d.newy = 0
-                self.d.newy_ = self.d.oldy
-                
-        self.d.pixmap_temp.draw_drawable(self.d.gc,self.d.pixmap,  0 , 0 ,0,0, WIDTH, HEIGHT)
-        self.d.pixmap_temp.draw_rectangle(self.d.gc_selection, False ,self.d.newx,self.d.newy,self.d.newx_,self.d.newy_)
-        self.d.pixmap_temp.draw_rectangle(self.d.gc_selection1, False, \
-                                        self.d.newx-1,self.d.newy-1,self.d.newx_+2,self.d.newy_+2)
         """ 
         
         if temp == True:
@@ -633,7 +509,7 @@ class Desenho:
         pixmap.draw_drawable(self.d.gc,self.d.pixmap,0,0,0,0,width,height)
         if fill == True:
             pixmap.draw_rectangle(self.d.gc,True,x,y,dx,dy)
-        pixmap.draw_rectangle(self.d.gc_line,False,x,y,dx,dy)
+        pixmap.draw_rectangle(self.d.gc_selection,False,x,y,dx,dy)
         widget.queue_draw()
         return self.d.oldx, self.d.oldy, coords[0], coords[1]        
         
@@ -646,10 +522,10 @@ class Desenho:
         coords -- Two value tuple
 
         """ 
-        self.d.pixmap_temp.draw_rectangle(self.d.get_style().white_gc, True,0, 0, WIDTH, HEIGHT)
+        #self.d.pixmap_temp.draw_rectangle(self.d.get_style().white_gc, True,0, 0, WIDTH, HEIGHT)
         self.d.pixmap_temp.draw_drawable(self.d.gc,self.d.pixmap,  0 , 0 ,0,0, WIDTH, HEIGHT)
         
-        self.d.pixmap_sel.draw_rectangle(self.d.get_style().white_gc, True,0, 0, WIDTH, HEIGHT)
+        #self.d.pixmap_sel.draw_rectangle(self.d.get_style().white_gc, True,0, 0, WIDTH, HEIGHT)
         self.d.pixmap_sel.draw_drawable(self.d.gc,self.d.pixmap,  0 , 0 ,0,0, WIDTH, HEIGHT)   
         
         if self.d.sx > self.d.oldx:
