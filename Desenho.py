@@ -144,6 +144,52 @@ class Desenho:
                 points = [(last[0]+size,last[1]), (coords[0]+size,coords[1]), (coords[0],coords[1]+size), (last[0],last[1]+size)]
                 self.d.pixmap.draw_polygon(self.d.gc_brush,True,points)
         widget.queue_draw()
+
+    def rainbow(self, widget, coords, last, color, size = 5, shape = 'circle'):
+        """Paint with rainbow.
+
+        Keyword arguments:
+        self -- Desenho.Desenho instance
+        widget -- Area object (GtkDrawingArea)
+        coords -- Two value tuple
+        size -- integer (default 30)
+        shape -- string (default 'circle')
+
+        """
+        colormap = self.d.get_colormap()
+        rainbow_colors = [
+        colormap.alloc_color('#ff0000', True, True), # vermelho
+        colormap.alloc_color('#ff8000', True, True), # laranja
+        colormap.alloc_color('#ffff00', True, True), # amarelo
+        colormap.alloc_color('#80ff00', True, True), # verde lima
+        colormap.alloc_color('#00ff00', True, True), # verde
+        colormap.alloc_color('#00ff80', True, True), # verde agua
+        colormap.alloc_color('#00ffff', True, True), # azul claro
+        colormap.alloc_color('#007fff', True, True), # quase azul
+        colormap.alloc_color('#0000ff', True, True), # azul
+        colormap.alloc_color('#8000ff', True, True), # anil
+        colormap.alloc_color('#ff00ff', True, True), # rosa violeta
+        colormap.alloc_color('#ff0080', True, True), # violeta
+        ]
+
+        self.d.gc_rainbow.set_foreground(rainbow_colors[color])
+        self.d.desenha = False
+        if(shape == 'circle'):
+            self.d.pixmap.draw_arc(self.d.gc_rainbow, True, coords[0], coords[1], size, size, 0, 360*64)
+            if last[0] != -1:
+                self.d.gc_rainbow.set_line_attributes(size, gtk.gdk.LINE_SOLID, gtk.gdk.CAP_ROUND, gtk.gdk.JOIN_ROUND)
+                self.d.pixmap.draw_line(self.d.gc_rainbow,last[0]+size/2,last[1]+size/2,coords[0]+size/2,coords[1]+size/2)
+                self.d.gc_rainbow.set_line_attributes(0, gtk.gdk.LINE_SOLID, gtk.gdk.CAP_ROUND, gtk.gdk.JOIN_ROUND)
+        if(shape == 'square'):
+            if last[0] != -1:
+                self.d.pixmap.draw_rectangle(self.d.gc_rainbow, True, last[0], last[1], size, size)
+                points = [coords, last, (last[0]+size,last[1]+size), (coords[0]+size,coords[1]+size)]
+                self.d.pixmap.draw_polygon(self.d.gc_rainbow,True,points)
+                points = [(last[0]+size,last[1]), (coords[0]+size,coords[1]), (coords[0],coords[1]+size), (last[0],last[1]+size)]
+                self.d.pixmap.draw_polygon(self.d.gc_rainbow,True,points)
+            self.d.pixmap.draw_rectangle(self.d.gc_rainbow, True, coords[0], coords[1], size, size)
+        widget.queue_draw()
+
     
     def square(self, widget, coords, temp, fill):
         """Draw a square.

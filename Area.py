@@ -114,6 +114,7 @@ class Area(gtk.DrawingArea):
         self.polygon_start = True
         self.points = []
         self.gc = None
+        self.gc_rainbow = None
         self.gc_line = None
         self.gc_eraser = None
         self.gc_brush = None
@@ -131,6 +132,7 @@ class Area(gtk.DrawingArea):
         self.brush_shape = 'circle'
         self.eraser_shape = 'circle'
         self.last = -1, -1
+        self.rainbow_counter = 0
                 
         self.font = pango.FontDescription('Sans 9')
         
@@ -172,6 +174,7 @@ class Area(gtk.DrawingArea):
         colormap = self.get_colormap()
         white = colormap.alloc_color('#ffffff', True, True) # white      
         self.gc_eraser.set_foreground(white)
+        self.gc_rainbow = widget.window.new_gc()
         
         self.gc_brush = widget.window.new_gc()      
         self.gc_brush.set_foreground(white)
@@ -259,6 +262,10 @@ class Area(gtk.DrawingArea):
             self.last = -1, -1
             self.d.brush(widget, coords, self.last, self.line_size, self.brush_shape)
             self.last = coords
+        if self.tool == 'rainbow':
+            self.last = -1, -1
+            self.d.brush(widget, coords, self.last, self.rainbow_counter,self.line_size, self.brush_shape)
+            self.last = coords
         x , y, state = event.window.get_pointer()
         if state & gtk.gdk.BUTTON3_MASK:
             self.sel_get_out = True
@@ -290,6 +297,11 @@ class Area(gtk.DrawingArea):
             elif self.tool == 'brush':
                 self.d.brush(widget, coords, self.last, self.line_size, self.brush_shape)
                 self.last = coords
+            elif self.tool == 'rainbow':
+                self.d.brush(widget, coords, self.last, self.rainbow_counter,self.line_size, self.brush_shape)
+                self.rainbow_counter += 1
+                if self.rainbow_counter > 11:
+                    self.rainbow_counter = 0
             if self.desenha:
                 # line
                 if self.tool == 'line':
@@ -369,16 +381,10 @@ class Area(gtk.DrawingArea):
             # ellipse
             elif self.tool == 'ellipse':
                 self.d.circle(widget,coords,False,True)
-                #self.pixmap.draw_arc(self.gc, True, self.newx, self.newy, self.newx_, self.newy_, 0, 360*64)
-                #self.pixmap.draw_arc(self.gc_line, False, self.newx, self.newy, self.newx_, self.newy_, 0, 360*64)
-                #widget.queue_draw()
                 self.enableUndo(widget)
             # rectangle
             elif self.tool == 'rectangle':
                 self.d.square(widget,coords,False,True)
-                #self.pixmap.draw_rectangle(self.gc, True, self.newx,self.newy, self.newx_,self.newy_)
-                #self.pixmap.draw_rectangle(self.gc_line, False, self.newx,self.newy, self.newx_,self.newy_)
-                #widget.queue_draw()
                 self.enableUndo(widget)
             # selection
             elif self.tool == 'marquee-rectangular':
@@ -437,12 +443,12 @@ class Area(gtk.DrawingArea):
                 n = 7
                 self.d.polygon_regular(widget,coords,n,False,True)
                 self.enableUndo(widget)
-            #Heart
+            #heart
             elif self.tool == 'heart':
                 self.d.heart(widget,coords,False,True)
                 self.enableUndo(widget)
 
-        if self.tool == 'brush' or self.tool == 'eraser':
+        if self.tool == 'brush' or self.tool == 'eraser' or self.tool == 'rainbow':
             self.last = -1, -1
             widget.queue_draw() 
             self.enableUndo(widget)
