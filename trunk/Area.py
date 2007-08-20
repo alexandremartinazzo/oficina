@@ -111,11 +111,6 @@ class Area(gtk.DrawingArea):
         self.connect("configure_event", self.configure_event)
         self.oldx = 0
         self.oldy = 0
-        self.newx = 0
-        self.newy = 0
-        self.newx_ = 0
-        self.newy_ = 0
-        self.color_dec = 0
         self.polygon_start = True
         self.points = []
         self.gc = None
@@ -135,6 +130,7 @@ class Area(gtk.DrawingArea):
         self.line_size = 2
         self.brush_shape = 'circle'
         self.eraser_shape = 'circle'
+        self.last = -1, -1
                 
         self.font = pango.FontDescription('Sans 9')
         
@@ -245,6 +241,7 @@ class Area(gtk.DrawingArea):
 
         """
         # text
+        coords = int(event.x), int(event.y)
         if self.tool == 'text':
             self.d.text(widget,event)
         if not self.selmove or self.tool != 'marquee-rectangular':
@@ -254,6 +251,14 @@ class Area(gtk.DrawingArea):
             self.pixmap.draw_drawable(self.gc, self.pixmap_temp, 0,0,0,0, WIDTH, HEIGHT)
             self.selmove = False
             self.enableUndo(widget)
+        if self.tool == 'eraser':
+            self.last = -1, -1
+            self.d.eraser(widget, coords, self.last, self.line_size, self.eraser_shape)
+            self.last = coords
+        if self.tool == 'brush':
+            self.last = -1, -1
+            self.d.brush(widget, coords, self.last, self.line_size, self.brush_shape)
+            self.last = coords
         x , y, state = event.window.get_pointer()
         if state & gtk.gdk.BUTTON3_MASK:
             self.sel_get_out = True
@@ -279,10 +284,12 @@ class Area(gtk.DrawingArea):
         if state & gtk.gdk.BUTTON1_MASK and self.pixmap != None:
             #eraser
             if self.tool == 'eraser':
-                self.d.eraser(widget, coords, self.line_size, self.eraser_shape)
+                self.d.eraser(widget, coords, self.last, self.line_size, self.eraser_shape)
+                self.last = coords
             #brush
             elif self.tool == 'brush':
-                self.d.brush(widget, coords, self.line_size, self.brush_shape)
+                self.d.brush(widget, coords, self.last, self.line_size, self.brush_shape)
+                self.last = coords
             if self.desenha:
                 # line
                 if self.tool == 'line':
@@ -402,7 +409,7 @@ class Area(gtk.DrawingArea):
             #bucket
             elif self.tool == 'bucket':
                 width, height = self.window.get_size()
-                fill(self.pixmap, self.gc, int(event.x), int(event.y), width, height, self.color_dec)
+                fill(self.pixmap, self.gc, coords[0], coords[1], width, height, self.gc_line.foreground.pixel)
                 widget.queue_draw()
                 self.enableUndo(widget)
             #triangle
@@ -436,6 +443,7 @@ class Area(gtk.DrawingArea):
                 self.enableUndo(widget)
 
         if self.tool == 'brush' or self.tool == 'eraser':
+            self.last = -1, -1
             widget.queue_draw() 
             self.enableUndo(widget)
         self.desenha = False
@@ -664,7 +672,6 @@ class Area(gtk.DrawingArea):
         self.gc_line.set_foreground(color)
         self.gc_line.set_line_attributes(1, gtk.gdk.LINE_ON_OFF_DASH, gtk.gdk.CAP_ROUND, gtk.gdk.JOIN_ROUND)  
         self.gc_brush.set_foreground(color)
-        self.color_dec = color.pixel
 
     def _set_grayscale(self,widget):
         """Apply grayscale effect.

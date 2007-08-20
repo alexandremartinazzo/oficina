@@ -91,7 +91,7 @@ class Desenho:
         #self.d.newy = coords[1]
         widget.queue_draw()
     
-    def eraser(self, widget, coords, size = 30, shape = 'circle'):
+    def eraser(self, widget, coords, last, size = 30, shape = 'circle'):
         """Erase part of the drawing.
 
         Keyword arguments:
@@ -105,15 +105,20 @@ class Desenho:
         self.d.desenha = False
         if(shape == 'circle'):
             self.d.pixmap.draw_arc(self.d.gc_eraser, True, coords[0], coords[1], size, size, 0, 360*64)
-            self.d.pixmap_temp.draw_arc(self.d.gc_eraser, True, coords[0], coords[1], size, size, 0, 360*64)
+            if last[0] != -1:
+                self.d.gc_eraser.set_line_attributes(size, gtk.gdk.LINE_SOLID, gtk.gdk.CAP_ROUND, gtk.gdk.JOIN_ROUND)
+                self.d.pixmap.draw_line(self.d.gc_eraser,last[0]+size/2,last[1]+size/2,coords[0]+size/2,coords[1]+size/2)
+                self.d.gc_eraser.set_line_attributes(0, gtk.gdk.LINE_SOLID, gtk.gdk.CAP_ROUND, gtk.gdk.JOIN_ROUND)
         if(shape == 'square'):
             self.d.pixmap.draw_rectangle(self.d.gc_eraser, True, coords[0], coords[1], size, size)
-            self.d.pixmap_temp.draw_rectangle(self.d.gc_eraser, True, coords[0], coords[1], size, size)
-        self.d.oldx = coords[0]
-        self.d.oldy = coords[1]
+            if last[0] != -1:
+                points = [coords, last, (last[0]+size,last[1]+size), (coords[0]+size,coords[1]+size)]
+                self.d.pixmap.draw_polygon(self.d.gc_eraser,True,points)
+                points = [(last[0]+size,last[1]), (coords[0]+size,coords[1]), (coords[0],coords[1]+size), (last[0],last[1]+size)]
+                self.d.pixmap.draw_polygon(self.d.gc_eraser,True,points)
         widget.queue_draw()
         
-    def brush(self, widget, coords, size = 5, shape = 'circle'):
+    def brush(self, widget, coords, last, size = 5, shape = 'circle'):
         """Paint with brush.
 
         Keyword arguments:
@@ -127,12 +132,17 @@ class Desenho:
         self.d.desenha = False
         if(shape == 'circle'):
             self.d.pixmap.draw_arc(self.d.gc_brush, True, coords[0], coords[1], size, size, 0, 360*64)
-            self.d.pixmap_temp.draw_arc(self.d.gc_brush, True, coords[0], coords[1], size, size, 0, 360*64)
+            if last[0] != -1:
+                self.d.gc_brush.set_line_attributes(size, gtk.gdk.LINE_SOLID, gtk.gdk.CAP_ROUND, gtk.gdk.JOIN_ROUND)
+                self.d.pixmap.draw_line(self.d.gc_brush,last[0]+size/2,last[1]+size/2,coords[0]+size/2,coords[1]+size/2)
+                self.d.gc_brush.set_line_attributes(0, gtk.gdk.LINE_SOLID, gtk.gdk.CAP_ROUND, gtk.gdk.JOIN_ROUND)
         if(shape == 'square'):
             self.d.pixmap.draw_rectangle(self.d.gc_brush, True, coords[0], coords[1], size, size)
-            self.d.pixmap_temp.draw_rectangle(self.d.gc_brush, True, coords[0], coords[1], size, size)
-        self.d.oldx = coords[0]
-        self.d.oldy = coords[1]
+            if last[0] != -1:
+                points = [coords, last, (last[0]+size,last[1]+size), (coords[0]+size,coords[1]+size)]
+                self.d.pixmap.draw_polygon(self.d.gc_brush,True,points)
+                points = [(last[0]+size,last[1]), (coords[0]+size,coords[1]), (coords[0],coords[1]+size), (last[0],last[1]+size)]
+                self.d.pixmap.draw_polygon(self.d.gc_brush,True,points)
         widget.queue_draw()
     
     def square(self, widget, coords, temp, fill):
@@ -582,29 +592,27 @@ class Desenho:
             else:
                 pixmap.draw_line(self.d.gc_line,self.d.oldx,self.d.oldy, coords[0], coords[1])
                 self.d.enableUndo(widget)
-                self.d.lastx = coords[0]
-                self.d.lasty = coords[1]
-                self.d.firstx = self.d.oldx
-                self.d.firsty = self.d.oldy
+                self.d.last = coords
+                self.d.first = self.d.oldx, self.d.oldy
                 self.d.polygon_start = False
-                self.d.points = [(self.d.oldx,self.d.oldy), (coords[0],coords[1])]
+                self.d.points = [self.d.first, coords]
         else:
             if temp == True:
-                pixmap.draw_line(self.d.gc_line,self.d.lastx,self.d.lasty,coords[0],coords[1])
+                pixmap.draw_line(self.d.gc_line,self.d.last[0],self.d.last[1],coords[0],coords[1])
             else:
-                x = coords[0] - self.d.firstx
-                y = coords[1] - self.d.firsty
+                x = coords[0] - self.d.first[0]
+                y = coords[1] - self.d.first[1]
                 d = math.hypot(x,y)
                 if d > 20: # close the polygon ?
-                    pixmap.draw_line(self.d.gc_line,self.d.lastx,self.d.lasty,coords[0],coords[1])
-                    self.d.lastx = coords[0]
-                    self.d.lasty = coords[1]
-                    self.d.points.append((coords[0],coords[1]))
+                    pixmap.draw_line(self.d.gc_line,self.d.last[0],self.d.last[1],coords[0],coords[1])
+                    self.d.last = coords
+                    self.d.points.append(coords)
                 else:
                     tp = tuple(self.d.points)
                     if fill == True:
                         pixmap.draw_polygon(self.d.gc, True, tp)
                     pixmap.draw_polygon(self.d.gc_line, False, tp)
+                    self.d.last = -1, -1
                     self.d.polygon_start = True
                     self.d.undo_times -= 1#destroy the undo screen of polygon start 
                     self.d.enableUndo(widget)
