@@ -105,7 +105,9 @@ class OficinaActivity(activity.Activity):
         self._textview = gtk.Entry()
         self._area.tool = 2
         self._fixed.put(self._area, 200 , 100)
-
+        # Area size increased
+        #self._fixed.put(self._area, 0 , 0)
+        
         sw.add_with_viewport(self._fixed)
         self._area.show()
         self._fixed.show()
