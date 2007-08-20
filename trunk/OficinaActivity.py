@@ -129,7 +129,7 @@ class OficinaActivity(activity.Activity):
         logging.debug('reading file %s', file_path)
 #         logging.debug(file_path)
         
-        self._area.d.loadImage(file_path, self._area)
+        self._area.loadImage(file_path, self._area, False)
         
         # Does this work?
 #         self._area.undo_times = 1

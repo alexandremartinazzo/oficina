@@ -758,4 +758,35 @@ class Area(gtk.DrawingArea):
      
     def get_selection_bounds(self):
         return self._selection_corners[0], self._selection_corners[1], self._selection_corners[2], self._selection_corners[3]
+
+    def loadImage(self, name, widget, load_selected):
+        """Load an image.
+
+        Keyword arguments:
+        self -- Area.area instance
+        name -- string (image file path)
+
+        """
+        pixbuf = gtk.gdk.pixbuf_new_from_file(name) 
+        size = (int)(pixbuf.get_width()), (int)(pixbuf.get_height())
+        
+        self.pixmap.draw_pixbuf(self.gc, pixbuf, 0, 0, 0, 0, size[0], size[1], dither=gtk.gdk.RGB_DITHER_NORMAL, x_dither=0, y_dither=0)
+        self.pixmap_temp.draw_pixbuf(self.gc, pixbuf, 0, 0, 0, 0, size[0], size[1], dither=gtk.gdk.RGB_DITHER_NORMAL, x_dither=0, y_dither=0)
+        self.pixmap_sel.draw_pixbuf(self.gc, pixbuf, 0, 0, 0, 0, size[0], size[1], dither=gtk.gdk.RGB_DITHER_NORMAL, x_dither=0, y_dither=0)
+        
+        
+        
+        if not load_selected :
+            self.enableUndo(widget)
+        else :
+            self.oldx, self.oldy = 0,0
+            self.d.selection(self, size, True, False)
+            #self.pixmap_temp.draw_rectangle(self.gc_selection, True ,0,0,size[0],size[1])
+            self.sx, self.sy = size
+            self.tool = 'marquee-rectangular'
+            self.window.set_cursor(gtk.gdk.Cursor(gtk.gdk.FLEUR)) 
+            self.selmove = True
+            self.desenha = True
+            
+        self.queue_draw()
         
