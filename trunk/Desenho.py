@@ -85,7 +85,8 @@ class Desenho:
         coords -- Two value tuple
 
         """
-        self.d.pixmap_temp.draw_drawable(self.d.gc,self.d.pixmap,  0 , 0 ,0,0, WIDTH, HEIGHT)
+        width, height = self.window.get_size()
+        self.d.pixmap_temp.draw_drawable(self.d.gc,self.d.pixmap,  0 , 0 ,0,0, width, height)
         self.d.pixmap_temp.draw_line(self.d.gc_line,self.d.oldx,self.d.oldy,coords[0],coords[1])
         #self.d.newx = coords[0] 
         #self.d.newy = coords[1]
@@ -487,7 +488,8 @@ class Desenho:
         coords -- Two value tuple
 
         """
-        self.d.pixmap_temp.draw_drawable(self.d.gc,self.d.pixmap,  0 , 0 ,0,0, WIDTH, HEIGHT)
+        width, height = self.d.window.get_size()
+        self.d.pixmap_temp.draw_drawable(self.d.gc,self.d.pixmap,  0 , 0 ,0,0, width, height)
         self.d.pixmap.draw_line(self.d.gc_line,self.d.oldx,self.d.oldy,coords[0],coords[1]) 
         self.d.oldx = coords[0]
         self.d.oldy = coords[1]
@@ -500,10 +502,11 @@ class Desenho:
         self -- Desenho.Desenho instance
 
         """
+        width, height = self.d.window.get_size()
         self.d.desenho = []
         self.d.textos = []      
-        self.d.pixmap.draw_rectangle(self.d.get_style().white_gc, True,0, 0, WIDTH, HEIGHT)
-        self.d.pixmap_temp.draw_rectangle(self.d.get_style().white_gc, True,0, 0, WIDTH, HEIGHT)
+        self.d.pixmap.draw_rectangle(self.d.get_style().white_gc, True,0, 0, width, height)
+        self.d.pixmap_temp.draw_rectangle(self.d.get_style().white_gc, True,0, 0, width, height)
         self.d.queue_draw() 
     
     def text(self,widget,event):
@@ -519,6 +522,8 @@ class Desenho:
             self.d.estadoTexto = 1
             print event.x
             self.d.janela._fixed.move(self.d.janela._textview, int(event.x)+200, int(event.y)+100)
+            # Area size has changed...
+            #self.d.janela._fixed.move(self.d.janela._textview, int(event.x), int(event.y))
             self.d.janela._textview.show()
         else:   
             self.d.estadoTexto = 0  
@@ -578,11 +583,10 @@ class Desenho:
         coords -- Two value tuple
 
         """ 
-        #self.d.pixmap_temp.draw_rectangle(self.d.get_style().white_gc, True,0, 0, WIDTH, HEIGHT)
-        self.d.pixmap_temp.draw_drawable(self.d.gc,self.d.pixmap,  0 , 0 ,0,0, WIDTH, HEIGHT)
+        width, height = self.d.window.get_size()
+        self.d.pixmap_temp.draw_drawable(self.d.gc,self.d.pixmap,  0 , 0 ,0,0, width, height)
         
-        #self.d.pixmap_sel.draw_rectangle(self.d.get_style().white_gc, True,0, 0, WIDTH, HEIGHT)
-        self.d.pixmap_sel.draw_drawable(self.d.gc,self.d.pixmap,  0 , 0 ,0,0, WIDTH, HEIGHT)   
+        self.d.pixmap_sel.draw_drawable(self.d.gc,self.d.pixmap,  0 , 0 ,0,0, width, height)   
         
         if self.d.sx > self.d.oldx:
             x0 = self.d.oldx
@@ -665,36 +669,4 @@ class Desenho:
         widget.queue_draw()
         
         
-    def fill(self, image, x, y, color):
-        '''Fills a region with a given color.
-        self    --
-        image   -- a gtk.gdk.Image
-        x,y     -- pixel coordinates
-        color   -- a color to fill (decimal)
-        
-        '''
-        
-        start_color = image.get_pixel(x,y)
-        width, height = self.d.window.get_size()
-        
-        if x < 0 or x > width or y < 0 or y > height \
-            or image.get_pixel(x,y) == color:
-#             print 'leaving...'
-            return
-        
-        edge = [(x, y)]
-        image.put_pixel(x, y, color)
-        while edge:
-#             print edge
-            newedge = []
-            while gtk.events_pending ():gtk.main_iteration()
-            for (x, y) in edge:
-                for (s, t) in ((x+1, y), (x-1, y), (x, y+1), (x, y-1)):
-                    if (s >= 0 and s < width) and (t >= 0 and t < height) \
-                        and image.get_pixel(s, t) == start_color:
-                        image.put_pixel(s, t, color)
-                        newedge.append((s, t))
-            edge = newedge
-        
-        return image
 
