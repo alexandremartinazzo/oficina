@@ -813,3 +813,7 @@ class Area(gtk.DrawingArea):
             
         self.queue_draw()
         
+    def clear(self):
+        self.d.clear()
+        self.enableUndo(self)
+        
