@@ -274,12 +274,15 @@ class Area(gtk.DrawingArea):
         x , y, state = event.window.get_pointer()
         x0, y0, x1, y1 = self.get_selection_bounds()
         
-        if (state & gtk.gdk.BUTTON3_MASK) or not (x0<x<x1 and y0<y<y1):
+        if (state & gtk.gdk.BUTTON3_MASK):
             self.sel_get_out = True
-            self.pixmap.draw_drawable(self.gc, self.pixmap_temp, 0,0,0,0, width, height)
             self.pixmap_sel.draw_drawable(self.gc, self.pixmap_temp, 0,0,0,0, width, height)
-        if state & gtk.gdk.BUTTON1_MASK:
-            self.pixmap_temp.draw_drawable(self.gc, self.pixmap, 0,0,0,0, width, height)
+        elif state & gtk.gdk.BUTTON1_MASK:
+            if not (x0<x<x1 and y0<y<y1) and self.selmove:
+                self.sel_get_out = True
+                self.pixmap_sel.draw_drawable(self.gc, self.pixmap_temp, 0,0,0,0, width, height)
+            else:
+                self.pixmap_temp.draw_drawable(self.gc, self.pixmap, 0,0,0,0, width, height)
         widget.queue_draw()
         self.desenha = True  
            
@@ -800,13 +803,15 @@ class Area(gtk.DrawingArea):
         
         
         if not load_selected :
+            self.undo_times -= 1
             self.enableUndo(widget)
+            pass
         else :
             self.selmove = True
             self.desenha = True
             self.oldx, self.oldy = 0,0
             self.d.selection(self, size, True, False)
-            self.pixmap_sel.draw_rectangle(self.gc_selection, True ,0,0,size[0],size[1])
+            self.pixmap_sel.draw_rectangle(self.gc_selection, False ,0,0,size[0],size[1])
             self.sx, self.sy = size
             self.tool = 'marquee-rectangular'
             self.window.set_cursor(gtk.gdk.Cursor(gtk.gdk.FLEUR)) 
