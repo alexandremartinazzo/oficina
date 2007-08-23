@@ -1,8 +1,9 @@
 5
 ===
+Sel functions improved, import and past now select the image, and can_undo fixed for first undo(pekayatt)
 Fixed bug with brush and selection, and you can not undo when file is resumed in Journal(pekayatt)
 Added 'Clear' button (alexandre)
-Modifications on selection and gelection bounds (pekayatt)
+Modifications on selection and selection bounds (pekayatt)
 Added rainbow effect (andremossinato)
 Side number for regular polygon can be choosen (alexandre)
 New shape available: Heart (andremossinato)
