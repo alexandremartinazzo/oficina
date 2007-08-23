@@ -587,6 +587,7 @@ class Desenho:
         """ 
         width, height = self.d.window.get_size()
         
+
         self.d.pixmap_sel.draw_drawable(self.d.gc,self.d.pixmap,0,0,0,0, width, height)   
         
         if self.d.sx > self.d.oldx:
@@ -619,7 +620,6 @@ class Desenho:
         self.d.pixmap_sel.draw_rectangle(self.d.gc_selection1, False ,coords[0] - w/2-1, coords[1]- h/2-1, w+2, h+2)
        
         widget.queue_draw()
-
 
     def polygon(self, widget, coords, temp, fill):
         """Draw polygon.
