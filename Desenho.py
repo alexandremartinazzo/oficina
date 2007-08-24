@@ -328,13 +328,15 @@ class Desenho:
         widget.queue_draw()
 
 
-    def star(self, widget, coords, temp, fill):
-        """Draw a arrow.
+    def star(self, widget, coords, n, temp, fill):
+        """Draw polygon with n sides.
 
         Keyword arguments:
         self -- Desenho.Desenho instance
         widget -- Area object (GtkDrawingArea)
         coords -- Two value tuple
+        n -- number of sides
+        temp -- switch between pixmap and pixmap_temp
 
         """
         if temp == True:
@@ -345,21 +347,21 @@ class Desenho:
         
         x = coords[0] - self.d.oldx
         y = coords[1] - self.d.oldy
-
-        points = [(self.d.oldx,self.d.oldy),\
-(self.d.oldx+int(x*0.25), self.d.oldy+int(y*0.4)),\
-(self.d.oldx+int(x), self.d.oldy+int(y*0.4)),\
-(self.d.oldx+int(x*0.35), self.d.oldy+int(y*0.6)),\
-(self.d.oldx+int(x*0.6), self.d.oldy+y),\
-(self.d.oldx, self.d.oldy+int(y*0.75)),\
-(self.d.oldx-int(x*0.6), self.d.oldy+y),\
-(self.d.oldx-int(x*0.35), self.d.oldy+int(y*0.6)),\
-(self.d.oldx-int(x), self.d.oldy+int(y*0.4)),\
-(self.d.oldx-int(x*0.25), self.d.oldy+int(y*0.4))]
+        A = math.atan2(y,x)
+        dA = 2*math.pi/n
+        r = math.hypot(y,x)
+        p = [(self.d.oldx+int(r*math.cos(A)),self.d.oldy+int(r*math.sin(A))),\
+        (self.d.oldx+int(0.4*r*math.cos(A+dA/2)),self.d.oldy+int(0.4*r*math.sin(A+dA/2)))]
+        for i in range(n-1):
+            A = A+dA
+            p.append((self.d.oldx+int(r*math.cos(A)),self.d.oldy+int(r*math.sin(A))))
+            p.append((self.d.oldx+int(0.4*r*math.cos(A+dA/2)),self.d.oldy+int(0.4*r*math.sin(A+dA/2))))
+        tp = tuple(p)
+        
         pixmap.draw_drawable(self.d.gc,self.d.pixmap,0,0,0,0,width,height)
         if fill == True:
-            pixmap.draw_polygon(self.d.gc,True,points)
-        pixmap.draw_polygon(self.d.gc_line,False,points)
+            pixmap.draw_polygon(self.d.gc,True,tp)
+        pixmap.draw_polygon(self.d.gc_line,False,tp)
         widget.queue_draw()
 
 

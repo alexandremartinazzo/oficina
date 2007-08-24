@@ -266,6 +266,8 @@ class Area(gtk.DrawingArea):
             self.last = -1, -1
             self.d.rainbow(widget, coords, self.last, self.rainbow_counter,self.line_size, self.brush_shape)
             self.last = coords
+        if self.tool == 'polygon':
+            self.configure_line(self.line_size)
             
         x , y, state = event.window.get_pointer()
         x0, y0, x1, y1 = self.get_selection_bounds()
@@ -360,7 +362,7 @@ class Area(gtk.DrawingArea):
                 #star
                 elif self.tool == 'star':
                     self.configure_line(self.line_size)
-                    self.d.star(widget,coords,True,True)
+                    self.d.star(widget,coords,self.polygon_sides,True,True)
                 #polygon regular
                 elif self.tool == 'polygon_regular':
                     self.configure_line(self.line_size)
@@ -447,7 +449,7 @@ class Area(gtk.DrawingArea):
                 self.enableUndo(widget)
             #star
             elif self.tool == 'star':
-                self.d.star(widget,coords,False,True)
+                self.d.star(widget,coords,self.polygon_sides,False,True)
                 self.enableUndo(widget)
             #polygon regular
             elif self.tool == 'polygon_regular':
