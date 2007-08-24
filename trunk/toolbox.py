@@ -131,6 +131,7 @@ class DrawEditToolbar(EditToolbar):
         
         self._activity._area.connect('undo', self._on_signal_undo_cb)
         self._activity._area.connect('redo', self._on_signal_redo_cb)
+        self._activity._area.connect('selected', self._on_signal_copy_cb)
         self._activity._area.connect('action-saved', self._on_signal_action_saved_cb)
 
         
@@ -151,6 +152,9 @@ class DrawEditToolbar(EditToolbar):
         
     def _on_signal_redo_cb(self, widget, data=None):
         self._verify_sensitive_buttons()
+           
+    def _on_signal_copy_cb(self, widget, data=None):
+        self._verify_sensitive_buttons()
         
     def _on_signal_action_saved_cb(self, widget, data=None):
         self._verify_sensitive_buttons()
@@ -158,6 +162,7 @@ class DrawEditToolbar(EditToolbar):
     def _verify_sensitive_buttons(self):
         self.undo.set_sensitive( self._activity._area.can_undo() )
         self.redo.set_sensitive( self._activity._area.can_redo() )
+        self.copy.set_sensitive( self._activity._area.is_selected() )
         #TODO: it is not possible to verify these yet.
         #self.copy.set_sensitive( self._activity._area.can_copy() )
         #self.paste.set_sensitive( self._activity._area.can_paste() )
