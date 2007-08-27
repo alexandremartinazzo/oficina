@@ -1074,11 +1074,12 @@ class ImageToolbar(gtk.Toolbar):
         self.insert(self._object_rotate_right, -1)
         self._object_rotate_right.show()
         self._object_rotate_right.set_tooltip(_('Rotate Right'))
+
+        """
         
         self._object_height = ToolButton('object-height')
         self.insert(self._object_height, -1)
         self._object_height.show()
-        self._object_height.connect('clicked', test_connect, activity, 'object-height')
         self._object_height.set_tooltip(_('Height'))           
 
         self._object_width = ToolButton('object-width')
@@ -1087,16 +1088,57 @@ class ImageToolbar(gtk.Toolbar):
         self._object_width.set_tooltip(_('Width'))
 
 
-        self._object_height.connect('clicked', set_tool, activity, 'object-height', self._OBJECT_HEIGHT)
-        """
+        self._configure_palette_resize(self._object_height, 'object-height', activity)
+        self._configure_palette_resize(self._object_width, 'object-width', activity)
+
+#        self._object_height.connect('clicked', self.resize, activity, 'object-height', self._OBJECT_HEIGHT)
+
         self._object_insert.connect('clicked', self.insertImage, activity)
         #self._object_rotate_left.connect('clicked', self.rotate_left, activity)
         #self._object_rotate_right.connect('clicked', set_tool, activity, 'object-rotate-right', self._OBJECT_ROTATE_RIGHT)
-        #self._object_width.connect('clicked', set_tool, activity, 'object-width', self._OBJECT_WIDTH)
+#        self._object_width.connect('clicked', self.resize, activity, 'object-width', self._OBJECT_WIDTH)
 	
     def rotate_left(self, widget, activity):    
         #activity._area._rotate_left(widget)
         pass
+
+    def _resize(self, spinButton, tool, activity):
+        size = spinButton.get_value_as_int()
+        if activity._area.tool == 'marquee-rectangular' and activity._area.selmove:
+            if tool == "object-height":
+                activity._area.d.resizeSelection(float(size)/100, 1.)
+            elif tool == "object-width":
+                activity._area.d.resizeSelection(1., float(size)/100)
+
+    def _configure_palette_resize(self, widget, tool, activity):
+        '''Set palette for a tool - width or height
+        widget  - the widget which Palette will be set, a ToolButton object
+        '''
+        logging.debug('setting a palette for %s', tool)
+               
+        palette = widget.get_palette()
+        
+        spin = gtk.SpinButton()
+        spin.show()
+        
+        # When inserted in a Palette, a spinbutton does not display text in black
+        black = gtk.gdk.Color(0,0,0)
+        spin.modify_text(gtk.STATE_NORMAL, black)
+        
+        # This is where we set restrictions for Resizing:
+        # Initial value, minimum value, maximum value, step
+        initial = float(100)
+        adj = gtk.Adjustment(initial, 10.0, 500.0, 1.0)
+        spin.set_adjustment(adj)
+        spin.set_numeric(True)
+        
+        label = gtk.Label(_('Resize (%): '))
+        label.show()
+        palette.action_bar.pack_start(label)
+        palette.action_bar.pack_start(spin)
+        
+        spin.connect('value-changed', self._resize, tool, activity)
+           
 
 
     def insertImage(self, widget, activity):
