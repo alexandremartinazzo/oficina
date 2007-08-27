@@ -597,6 +597,7 @@ class Desenho:
         return x,y,x+dx,y+dy
         
     def moveSelection(self, widget, coords, mvcopy=False, pixbuf_copy=None):
+        self.draw_widget = widget
         """Move the selection.
 
         Keyword arguments:
@@ -626,7 +627,7 @@ class Desenho:
         if not mvcopy:
             self.d.pixmap_sel.draw_rectangle(self.d.get_style().white_gc, True, x0, y0, w, h)
         
-        if pixbuf_copy!=None: #to import or past image
+        if pixbuf_copy!=None: #to import or paste image
             self.d.pixmap_sel.draw_pixbuf(self.d.gc, pixbuf_copy, 0, 0, coords[0] - w/2, coords[1]- h/2, w, h, dither=gtk.gdk.RGB_DITHER_NORMAL, x_dither=0, y_dither=0)
             self.d.pixmap_temp.draw_pixbuf(self.d.gc, pixbuf_copy, 0, 0, coords[0] - w/2, coords[1]- h/2, w, h, dither=gtk.gdk.RGB_DITHER_NORMAL, x_dither=0, y_dither=0)
         else:    
@@ -638,7 +639,8 @@ class Desenho:
         self.d.pixmap_sel.draw_rectangle(self.d.gc_selection1, False ,coords[0] - w/2-1, coords[1]- h/2-1, w+2, h+2)
         widget.queue_draw()
 
-    def resizeSelection(self, widget, width_percent, height_percent):
+    def resizeSelection(self, width_percent, height_percent):
+        widget = self.draw_widget
         """Resize the selection.
 
         Keyword arguments:
@@ -664,27 +666,26 @@ class Desenho:
         w = int(math.fabs(self.d.sx - self.d.oldx))
         h = int(math.fabs(self.d.sy - self.d.oldy))
 
-        width_percent, height_percent = 2,2
-
         delta_x = int( w*(width_percent-1)/2 )
         delta_y = int( h*(height_percent-1)/2 )
 
         pixbuf = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, False, 8, w, h)
         pixbuf.get_from_drawable(self.d.pixmap, gtk.gdk.colormap_get_system(), x0, y0, 0, 0, w, h)
         pixbuf = pixbuf.scale_simple(int(w*width_percent), int(h*height_percent), gtk.gdk.INTERP_BILINEAR)
-
     
-        #self.d.pixmap_sel.draw_rectangle(self.d.get_style().white_gc, True, x0 - delta_x/2, x1 - delta_y/2, int(w*width_percent), int(h*height_percent))
         self.d.pixmap_sel.draw_rectangle(self.d.get_style().white_gc, True, x0 - delta_x, y0 - delta_y, int(w*width_percent), int(h*height_percent))
         self.d.pixmap_sel.draw_pixbuf(self.d.get_style().white_gc,pixbuf,0,0,x0 - delta_x, y0 - delta_y,int(w*width_percent), int(h*height_percent))
         
         self.d.pixmap_temp.draw_drawable(self.d.gc, self.d.pixmap_sel,0,0,0,0, width, height)  
 
 	    #to draw the selection black and white line rectangle
-        self.d.pixmap_sel.draw_rectangle(self.d.gc_selection, False ,x0- delta_x, y0- delta_y-4,2*w+1, 2*h+1)
-        self.d.pixmap_sel.draw_rectangle(self.d.gc_selection1, False ,x0- delta_x, y0- delta_y-5,2*w +2, 2*h +2)
-  
+        self.d.pixmap_sel.draw_rectangle(self.d.gc_selection, False ,x0- delta_x, y0- delta_y-4,int(width_percent*w+1), int(height_percent*h+1))
+        self.d.pixmap_sel.draw_rectangle(self.d.gc_selection1, False ,x0- delta_x, y0- delta_y-5,int(width_percent*w +2), int(height_percent*h +2))
+
         widget.queue_draw()
+
+        self.d.pixmap.draw_drawable(self.gc, self.pixmap_temp, 0,0,0,0, width, height)
+        self.d.enableUndo(widget)
         
     def polygon(self, widget, coords, temp, fill):
         """Draw polygon.
