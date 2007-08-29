@@ -68,9 +68,8 @@ class OficinaActivity(activity.Activity):
     def __init__(self, handle):
         """Initialize the OficinaActivity object.
 
-            Keyword arguments:
-            self -- 
-            handle --
+            @param  self
+            @param  handle
 
         """
         activity.Activity.__init__(self, handle)
@@ -126,8 +125,8 @@ class OficinaActivity(activity.Activity):
     def read_file(self, file_path):
         '''Read file from Sugar Journal.
 
-        self --
-        file_path --
+            @param  self
+            @param  file_path 
 
         '''
         logging.debug('reading file %s', file_path)
@@ -143,8 +142,8 @@ class OficinaActivity(activity.Activity):
     def write_file(self, file_path):
         '''Save file on Sugar Journal.
 
-        self --
-        file_path -- 
+            @param  self 
+            @param  file_path 
 
         '''
         logging.debug('saving as PNG')
