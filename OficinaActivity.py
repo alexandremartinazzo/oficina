@@ -65,6 +65,9 @@ from Area import Area
 import logging
 
 class OficinaActivity(activity.Activity):
+    def oficina(self, widget, data=None):
+        logging.info('Oficina')
+         
     def __init__(self, handle):
         """Initialize the OficinaActivity object.
 
