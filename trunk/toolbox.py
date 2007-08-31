@@ -1106,9 +1106,9 @@ class ImageToolbar(gtk.Toolbar):
         size = spinButton.get_value_as_int()
         if activity._area.tool == 'marquee-rectangular' and activity._area.selmove:
             if tool == "object-height":
-                activity._area.d.resizeSelection(float(size)/100, 1.)
+                activity._area.d.resizeSelection(activity._area,1., float(size)/100)
             elif tool == "object-width":
-                activity._area.d.resizeSelection(1., float(size)/100)
+                activity._area.d.resizeSelection(activity._area,float(size)/100, 1.)
 
     def _configure_palette_resize(self, widget, tool, activity):
         """Set palette for a tool - width or height
