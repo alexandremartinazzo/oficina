@@ -1,0 +1,207 @@
+# translation of drawing.master.po to Arabic
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Khaled Hosny <khaledhosny@eglug.org>, 2007.
+msgid ""
+msgstr ""
+"Project-Id-Version: drawing.master\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2007-07-13 17:56-0300\n"
+"PO-Revision-Date: 2007-08-16 01:00+0300\n"
+"Last-Translator: Khaled Hosny <khaledhosny@eglug.org>\n"
+"Language-Team: Arabic <doc@arabeyes.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.4\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\nnplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#: toolbox.py:22
+msgid "Edit"
+msgstr "حرّر"
+
+#: toolbox.py:26
+msgid "Tools"
+msgstr "أدوات"
+
+#: toolbox.py:30
+msgid "Shapes"
+msgstr "أشكال"
+
+#: toolbox.py:34
+msgid "Text"
+msgstr "نص"
+
+#: toolbox.py:38
+msgid "Image"
+msgstr "صورة"
+
+#: toolbox.py:42
+msgid "Effects"
+msgstr "مؤثِّرات"
+
+#: toolbox.py:114
+msgid "Pencil"
+msgstr "قلم"
+
+#: toolbox.py:119
+msgid "Brush"
+msgstr "فرشاة"
+
+#: toolbox.py:126
+msgid "Eraser"
+msgstr "ممحاة"
+
+#: toolbox.py:131
+msgid "Polygon"
+msgstr "مضلع"
+
+#: toolbox.py:136
+msgid "Bucket"
+msgstr "محفظة"
+
+#: toolbox.py:159
+msgid "Rectangular Marquee"
+msgstr "معلِّمة مربّعة"
+
+#: toolbox.py:176
+msgid "Square"
+msgstr "مربّع"
+
+#: toolbox.py:177
+msgid "Circle"
+msgstr "دائرة"
+
+#: toolbox.py:208 toolbox.py:243
+msgid "Black"
+msgstr "أسود"
+
+#: toolbox.py:209 toolbox.py:244
+msgid "Purple"
+msgstr "بنفسجي"
+
+#: toolbox.py:210 toolbox.py:245
+msgid "Yellow"
+msgstr "أصفر"
+
+#: toolbox.py:211 toolbox.py:246
+msgid "Blue"
+msgstr "أزرق"
+
+#: toolbox.py:212 toolbox.py:247
+msgid "Green"
+msgstr "أخضر"
+
+#: toolbox.py:213 toolbox.py:248
+msgid "Red"
+msgstr "أحمر"
+
+#: toolbox.py:214 toolbox.py:249
+msgid "Orange"
+msgstr "برتقالي"
+
+#: toolbox.py:215 toolbox.py:250
+msgid "White"
+msgstr "أبيض"
+
+#: toolbox.py:286
+msgid "1"
+msgstr "١"
+
+#: toolbox.py:287
+msgid "2"
+msgstr "٢"
+
+#: toolbox.py:288
+msgid "3"
+msgstr "٣"
+
+#: toolbox.py:289
+msgid "5"
+msgstr "٥"
+
+#: toolbox.py:290 toolbox.py:606
+msgid "10"
+msgstr "١٠"
+
+#: toolbox.py:291
+msgid "20"
+msgstr "٢٠"
+
+#: toolbox.py:292 toolbox.py:604
+msgid "50"
+msgstr "٥٠"
+
+#: toolbox.py:293 toolbox.py:603
+msgid "100"
+msgstr "١٠٠"
+
+#: toolbox.py:294 toolbox.py:600
+msgid "500"
+msgstr "٥٠٠"
+
+#: toolbox.py:295 toolbox.py:599
+msgid "1000"
+msgstr "١٠٠٠"
+
+#: toolbox.py:296
+msgid "5000"
+msgstr "٥٠٠٠"
+
+#: toolbox.py:297
+msgid "10000"
+msgstr "١٠٠٠٠"
+
+#: toolbox.py:298
+msgid "100000"
+msgstr "١٠٠٠٠٠"
+
+#: toolbox.py:354
+msgid "Ellipse"
+msgstr "بيضاوي"
+
+#: toolbox.py:359
+msgid "Rectangle"
+msgstr "مستطيل"
+
+#: toolbox.py:364
+msgid "Line"
+msgstr "خط"
+
+#: toolbox.py:429
+msgid "Type"
+msgstr "نوع"
+
+#: toolbox.py:482
+msgid "object-insert"
+msgstr "ادراج-عنصر"
+
+#: toolbox.py:525 toolbox.py:711
+msgid "Open File..."
+msgstr "افتح ملف..."
+
+#: toolbox.py:559
+msgid "Grayscale"
+msgstr "تدرج رمادي"
+
+#: toolbox.py:601
+msgid "200"
+msgstr "٢٠٠"
+
+#: toolbox.py:602
+msgid "150"
+msgstr "١٥٠"
+
+#: toolbox.py:605
+msgid "25"
+msgstr "٢٥"
+
+#: toolbox.py:619
+msgid "ZOOM +"
+msgstr "زووم +"
+
+#: toolbox.py:624
+msgid "ZOOM -"
+msgstr "زووم -"
+
