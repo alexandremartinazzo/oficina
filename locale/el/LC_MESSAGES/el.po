@@ -1,206 +1,250 @@
 # Greek translation of Drawing activity.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
+# Copyright (C) 2007 NATE LSI-USP
+# This file is distributed under the same license as the Oficina package.
+# 
 # Simos Xenitellis <simos.lists@googlemail.com>, 2007.
 # G Mwralhs <>, 2007.
 # FivosZ <>, 2007.
-#
 msgid ""
 msgstr ""
-"Project-Id-Version: Drawing activity\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-07-13 17:56-0300\n"
-"PO-Revision-Date: 2007-08-20 17:56-0300\n"
+"Project-Id-Version: drawing.master\n"
+"Report-Msgid-Bugs-To: oficina@lsi.usp.br\n"
+"POT-Creation-Date: 2007-09-11 13:52-0300\n"
+"PO-Revision-Date: 2007-09-11 13:58-0300\n"
 "Last-Translator: Simos Xenitellis <simos.lists@googlemail.com>\n"
 "Language-Team: Greek <olpc-l10n-el@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: toolbox.py:22
+#: toolbox.py:75
 msgid "Edit"
 msgstr "Επεξεργασία"
 
-#: toolbox.py:26
+#: toolbox.py:79
 msgid "Tools"
 msgstr "Εργαλεία"
 
-#: toolbox.py:30
+#: toolbox.py:83
 msgid "Shapes"
 msgstr "Σχήματα"
 
-#: toolbox.py:34
+#: toolbox.py:87
 msgid "Text"
 msgstr "Κείμενο"
 
-#: toolbox.py:38
+#: toolbox.py:91
 msgid "Image"
 msgstr "Εικόνα"
 
-#: toolbox.py:42
+#: toolbox.py:95
 msgid "Effects"
 msgstr "Εφέ"
 
-#: toolbox.py:114
+#: toolbox.py:110
+msgid "Undo"
+msgstr ""
+
+#: toolbox.py:111
+msgid "Redo"
+msgstr ""
+
+#: toolbox.py:112
+msgid "Copy"
+msgstr ""
+
+#: toolbox.py:113
+msgid "Paste"
+msgstr ""
+
+#: toolbox.py:123
+msgid "Clear"
+msgstr ""
+
+#: toolbox.py:198
+msgid "Tool Color"
+msgstr ""
+
+#: toolbox.py:227
 msgid "Pencil"
 msgstr "Μολύβι"
 
-#: toolbox.py:119
+#: toolbox.py:232
 msgid "Brush"
 msgstr "Πινέλο"
 
-#: toolbox.py:126
+#: toolbox.py:241
 msgid "Eraser"
-msgstr "Σβήστρα"
+msgstr "Γόμα"
 
-#: toolbox.py:131
+#: toolbox.py:250 toolbox.py:715
 msgid "Polygon"
 msgstr "Πολύγωνο"
 
-#: toolbox.py:136
+#: toolbox.py:259
 msgid "Bucket"
 msgstr "Κουβάς"
 
-#: toolbox.py:159
+#: toolbox.py:283
 msgid "Rectangular Marquee"
-msgstr "Ορθογώνιο πλαίσιο"
+msgstr "Ορθογώνια επιλογή"
 
-#: toolbox.py:176
+#: toolbox.py:313
 msgid "Square"
 msgstr "Τετράγωνο"
 
-#: toolbox.py:177
+#: toolbox.py:314
 msgid "Circle"
 msgstr "Κύκλος"
 
-#: toolbox.py:208 toolbox.py:243
-msgid "Black"
-msgstr "Μαύρο"
+#: toolbox.py:333 toolbox.py:949
+msgid "Fill"
+msgstr ""
 
-#: toolbox.py:209 toolbox.py:244
-msgid "Purple"
-msgstr "Μωβ"
-
-#: toolbox.py:210 toolbox.py:245
-msgid "Yellow"
-msgstr "Κίτρινο"
-
-#: toolbox.py:211 toolbox.py:246
-msgid "Blue"
-msgstr "Μπλε"
-
-#: toolbox.py:212 toolbox.py:247
-msgid "Green"
-msgstr "Πράσινο"
-
-#: toolbox.py:213 toolbox.py:248
-msgid "Red"
-msgstr "Κόκκινο"
-
-#: toolbox.py:214 toolbox.py:249
-msgid "Orange"
-msgstr "Πορτοκαλί"
-
-#: toolbox.py:215 toolbox.py:250
-msgid "White"
-msgstr "Λευκό"
-
-#: toolbox.py:286
+#: toolbox.py:557
 msgid "1"
 msgstr "1"
 
-#: toolbox.py:287
+#: toolbox.py:558
 msgid "2"
 msgstr "2"
 
-#: toolbox.py:288
+#: toolbox.py:559
 msgid "3"
 msgstr "3"
 
-#: toolbox.py:289
+#: toolbox.py:560
 msgid "5"
 msgstr "5"
 
-#: toolbox.py:290 toolbox.py:606
+#: toolbox.py:561 toolbox.py:1306
 msgid "10"
 msgstr "10"
 
-#: toolbox.py:291
+#: toolbox.py:562
 msgid "20"
 msgstr "20"
 
-#: toolbox.py:292 toolbox.py:604
+#: toolbox.py:563 toolbox.py:1304
 msgid "50"
 msgstr "50"
 
-#: toolbox.py:293 toolbox.py:603
+#: toolbox.py:564 toolbox.py:1303
 msgid "100"
 msgstr "100"
 
-#: toolbox.py:294 toolbox.py:600
-msgid "500"
-msgstr "500"
+#: toolbox.py:657
+msgid "Fill Color"
+msgstr ""
 
-#: toolbox.py:295 toolbox.py:599
-msgid "1000"
-msgstr "1000"
+#: toolbox.py:669
+msgid "Stroke Color"
+msgstr ""
 
-#: toolbox.py:296
-msgid "5000"
-msgstr "5000"
-
-#: toolbox.py:297
-msgid "10000"
-msgstr "10000"
-
-#: toolbox.py:298
-msgid "100000"
-msgstr "100000"
-
-#: toolbox.py:354
+#: toolbox.py:692
 msgid "Ellipse"
 msgstr "Έλλειψη"
 
-#: toolbox.py:359
+#: toolbox.py:701
 msgid "Rectangle"
 msgstr "Ορθογώνιο"
 
-#: toolbox.py:364
+#: toolbox.py:710
 msgid "Line"
 msgstr "Γραμμή"
 
-#: toolbox.py:429
+#: toolbox.py:733
+msgid "Heart"
+msgstr "Καρδιά"
+
+#: toolbox.py:743
+msgid "Parallelogram"
+msgstr "Παραλληλόγραμμο"
+
+#: toolbox.py:752
+msgid "Arrow"
+msgstr "Βέλος"
+
+#: toolbox.py:761
+msgid "Star"
+msgstr "Άστρο"
+
+#: toolbox.py:770
+msgid "Trapezoid"
+msgstr "Τραπέζιο"
+
+#: toolbox.py:779
+msgid "Triangle"
+msgstr "Τρίγωνο"
+
+#: toolbox.py:882
+msgid "Sides: "
+msgstr ""
+
+#: toolbox.py:925
+msgid "Points: "
+msgstr ""
+
+#: toolbox.py:987
 msgid "Type"
 msgstr "Τύπος"
 
-#: toolbox.py:482
-msgid "object-insert"
-msgstr "Εισαγωγή αντικειμένου"
+#: toolbox.py:1061
+msgid "Insert Image"
+msgstr "Εισαγωγή εικόνας"
 
-#: toolbox.py:525 toolbox.py:711
+#: toolbox.py:1083
+msgid "Height"
+msgstr "Ύψος"
+
+#: toolbox.py:1088
+msgid "Width"
+msgstr "Πλάτος"
+
+#: toolbox.py:1139
+msgid "Resize (%): "
+msgstr ""
+
+#: toolbox.py:1148
 msgid "Open File..."
 msgstr "Άνοιγμα αρχείου..."
 
-#: toolbox.py:559
+#: toolbox.py:1188
 msgid "Grayscale"
 msgstr "Κλίμακα του γκρι"
 
-#: toolbox.py:601
+#: toolbox.py:1193
+msgid "Rainbow"
+msgstr ""
+
+#: toolbox.py:1262
+msgid "Size"
+msgstr ""
+
+#: toolbox.py:1299
+msgid "1000"
+msgstr "1000"
+
+#: toolbox.py:1300
+msgid "500"
+msgstr "500"
+
+#: toolbox.py:1301
 msgid "200"
 msgstr "200"
 
-#: toolbox.py:602
+#: toolbox.py:1302
 msgid "150"
 msgstr "150"
 
-#: toolbox.py:605
+#: toolbox.py:1305
 msgid "25"
 msgstr "25"
 
-#: toolbox.py:619
+#: toolbox.py:1319
 msgid "ZOOM +"
 msgstr "ΕΣΤΙΑΣΗ +"
 
-#: toolbox.py:624
+#: toolbox.py:1324
 msgid "ZOOM -"
 msgstr "ΕΣΤΙΑΣΗ -"
