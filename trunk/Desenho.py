@@ -499,11 +499,11 @@ class Desenho:
         widget.oldy = coords[1]
         widget.queue_draw()
 
-    def clear(self):
+    def clear(self, widget):
         """Clear the drawing.
 
             @param  self -- Desenho.Desenho instance
-
+            @param  widget -- Area object (GtkDrawingArea)
         """
         width, height = widget.window.get_size()
         widget.desenho = []
@@ -513,14 +513,14 @@ class Desenho:
         widget.queue_draw() 
     
     def text(self,widget,event):
-        """Make a selection.
+        """Display and draw text in the drawing area.
 
             @param  self -- Desenho.Desenho instance
             @param  widget -- Area object (GtkDrawingArea)
             @param  event -- GdkEvent
 
         """
-        #print widget.estadoTexto
+        
         if widget.estadoTexto == 0:
             widget.estadoTexto = 1
             
@@ -536,28 +536,27 @@ class Desenho:
             try:
             # This works for a gtk.Entry
                 text = widget.janela._textview.get_text()
-            except:
+            except AttributeError:
             # This works for a gtk.TextView
                 buf = widget.janela._textview.get_buffer()
                 start, end = buf.get_bounds()
                 text = buf.get_text(start, end)
             
             layout = widget.create_pango_layout(text)
-            layout.set_font_description(widget.font)
+            #layout.set_font_description(widget.font)
             
             widget.pixmap.draw_layout(widget.gc, widget.oldx, widget.oldy, layout)
             widget.pixmap_temp.draw_layout(widget.gc, widget.oldx, widget.oldy, layout)
             widget.janela._textview.hide()
             try:
                 widget.janela._textview.set_text('')
-            except:
+            except AttributeError:
                 buf.set_text('')
 
             widget.enableUndo(widget)
             
             widget.queue_draw()
             
-        #print widget.estadoTexto
 
     def selection(self, widget, coords, temp, fill):
         """Make a selection.
