@@ -76,13 +76,14 @@ class OficinaActivity(activity.Activity):
 
         """
         activity.Activity.__init__(self, handle)
+        self.set_title(_('Paint'))
         
         logging.debug('Starting Paint activity (Oficina)')
 
         os.chdir(activity.get_bundle_path())
         #print activity.get_bundle_path()
         
-        self._fixed = gtk.Fixed()   
+        self._fixed = gtk.Fixed()
         self._area = Area(self) 
         
         toolbox = Toolbox(self)
@@ -102,11 +103,9 @@ class OficinaActivity(activity.Activity):
         self._fixed.put(self.bg, 200, 100)
         self.bg.show()
 
-        #FIXME: use a textview instead of an Entry
         self._textview = gtk.TextView()
         # If we use this, text viewer will have constant size, we don't want that
         #self._textview.set_size_request(100,100)
-        #self._textview = gtk.Entry()
         
         self._fixed.put(self._area, 200 , 100)
         # Area size increased
@@ -123,7 +122,18 @@ class OficinaActivity(activity.Activity):
 
         # setting scrolledwindow as activity canvas...
         self.set_canvas(sw)
-
+        
+#         # Setting a default tool
+#         initial_tool = {
+#         'name'          : 'pencil',
+#         'line size'     : 2,
+#         'fill color'    : None,
+#         'stroke color'  : None,
+#         'line shape'    : 'circle',
+#         'fill'          : True,
+#         'vertices'      : None
+#         }
+#         self._area.set_tool(initial_tool)
 
     def read_file(self, file_path):
         '''Read file from Sugar Journal.
@@ -137,9 +147,6 @@ class OficinaActivity(activity.Activity):
         
         self._area.loadImage(file_path, self._area, False)
         
-        # Does this work?
-#         self._area.undo_times = 1
-#         self._area.redo_times = 0
 
 
     def write_file(self, file_path):
