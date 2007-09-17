@@ -1218,6 +1218,10 @@ class ImageToolbar(gtk.Toolbar):
         separator.set_draw(True)
         self.insert(separator, -1)
         separator.show()
+        
+        self.width_percent = 1.
+        self.height_percent = 1.
+
         """
         self._object_rotate_left = ToolButton('object-rotate-left')
         self.insert(self._object_rotate_left, -1)
@@ -1251,18 +1255,24 @@ class ImageToolbar(gtk.Toolbar):
         #self._object_rotate_left.connect('clicked', self.rotate_left, activity)
         #self._object_rotate_right.connect('clicked', set_tool, activity, 'object-rotate-right', self._OBJECT_ROTATE_RIGHT)
 #        self._object_width.connect('clicked', self.resize, activity, 'object-width', self._OBJECT_WIDTH)
-	
+
+    def new_selection(self, widget, spin, activity):
+        spin.set_value(100)
+        self.width_percent = 1.
+        self.height_percent = 1.
+
     def rotate_left(self, widget, activity):    
         #activity._area._rotate_left(widget)
         pass
 
     def _resize(self, spinButton, tool, activity):
-        size = spinButton.get_value_as_int()
-        if activity._area.tool == 'marquee-rectangular' and activity._area.selmove:
+        if activity._area.tool['name'] == 'marquee-rectangular' and activity._area.selmove:
             if tool == "object-height":
-                activity._area.d.resizeSelection(activity._area,1., float(size)/100)
+                self.height_percent = spinButton.get_value_as_int()/100.
+                activity._area.d.resizeSelection(activity._area, self.width_percent, self.height_percent)
             elif tool == "object-width":
-                activity._area.d.resizeSelection(activity._area,float(size)/100, 1.)
+                self.width_percent = spinButton.get_value_as_int()/100.
+                activity._area.d.resizeSelection(activity._area, self.width_percent, self.height_percent)
 
     def _configure_palette_resize(self, widget, tool, activity):
         """Set palette for a tool - width or height
@@ -1296,7 +1306,8 @@ class ImageToolbar(gtk.Toolbar):
         palette.action_bar.pack_start(spin)
         
         spin.connect('value-changed', self._resize, tool, activity)
-           
+        activity._area.connect('selected', self.new_selection, spin, activity)
+
     def insertImage(self, widget, activity):
         # TODO: add a filter to display images only.
         dialog = gtk.FileChooserDialog(title=(_('Open File...')),   
