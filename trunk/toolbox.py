@@ -1256,16 +1256,21 @@ class ImageToolbar(gtk.Toolbar):
         #self._object_rotate_right.connect('clicked', set_tool, activity, 'object-rotate-right', self._OBJECT_ROTATE_RIGHT)
 #        self._object_width.connect('clicked', self.resize, activity, 'object-width', self._OBJECT_WIDTH)
 
-    def new_selection(self, widget, spin, activity):
-        spin.set_value(100)
-        self.width_percent = 1.
-        self.height_percent = 1.
+    def _selected(self, widget, spin, activity):
+        if not activity._area.is_selected():
+            spin.set_value(100)
+            self.width_percent = 1.
+            self.height_percent = 1.
+            try:
+                del(activity._area.d.resize_pixbuf)
+                del(activity._area.d.resized)
+            except: pass
 
     def rotate_left(self, widget, activity):    
         #activity._area._rotate_left(widget)
         pass
 
-    def _resize(self, spinButton, tool, activity):
+    def resize(self, spinButton, tool, activity):
         if activity._area.tool['name'] == 'marquee-rectangular' and activity._area.selmove:
             if tool == "object-height":
                 self.height_percent = spinButton.get_value_as_int()/100.
@@ -1305,8 +1310,8 @@ class ImageToolbar(gtk.Toolbar):
         palette.action_bar.pack_start(label)
         palette.action_bar.pack_start(spin)
         
-        spin.connect('value-changed', self._resize, tool, activity)
-        activity._area.connect('selected', self.new_selection, spin, activity)
+        spin.connect('value-changed', self.resize, tool, activity)
+        activity._area.connect('selected', self._selected, spin, activity)
 
     def insertImage(self, widget, activity):
         # TODO: add a filter to display images only.
