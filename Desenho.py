@@ -60,6 +60,7 @@ import sys, gobject, socket
 from gtk import gdk
 import math
 import pango
+import gc
 
 
 WIDTH = 1195
@@ -681,14 +682,18 @@ class Desenho:
         delta_x = int( w*(width_percent-1)/2 )
         delta_y = int( h*(height_percent-1)/2 )
 
+        gc.collect()
+
         try: self.resize_pixbuf
         except:
-            try: del(self.resize_pixbuf)
-            except: pass
             self.resize_pixbuf = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, False, 8, w, h)
             self.resize_pixbuf.get_from_drawable(widget.pixmap, gtk.gdk.colormap_get_system(), x0, y0, 0, 0, int(w), int(h))
 
         x0,y0 = self.coords
+
+        try:
+            del(self.resized)
+        except: pass
 
         self.resized = self.resize_pixbuf.scale_simple(int(w*width_percent), int(h*height_percent), gtk.gdk.INTERP_HYPER)
     
@@ -700,10 +705,9 @@ class Desenho:
 	    #to draw the selection black and white line rectangle
         widget.pixmap_sel.draw_rectangle(widget.gc_selection, False ,x0- delta_x -1, y0- delta_y-1,int(width_percent*w+1), int(height_percent*h+1))
         widget.pixmap_sel.draw_rectangle(widget.gc_selection1, False ,x0- delta_x -2, y0- delta_y-2,int(width_percent*w +1), int(height_percent*h +1))
-
-        #widget.pixmap.draw_drawable(widget.gc, widget.pixmap_sel, 0,0,0,0, width, height)
  
         widget.queue_draw()
+        gc.collect()
         
     def polygon(self, widget, coords, temp, fill):
         """Draw polygon.
