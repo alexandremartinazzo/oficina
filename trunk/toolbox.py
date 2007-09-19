@@ -1235,19 +1235,31 @@ class ImageToolbar(gtk.Toolbar):
 
         """
         
+
+
         self._object_height = ToolButton('object-height')
         self.insert(self._object_height, -1)
         self._object_height.show()
         self._object_height.set_tooltip(_('Height'))           
+
+        height_spinButton = self._create_spinButton(self._object_height, 'object-height', activity)
+
+        item = gtk.ToolItem()
+        item.add(height_spinButton)
+        self.insert(item, -1)
+        item.show()
 
         self._object_width = ToolButton('object-width')
         self.insert(self._object_width, -1)
         self._object_width.show()
         self._object_width.set_tooltip(_('Width'))
 
+        width_spinButton = self._create_spinButton(self._object_width, 'object-width', activity)
 
-        self._configure_palette_resize(self._object_height, 'object-height', activity)
-        self._configure_palette_resize(self._object_width, 'object-width', activity)
+        item = gtk.ToolItem()
+        item.add(width_spinButton)
+        self.insert(item, -1)
+        item.show()
 
 #        self._object_height.connect('clicked', self.resize, activity, 'object-height', self._OBJECT_HEIGHT)
 
@@ -1261,10 +1273,10 @@ class ImageToolbar(gtk.Toolbar):
             spin.set_value(100)
             self.width_percent = 1.
             self.height_percent = 1.
-            try:
-                del(activity._area.d.resize_pixbuf)
-                del(activity._area.d.resized)
-            except: pass
+        try:
+            del(activity._area.d.resize_pixbuf)
+            del(activity._area.d.resized)
+        except: pass
 
     def rotate_left(self, widget, activity):    
         #activity._area._rotate_left(widget)
@@ -1279,7 +1291,7 @@ class ImageToolbar(gtk.Toolbar):
                 self.width_percent = spinButton.get_value_as_int()/100.
                 activity._area.d.resizeSelection(activity._area, self.width_percent, self.height_percent)
 
-    def _configure_palette_resize(self, widget, tool, activity):
+    def _create_spinButton(self, widget, tool, activity):
         """Set palette for a tool - width or height
 
             @param self -- gtk.Toolbar
@@ -1287,31 +1299,23 @@ class ImageToolbar(gtk.Toolbar):
             @param tool
             @param activity
         """
-        logging.debug('setting a palette for %s', tool)
-               
-        palette = widget.get_palette()
-        
+        logging.debug('setting a spinButton for %s', tool)
+                      
         spin = gtk.SpinButton()
         spin.show()
-        
-        # When inserted in a Palette, a spinbutton does not display text in black
-        black = gtk.gdk.Color(0,0,0)
-        spin.modify_text(gtk.STATE_NORMAL, black)
-        
+               
         # This is where we set restrictions for Resizing:
         # Initial value, minimum value, maximum value, step
         initial = float(100)
         adj = gtk.Adjustment(initial, 10.0, 500.0, 1.0)
         spin.set_adjustment(adj)
         spin.set_numeric(True)
-        
-        label = gtk.Label(_('Resize (%): '))
-        label.show()
-        palette.action_bar.pack_start(label)
-        palette.action_bar.pack_start(spin)
+
         
         spin.connect('value-changed', self.resize, tool, activity)
         activity._area.connect('selected', self._selected, spin, activity)
+
+        return spin
 
     def insertImage(self, widget, activity):
         # TODO: add a filter to display images only.
