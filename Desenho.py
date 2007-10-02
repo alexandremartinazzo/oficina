@@ -525,21 +525,21 @@ class Desenho:
         if widget.estadoTexto == 0:
             widget.estadoTexto = 1
             
-            widget.janela._fixed.move(widget.janela._textview, int(event.x)+200, int(event.y)+100)
+            widget.janela.fixed.move(widget.janela.textview, int(event.x)+200, int(event.y)+100)
             # Area size has changed...
-            #widget.janela._fixed.move(widget.janela._textview, int(event.x), int(event.y))
-            widget.janela._textview.show()
-            widget.janela._textview.grab_focus()
+            #widget.janela.fixed.move(widget.janela.textview, int(event.x), int(event.y))
+            widget.janela.textview.show()
+            widget.janela.textview.grab_focus()
             
         else:   
             widget.estadoTexto = 0  
             
             try:
             # This works for a gtk.Entry
-                text = widget.janela._textview.get_text()
+                text = widget.janela.textview.get_text()
             except AttributeError:
             # This works for a gtk.TextView
-                buf = widget.janela._textview.get_buffer()
+                buf = widget.janela.textview.get_buffer()
                 start, end = buf.get_bounds()
                 text = buf.get_text(start, end)
             
@@ -548,9 +548,10 @@ class Desenho:
             
             widget.pixmap.draw_layout(widget.gc, widget.oldx, widget.oldy, layout)
             widget.pixmap_temp.draw_layout(widget.gc, widget.oldx, widget.oldy, layout)
-            widget.janela._textview.hide()
+            widget.janela.textview.hide()
+            
             try:
-                widget.janela._textview.set_text('')
+                widget.janela.textview.set_text('')
             except AttributeError:
                 buf.set_text('')
 
@@ -570,7 +571,7 @@ class Desenho:
             
             @return (x0,y0,x1,y1) -- coords of corners 
         """ 
-      
+        
         if temp == True:
             pixmap = widget.pixmap_temp
         else:
@@ -598,7 +599,7 @@ class Desenho:
         pixmap.draw_rectangle(widget.gc_selection,False,x,y,dx,dy)
         pixmap.draw_rectangle(widget.gc_selection1,False,x-1,y-1,dx+2,dy+2)
         widget.queue_draw()
-            
+        
         return x,y,x+dx,y+dy
         
     def moveSelection(self, widget, coords, mvcopy=False, pixbuf_copy=None):
@@ -610,8 +611,8 @@ class Desenho:
             @param  mvcopy -- Copy or Move
             @param  pixbuf_copy -- For import image
 
-        """
-
+        """ 
+        
         width, height = widget.window.get_size()
 
         widget.pixmap_sel.draw_drawable(widget.gc,widget.pixmap,0,0,0,0, width, height)   
@@ -628,12 +629,13 @@ class Desenho:
             
         w = int(math.fabs(widget.sx - widget.oldx))
         h = int(math.fabs(widget.sy - widget.oldy))
-
+        
         self.coords = (coords[0] -w/2,coords[1]-h/2)
 
         widget._set_selection_bounds(coords[0]-w/2, coords[1]-h/2, coords[0]+w/2, coords[1]+h/2)             
         if not mvcopy:
             widget.pixmap_sel.draw_rectangle(widget.get_style().white_gc, True, x0, y0, w, h)
+            
         try: # test if resizing has been done
             w, h = self.resized.get_width(), self.resized.get_height()
             widget.pixmap_sel.draw_pixbuf(widget.gc,self.resized,0,0,coords[0] - w/2, coords[1] - h/2, w, h) 
@@ -644,8 +646,9 @@ class Desenho:
                 widget.pixmap_temp.draw_pixbuf(widget.gc, pixbuf_copy, 0, 0, coords[0] - w/2, coords[1]- h/2, w, h, dither=gtk.gdk.RGB_DITHER_NORMAL, x_dither=0, y_dither=0)
             else:    
                 widget.pixmap_sel.draw_drawable(widget.gc, widget.pixmap, x0, y0, coords[0] - w/2, coords[1]- h/2, w, h)
-        widget.pixmap_temp.draw_drawable(widget.gc, widget.pixmap_sel,0,0,0,0, width, height)  
-    
+                
+        widget.pixmap_temp.draw_drawable(widget.gc, widget.pixmap_sel,0,0,0,0, width, height)
+        
         #to draw the selection black and white line rectangle
         widget.pixmap_sel.draw_rectangle(widget.gc_selection, False ,coords[0] - w/2, coords[1]- h/2, w, h)
         widget.pixmap_sel.draw_rectangle(widget.gc_selection1, False ,coords[0] - w/2-1, coords[1]- h/2-1, w+2, h+2)
@@ -663,8 +666,7 @@ class Desenho:
         widget.selmove = True
 
         width, height = widget.window.get_size()
-
-        widget.pixmap_sel.draw_drawable(widget.gc,widget.pixmap_temp,0,0,0,0, width, height)   
+        widget.pixmap_sel.draw_drawable(widget.gc,widget.pixmap_temp,0,0,0,0, width, height)
         
         if widget.sx > widget.oldx:
             x0 = int(widget.oldx)
@@ -678,19 +680,17 @@ class Desenho:
             
         w = int(math.fabs(widget.sx - widget.oldx))
         h = int(math.fabs(widget.sy - widget.oldy))
-
         delta_x = int( w*(width_percent-1)/2 )
         delta_y = int( h*(height_percent-1)/2 )
-
         gc.collect()
-
+        
         try: self.resize_pixbuf
         except:
             self.resize_pixbuf = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, False, 8, w, h)
             self.resize_pixbuf.get_from_drawable(widget.pixmap, gtk.gdk.colormap_get_system(), x0, y0, 0, 0, int(w), int(h))
 
         x0,y0 = self.coords
-
+        
         try:
             del(self.resized)
         except: pass
@@ -705,7 +705,7 @@ class Desenho:
 	    #to draw the selection black and white line rectangle
         widget.pixmap_sel.draw_rectangle(widget.gc_selection, False ,x0- delta_x -1, y0- delta_y-1,int(width_percent*w+1), int(height_percent*h+1))
         widget.pixmap_sel.draw_rectangle(widget.gc_selection1, False ,x0- delta_x -2, y0- delta_y-2,int(width_percent*w +1), int(height_percent*h +1))
- 
+        
         widget.queue_draw()
         gc.collect()
         
