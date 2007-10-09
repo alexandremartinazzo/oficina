@@ -1,5 +1,8 @@
 11
 
+* Fixed bug in "Insert Image" (andre)
+* Added rotate (andre)
+* Now effects can be used in selection (andre)
 * Bug #3749 fixed; resuming from Journal is working again (alexandre)
 * Fixed memory leak when using "Bucket" tool (bgola`)
 * Reduced memory usage in resize functions (barbolo)

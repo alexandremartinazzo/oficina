@@ -146,6 +146,7 @@ class OficinaActivity(activity.Activity):
         logging.debug('writting file %s', file_path)
         
         width, height = self.area.window.get_size()
+        self.area.getout()
         pixbuf = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, False, 8, width, height)
         pixbuf.get_from_drawable(self.area.pixmap, gtk.gdk.colormap_get_system(), 0, 0, 0, 0, -1, -1)
         self.metadata['mime_type'] = 'image/png'
