@@ -136,7 +136,7 @@ class DrawEditToolbar(EditToolbar):
         
         self._activity.area.connect('undo', self._on_signal_undo_cb)
         self._activity.area.connect('redo', self._on_signal_redo_cb)
-        self._activity.area.connect('selected', self._on_signal_copy_cb)
+        self._activity.area.connect('select', self._on_signal_copy_cb)
         self._activity.area.connect('action-saved', self._on_signal_action_saved_cb)
 
         
@@ -150,7 +150,7 @@ class DrawEditToolbar(EditToolbar):
         self._activity.area.copy()
         
     def _paste_cb(self, widget, data=None):
-        self._activity.area.past()
+        self._activity.area.past(widget)
         
     def _on_signal_undo_cb(self, widget, data=None):
         self._verify_sensitive_buttons()
@@ -1165,7 +1165,6 @@ class ImageToolbar(gtk.Toolbar):
         self.width_percent = 1.
         self.height_percent = 1.
 
-        """
         self._object_rotate_left = ToolButton('object-rotate-left')
         self.insert(self._object_rotate_left, -1)
         self._object_rotate_left.show()
@@ -1175,8 +1174,6 @@ class ImageToolbar(gtk.Toolbar):
         self.insert(self._object_rotate_right, -1)
         self._object_rotate_right.show()
         self._object_rotate_right.set_tooltip(_('Rotate Right'))
-
-        """
         
         self._object_height = ToolButton('object-height')
         self.insert(self._object_height, -1)
@@ -1205,8 +1202,8 @@ class ImageToolbar(gtk.Toolbar):
 #        self._object_height.connect('clicked', self.resize, activity, 'object-height', self._OBJECT_HEIGHT)
 
         self._object_insert.connect('clicked', self.insertImage, activity)
-        #self._object_rotate_left.connect('clicked', self.rotate_left, activity)
-        #self._object_rotate_right.connect('clicked', set_tool, activity, 'object-rotate-right', self._OBJECT_ROTATE_RIGHT)
+        self._object_rotate_left.connect('clicked', self.rotate_left, activity)
+        self._object_rotate_right.connect('clicked', self.rotate_right, activity)
 #        self._object_width.connect('clicked', self.resize, activity, 'object-width', self._OBJECT_WIDTH)
 
     def _selected(self, widget, spin, activity):
@@ -1220,7 +1217,11 @@ class ImageToolbar(gtk.Toolbar):
         except: pass
 
     def rotate_left(self, widget, activity):
-        #activity.area._rotate_left(widget)
+        activity.area._rotate_left(widget)
+        pass
+
+    def rotate_right(self, widget, activity):
+        activity.area._rotate_right(widget)
         pass
 
     def resize(self, spinButton, tool, activity):
@@ -1253,7 +1254,7 @@ class ImageToolbar(gtk.Toolbar):
         spin.set_numeric(True)
         
         spin.connect('value-changed', self.resize, tool, activity)
-        activity.area.connect('selected', self._selected, spin, activity)
+        activity.area.connect('select', self._selected, spin, activity)
 
         return spin
         
