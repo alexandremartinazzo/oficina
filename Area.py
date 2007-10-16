@@ -365,7 +365,7 @@ class Area(gtk.DrawingArea):
                         
                 elif self.tool['name'] == 'polygon':
                     self.configure_line(self.line_size)
-                    self.d.polygon(widget,coords,True,self.tool['fill'])
+                    self.d.polygon(widget,coords,True,self.tool['fill'],"motion")
                     
                 elif self.tool['name'] == 'triangle':
                     self.configure_line(self.line_size)
@@ -406,6 +406,10 @@ class Area(gtk.DrawingArea):
                 else:
                     self.window.set_cursor(gtk.gdk.Cursor(gtk.gdk.FLEUR))
 
+            elif self.tool['name'] == 'polygon':
+                self.desenha = True
+                self.configure_line(self.line_size)
+                self.d.polygon(widget,coords,True,self.tool['fill'],"moving")
 
     def mouseup(self,widget,event): 
         """Make the Area object (GtkDrawingArea) recognize that the mouse was released.
@@ -452,7 +456,7 @@ class Area(gtk.DrawingArea):
                 self.emit('select')
 
             elif self.tool['name'] == 'polygon':
-                self.d.polygon(widget, coords, False, self.tool['fill'])
+                self.d.polygon(widget, coords, False, self.tool['fill'],"release")
 
             elif self.tool['name'] == 'bucket':
                 width, height = self.window.get_size()

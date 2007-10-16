@@ -645,7 +645,7 @@ class Desenho:
         widget.queue_draw()
         gc.collect()
         
-    def polygon(self, widget, coords, temp, fill):
+    def polygon(self, widget, coords, temp, fill, param = None):
         """Draw polygon.
 
             @param  self -- Desenho.Desenho instance
@@ -663,21 +663,48 @@ class Desenho:
         width, height = widget.window.get_size()
 
         pixmap.draw_drawable(widget.gc, widget.pixmap, 0, 0, 0, 0, width, height)
-        
-        if widget.polygon_start == True: # Starting a new polygon ?
-            if temp == True:
-                pixmap.draw_line(widget.gc_line,widget.oldx,widget.oldy, coords[0], coords[1])
-            else:
-                pixmap.draw_line(widget.gc_line,widget.oldx,widget.oldy, coords[0], coords[1])
+
+        if param == "moving":
+            # mouse not pressed moving
+            if not widget.polygon_start:
+                pixmap.draw_line(widget.gc_line,widget.last[0],widget.last[1], coords[0], coords[1])
+        elif widget.polygon_start == True: # Starting a new polygon ?
+            if param == "motion":
+                # first press
+                try:
+                    pixmap.draw_line(widget.gc_line,widget.last[0],widget.last[1], coords[0], coords[1])
+                    widget.pixmap.draw_line(widget.gc_line,widget.last[0],widget.last[1], coords[0], coords[1])
+                    widget.points.append(coords)
+                except:
+                    pixmap.draw_line(widget.gc_line,widget.oldx,widget.oldy, coords[0], coords[1])
+                    widget.pixmap.draw_line(widget.gc_line,widget.oldx,widget.oldy, coords[0], coords[1])
+                    widget.first = widget.oldx, widget.oldy
+                    widget.points = [widget.first, coords]
+                widget.enableUndo(widget)
+                widget.last = coords                    
+            else: # param == "release"
+                # first release
+                try:
+                    widget.first
+                    widget.points.append(coords)
+                    widget.pixmap.draw_line(widget.gc_line,widget.last[0],widget.last[1], coords[0], coords[1])
+                except:
+                    widget.first = widget.oldx, widget.oldy
+                    widget.points = [widget.first, coords]                
+                    widget.pixmap.draw_line(widget.gc_line,widget.oldx,widget.oldy, coords[0], coords[1])
                 widget.enableUndo(widget)
                 widget.last = coords
-                widget.first = widget.oldx, widget.oldy
                 widget.polygon_start = False
-                widget.points = [widget.first, coords]
         else:
-            if temp == True:
+            if param == "motion":
+     #           print "press"
                 pixmap.draw_line(widget.gc_line,widget.last[0],widget.last[1],coords[0],coords[1])
-            else:
+                widget.pixmap.draw_line(widget.gc_line,widget.last[0],widget.last[1], coords[0], coords[1])
+                widget.enableUndo(widget)
+                widget.last = coords
+                widget.points.append(coords)
+            elif param == "release":
+         #       print "release"
                 x = coords[0] - widget.first[0]
                 y = coords[1] - widget.first[1]
                 d = math.hypot(x,y)
