@@ -82,7 +82,9 @@ class Area(gtk.DrawingArea):
         logging.debug('Area.__init__(self, janela)')
         
         gtk.DrawingArea.__init__(self)
-        self.set_size_request(800, 600)
+        #self.set_size_request(800, 600)
+        self.set_size_request(1185, 770)
+        
         self.set_events(gtk.gdk.POINTER_MOTION_MASK |
                 gtk.gdk.POINTER_MOTION_HINT_MASK |
                 gtk.gdk.BUTTON_PRESS_MASK |
@@ -528,8 +530,8 @@ class Area(gtk.DrawingArea):
         self.undo_surf = True
 
 
-	    #special case for func polygon
-        if self.tool['name'] == 'polygon':		
+        #special case for func polygon
+        if self.tool['name'] == 'polygon':        
                 self.polygon_start = True #start the polygon again
         
 
@@ -565,7 +567,8 @@ class Area(gtk.DrawingArea):
             @param  widget -- the Area object (GtkDrawingArea)
 
         """
-        logging.debug('Area.enableUndo(self,widget)')
+        #logging.debug('Area.enableUndo(self,widget)')
+        
         width, height = self.window.get_size()
         
         if self.undo_surf:
@@ -630,7 +633,7 @@ class Area(gtk.DrawingArea):
             if (os.path.exists(data)):
                 os.remove( data )
         data = None
-	       
+           
     def past(self,widget):
         """ Past image.
         Past image that is in pixmap
@@ -856,7 +859,7 @@ class Area(gtk.DrawingArea):
             @param  self -- the Area object (GtkDrawingArea)
             
         """
-        logging.debug('Area.can_redo(self)')
+        #logging.debug('Area.can_redo(self)')
         
         if self.redo_times < 1:
             return False
@@ -871,7 +874,7 @@ class Area(gtk.DrawingArea):
             
         """
         
-        logging.debug('Area.is_selected(self)')
+        #logging.debug('Area.is_selected(self)')
         
         if self.selmove:
             return True
@@ -898,13 +901,13 @@ class Area(gtk.DrawingArea):
         """
         return self._selection_corners[0], self._selection_corners[1], self._selection_corners[2], self._selection_corners[3]
 
-    def loadImage(self, name, widget, load_selected=True):
+    def loadImage(self, name, widget=None, load_selected=True):
         """Load an image.
 
             @param  self -- Area instance
             @param  name -- string (image file path)
             @param  widget -- GtkDrawingArea
-            @param  load_selected -- False if this func is called by Journal
+            @param  load_selected -- False if loading file from Journal
 
         """
         logging.debug('Area.loadImage')
@@ -920,15 +923,18 @@ class Area(gtk.DrawingArea):
         else :
             pixbuf = gtk.gdk.pixbuf_new_from_file(name)
             size = (int)(pixbuf.get_width()), (int)(pixbuf.get_height())
-            self.getout(True,widget)
-            self.pixmap_sel = gtk.gdk.Pixmap(widget.window,size[0],size[1],-1)
+            #self.getout(True,widget)
+            self.getout(True)
+            #self.pixmap_sel = gtk.gdk.Pixmap(widget.window,size[0],size[1],-1)
+            self.pixmap_sel = gtk.gdk.Pixmap(self.window,size[0],size[1],-1)
             self.pixmap_sel.draw_pixbuf(self.gc,pixbuf,0,0,0,0,size[0],size[1],dither=gtk.gdk.RGB_DITHER_NORMAL,x_dither=0,y_dither=0)
 
             self.sel_get_out = False
             self.selmove = True
             self.desenha = True
             self.orig_x, self.orig_y = 0,0
-            width, height = widget.window.get_size()
+            #width, height = widget.window.get_size()
+            width, height = self.window.get_size()
             
             self.pixmap_temp.draw_drawable(self.gc,self.pixmap,0,0,0,0,width,height)
             self.pixmap_temp.draw_drawable(self.gc,self.pixmap_sel,0,0,0,0,size[0],size[1])
@@ -938,7 +944,8 @@ class Area(gtk.DrawingArea):
             self.tool['name'] = 'marquee-rectangular'
             self.window.set_cursor(gtk.gdk.Cursor(gtk.gdk.FLEUR)) 
             self.emit('select')
-        widget.queue_draw()
+        #widget.queue_draw()
+        self.queue_draw()
         
     def clear(self):
         """ Clear Canvas
@@ -946,7 +953,11 @@ class Area(gtk.DrawingArea):
         """
         logging.debug('Area.clear')
         self.d.clear(self)
-        self.enableUndo(self)
+        
+        # If something is selected, the action will be saved 
+        # after it is unselected
+        if not self.is_selected():
+            self.enableUndo(self)
         
     # Changing to public methods
     def _set_fill_color(self, color):
@@ -1018,14 +1029,24 @@ class Area(gtk.DrawingArea):
         self.window.set_cursor(cursor)
         
     def getout(self,undo=False,widget=None):
+        logging.debug('Area.getout')
+        
         try:
             self.pixmap_sel
             size = self.pixmap_sel.get_size()
             self.pixmap.draw_drawable(self.gc,self.pixmap_sel,0,0,self.orig_x,self.orig_y,size[0],size[1])
             self.selmove = False
             if undo:
-                self.enableUndo(widget)
+                if widget is not None:
+                    self.enableUndo(widget)
+                else:
+                    self.enableUndo(self)
+                    
             del(self.pixmap_sel)
             del(self.pixbuf_resize)
-        except: pass 
+        
+        except NameError, message:
+            logging.debug(message)
+        except Exception, message:
+            logging.debug('Unexpected error: %s', message)
 
