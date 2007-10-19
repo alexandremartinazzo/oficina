@@ -56,15 +56,13 @@ Roseli de Deus Lopes                (roseli@lsi.usp.br)
 import  pygtk
 pygtk.require('2.0')
 import gtk
-import sys, gobject, socket
+import sys, gobject, logging
 from gtk import gdk
 import math
 import pango
 import gc
 
 
-WIDTH = 1195
-HEIGHT = 800
 ##Pixmap manipulation
 class Desenho:
     def __init__(self, widget):
@@ -486,11 +484,32 @@ class Desenho:
             @param  self -- Desenho.Desenho instance
             @param  widget -- Area object (GtkDrawingArea)
         """
-        width, height = widget.window.get_size()
+        logging.debug('Desenho.clear')
+        
         widget.desenho = []
-        widget.textos = []      
-        widget.pixmap.draw_rectangle(widget.get_style().white_gc, True,0, 0, width, height)
-        widget.pixmap_temp.draw_rectangle(widget.get_style().white_gc, True,0, 0, width, height)
+        widget.textos = []
+        
+        # try to clear a selected area first
+        if widget.is_selected():
+            try:
+                width, height = widget.pixmap_sel.get_size()
+                
+                # Clear the selected area
+                widget.pixmap_sel.draw_rectangle(widget.get_style().white_gc, True,0, 0, width, height)
+                # Draw the selected area in the displayed pixmap
+                widget.pixmap_temp.draw_drawable(widget.gc,widget.pixmap_sel,0,0,widget.orig_x,widget.orig_y, width, height)
+                # Draw the selection rectangle
+                widget.pixmap_temp.draw_rectangle(widget.gc_selection, False, widget.orig_x,widget.orig_y, width, height)
+                widget.pixmap_temp.draw_rectangle(widget.gc_selection1,False, widget.orig_x-1,widget.orig_y-1, width+2, height+2)
+                
+            except NameError, message:
+                logging.debug(message)
+            except Exception, message:
+                logging.debug('Unexpected error: %s', message)
+        else:
+            width, height = widget.window.get_size()
+            widget.pixmap.draw_rectangle(widget.get_style().white_gc, True,0, 0, width, height)
+            widget.pixmap_temp.draw_rectangle(widget.get_style().white_gc, True,0, 0, width, height)
         widget.queue_draw() 
     
     def text(self,widget,event):
@@ -505,9 +524,9 @@ class Desenho:
         if widget.estadoTexto == 0:
             widget.estadoTexto = 1
             
-            widget.janela.fixed.move(widget.janela.textview, int(event.x)+200, int(event.y)+100)
+            #widget.janela.fixed.move(widget.janela.textview, int(event.x)+200, int(event.y)+100)
             # Area size has changed...
-            #widget.janela.fixed.move(widget.janela.textview, int(event.x), int(event.y))
+            widget.janela.fixed.move(widget.janela.textview, int(event.x), int(event.y))
             widget.janela.textview.show()
             widget.janela.textview.grab_focus()
             
