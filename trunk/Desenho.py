@@ -675,6 +675,7 @@ class Desenho:
 
         """
 
+		# checks what pixmap is active (original or temporary)
         if temp == True:
             pixmap = widget.pixmap_temp
         else:
@@ -683,13 +684,15 @@ class Desenho:
 
         pixmap.draw_drawable(widget.gc, widget.pixmap, 0, 0, 0, 0, width, height)
 
+		# here the function starts dealing with drawing issues
         if param == "moving":
-            # mouse not pressed moving
+            # situation: mouse is not pressed while moving
             if not widget.polygon_start:
                 pixmap.draw_line(widget.gc_line,widget.last[0],widget.last[1], coords[0], coords[1])
         elif widget.polygon_start == True: # Starting a new polygon ?
+			# the polygon has not started yet
             if param == "motion":
-                # first press
+                # situation: first mouse press event
                 try:
                     pixmap.draw_line(widget.gc_line,widget.last[0],widget.last[1], coords[0], coords[1])
                     widget.pixmap.draw_line(widget.gc_line,widget.last[0],widget.last[1], coords[0], coords[1])
@@ -699,10 +702,9 @@ class Desenho:
                     widget.pixmap.draw_line(widget.gc_line,widget.oldx,widget.oldy, coords[0], coords[1])
                     widget.first = widget.oldx, widget.oldy
                     widget.points = [widget.first, coords]
-                widget.enableUndo(widget)
                 widget.last = coords                    
             else: # param == "release"
-                # first release
+                # situation: first mouse release event
                 try:
                     widget.first
                     widget.points.append(coords)
@@ -711,34 +713,36 @@ class Desenho:
                     widget.first = widget.oldx, widget.oldy
                     widget.points = [widget.first, coords]                
                     widget.pixmap.draw_line(widget.gc_line,widget.oldx,widget.oldy, coords[0], coords[1])
-                widget.enableUndo(widget)
                 widget.last = coords
                 widget.polygon_start = False
         else:
+			# the first polygon's point is done
             if param == "motion":
-     #           print "press"
+				# situation: mouse is moving while pressed
                 pixmap.draw_line(widget.gc_line,widget.last[0],widget.last[1],coords[0],coords[1])
                 widget.pixmap.draw_line(widget.gc_line,widget.last[0],widget.last[1], coords[0], coords[1])
-                widget.enableUndo(widget)
                 widget.last = coords
                 widget.points.append(coords)
             elif param == "release":
-         #       print "release"
+				# situation: mouse release event
                 x = coords[0] - widget.first[0]
                 y = coords[1] - widget.first[1]
                 d = math.hypot(x,y)
-                if d > 20: # close the polygon ?
+				# close the polygon ?
+                if d > 20:
+					# do not close the polygon!
                     pixmap.draw_line(widget.gc_line,widget.last[0],widget.last[1],coords[0],coords[1])
                     widget.last = coords
                     widget.points.append(coords)
                 else:
+					# close the polygon!
                     tp = tuple(widget.points)
                     if fill == True:
                         pixmap.draw_polygon(widget.gc, True, tp)
                     pixmap.draw_polygon(widget.gc_line, False, tp)
                     widget.last = []
                     widget.polygon_start = True
-                    widget.undo_times -= 1#destroy the undo screen of polygon start 
+                    widget.undo_times -= 1 # destroy the undo screen of polygon start 
                     widget.enableUndo(widget)
         widget.queue_draw()
         
